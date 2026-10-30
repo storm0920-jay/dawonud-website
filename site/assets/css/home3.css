@@ -249,7 +249,7 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .mast-nav a { position: absolute; top: 0; font: 600 17px/1 var(--en); letter-spacing: -0.02em; padding: 6px 0 0; height: 40px; animation: fade-up .8s both; }
 .mast-nav a::before { content: ""; position: absolute; left: 0; bottom: -7px; width: 1px; height: 13px; background: var(--white); }
 .mast-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 6px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .35s; }
-.mast-nav a:hover::after { transform: scaleX(1); }
+.mast-nav a:hover::after { transform: scaleX(0); }
 .mast-nav .c2 { left: calc(var(--col) * 1); animation-delay: .5s; }
 .mast-nav .c4 { left: calc(var(--col) * 3); animation-delay: .56s; }
 .mast-nav .c5 { left: calc(var(--col) * 4); animation-delay: .62s; }
@@ -303,3 +303,31 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
   .mast-head { font-size: 30px; }
 }
 @media (prefers-reduced-motion: reduce) { .mast * { animation: none !important; } }
+
+/* 메뉴에 올렸을 때 왼쪽에서 늘어나는 굵은 선 */
+.nav-ind { position: absolute; left: 20px; bottom: -2px; height: 3px; width: 0; background: var(--white); transition: width .55s cubic-bezier(.7,0,.2,1); pointer-events: none; }
+.mast-nav a:hover { opacity: 1; }
+.mast-nav:hover a { opacity: .45; transition: opacity .3s; }
+.mast-nav:hover a:hover, .mast-nav a:focus-visible { opacity: 1; }
+
+/* 3D 단어 공간 */
+.space { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: #EFEFED; color: #0E0E0E; perspective: 1100px; }
+html.inverted .space { background: #141414; color: #F4F2ED; }
+.space-cam { position: absolute; inset: 0; display: grid; place-items: center; transform-style: preserve-3d; }
+.space-world { position: relative; width: 0; height: 0; transform-style: preserve-3d; transform: rotateX(56deg) rotateZ(-24deg); }
+.space-world > * { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+.pane { width: 420px; height: 420px; margin: -210px 0 0 -210px; border: 1px solid rgba(14,14,14,.13); background: rgba(255,255,255,.28); }
+html.inverted .pane { border-color: rgba(244,242,237,.12); background: rgba(255,255,255,.03); }
+.box { width: 0; height: 0; }
+.box i { position: absolute; width: 210px; height: 210px; left: -105px; top: -105px; border: 1px solid rgba(14,14,14,.16); background: rgba(255,255,255,.22); }
+html.inverted .box i { border-color: rgba(244,242,237,.14); background: rgba(255,255,255,.03); }
+.box .f1 { transform: translateZ(210px); }
+.box .f2 { transform: translateY(-105px) rotateX(90deg) translateZ(-105px) translateY(105px); }
+.box .f3 { transform: translateY(105px) rotateX(-90deg) translateZ(-105px) translateY(-105px); }
+.box .f4 { transform: translateX(-105px) rotateY(-90deg) translateZ(-105px) translateX(105px); }
+.box .f5 { transform: translateX(105px) rotateY(90deg) translateZ(-105px) translateX(-105px); }
+.word { font: 500 64px/1 var(--en); letter-spacing: -0.03em; white-space: nowrap; translate: -50% -50%; }
+.word.far { opacity: .38; }
+.word.soft { font-size: 48px; font-style: italic; font-weight: 300; opacity: .3; transform-origin: 50% 100%; }
+.space-cap { position: absolute; left: 20px; bottom: 26px; font: 700 13px/1.2 var(--en); letter-spacing: -0.01em; }
+@media (max-width: 700px) { .word { font-size: 44px; } .word.soft { font-size: 32px; } }
