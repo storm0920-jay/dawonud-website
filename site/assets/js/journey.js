@@ -1,46 +1,61 @@
 /* 메인 스크롤 장면
    1~4단계: 작업지시서대로 (세 줄 문장 → 셔터 → 두 번째 문장 → 단어 공간 등장)
-   5단계부터: 참고 녹화(29~45초)를 1초 단위로 잰 움직임. 높이가 다른 상자들이 격자로 서 있고 상자 윗면마다 단어가 놓인 공간이
-   시계 방향으로 돌며 기울고 → 단어가 누워 얇은 선이 되고 → 상자 사이를 내려다보다 → 가운데 상자 안으로 들어가 이미지가 열림.
+   5단계부터: SANTAL 구조분석(3장)의 수치로 만든 3D 상자 공간. 한 변 1인 상자가 층마다 격자로 쌓인 피라미드이고,
+   상자 앞면에 큰 단어, 왼쪽 옆면에 작은 동사가 붙어 있음. 망원 카메라(화면 세로에 상자 약 2개)가 정면에서 위로 반원을 그리며
+   시계 방향으로 돌고 → 가운데 층들이 흐르다 사라지고 엇갈린 열이 반듯해짐 → 위에서 본 상자 격자 → 가운데 상자 안으로 내려가 이미지가 열림.
    스크롤 위치에 1:1로 묶여 있어서(scrub) 멈추면 멈추고, 올리면 거꾸로 돕니다.
    단어·구간(%)·수치는 모두 아래 CONFIG 에서 고칩니다. 구간 값은 이 섹션 스크롤 진행도(0~1)입니다. */
+import * as THREE from "../vendor/three.module.min.js";
+
 const CONFIG = {
   words: {
     first: ["Design", "Shapes", "Place"],              // 1단계 세 줄. 마지막 줄이 피벗 단어
     second: ["Defines", "Life"],                       // 3단계: 피벗 단어 아래 두 줄 (Place / Defines / Life)
-    field: ["Landscape", "Streetscape", "Community", "Shapes", "Connects", "Defines"],
-    sense: ["Walk", "Pause", "Gather"],                // 감각 단어 3종 (작은 기울임 글자, 상자 옆면)
+    field: ["Landscape", "Streetscape", "Community", "Shapes", "Connects", "Defines"],   // 상자 앞면 단어 6개 순환
+    sense: ["Walk", "Pause", "Gather"],                // 상자 왼쪽 옆면 동사 3개 순환
   },
   // 구간 비율은 밝은 녹화(Video Project_색반전, 0~33초)의 스크롤바 위치를 0.5초마다 재서 맞춤. 일정한 속도로 내리면 녹화와 같은 속도로 바뀜
   scroll: { scrub: 1, length: 900 },                   // 관성(초), 장면을 붙잡아 둔 채 스크롤하는 길이(vh)
   upTo: 9,                                             // 4면 1~4단계까지만 보여 줌
   type: { tracking: "-0.02em", leading: .98, white2: .75 },
-  levels: [1, .55, .25, .1],                           // 단어 밝기 4단계(흰색 불투명도)
 
   s1: { from: 0, to: .04, rise: .4, right: .62, centerY: .45, barW: .09 },     // 녹화 1~2초
   s2: { close: [.04, .06], narrow: [.06, .075], end: .08 },                    // 녹화 2초
   s3: { l2: [.08, .10], l3: [.09, .11], indent: 2 },                           // 녹화 3초
   s4: { merge: [.11, .15], field: [.11, .16], handOff: .16 },                  // 녹화 4~5초
-  // 상자 공간: 격자 칸 크기(글자 크기의 배수), 칸 수, 윗면 높이 [최저, 최고, 간격](px), 깊이, 윗면마다 단어 줄 수
-  boxes: { pitch: 5.6, gap: 18, range: 6, rangeMobile: 4, tops: [-100, 150, 50], depth: [700, 1300], coreDepth: 1500, floor: 600, lines: 5, senseShare: .28, sideWords: .5 },
-  // 카메라 (rx: 앞뒤 기울기, rz: 시계 방향 회전, z: 다가감)
+
+  // 상자 공간 (단위: 상자 한 변 = 1). 층: [층 번호(높이), 열, 깊이, 불투명도]
+  cubes: {
+    layers: [[6, 7, 7, 1], [5, 9, 9, 1], [4, 11, 3, 1], [3, 11, 3, 1], [2, 11, 3, 1], [1, 11, 3, 1], [0, 11, 3, 1], [-1, 11, 3, .2],
+             [-2, 1, 1, .12], [-3, 3, 3, .1], [-4, 5, 5, 0]],
+    middle: [-1, 4],                                   // 흐르다 사라지는 가운데 층(11×3)
+    faces: { front: .7, left: .4, right: .2, top: .6 }, // 면 불투명도
+    line: .2,                                          // 모서리 선 불투명도 (1px)
+    word: .175, side: .12,                             // 글자 크기 (상자 높이 대비)
+    shift: { layer: 5, col: 2, depth: 1 },             // 단어 순환: 층마다 5칸, 열마다 2칸, 깊이마다 1칸 밀기
+    stagger: { col: .25, colMax: 1 },                  // 가운데에서 먼 열일수록 뒤로 밀림 (층 엇갈림은 셰이더의 lstag)
+    well: true,                                        // 꼭대기 층 가운데 상자를 비워 우물처럼 (바닥에 이미지)
+  },
+  // 카메라: tilt 정면→위(도), roll 화면 시계 방향 회전(도). 녹화 기준
   camera: [
-    { p: .16, rx: 0, rz: 0, z: 0 },          // 5초: 정면
-    { p: .20, rx: 10, rz: 25, z: 0 },        // 6초: 비스듬히
-    { p: .23, rx: 20, rz: 45, z: 20 },       // 7~8초
-    { p: .26, rx: 28, rz: 62, z: 30 },       // 9~10초
-    { p: .29, rx: 34, rz: 80, z: 40 },       // 11초: 거의 세로
-    { p: .34, rx: 30, rz: 115, z: 60 },      // 12~13초: 단어가 누우며 사선
-    { p: .39, rx: 18, rz: 150, z: 100 },     // 15초: 얇은 선
-    { p: .55, rx: 4, rz: 176, z: 160 },      // 16~21초: 상자만 남아 천천히 정렬
-    { p: .78, rx: 0, rz: 180, z: 320 },      // 27초: 위에서 내려다본 격자, 가운데 상자 바닥의 이미지가 작게 보임
-    { p: .95, rx: 0, rz: 180, z: 1380 },     // 28~32초: 가운데 상자 안으로 내려가 바닥 이미지가 화면을 채움
+    { p: .16, tilt: 0, roll: 0 },            // 5초: 정면
+    { p: .20, tilt: 12, roll: 25 },          // 6초
+    { p: .23, tilt: 25, roll: 45 },          // 7~8초
+    { p: .26, tilt: 40, roll: 62 },          // 9~10초
+    { p: .29, tilt: 55, roll: 80 },          // 11초: 거의 세로
+    { p: .34, tilt: 75, roll: 115 },         // 12~13초: 앞면 단어가 누워 얇은 선
+    { p: .39, tilt: 88, roll: 150 },         // 15초
+    { p: .55, tilt: 90, roll: 176 },         // 16~21초: 위에서 본 상자 격자
+    { p: .78, tilt: 90, roll: 180 },         // 27초
   ],
-  lieDown: [.30, .37],                                 // 단어가 상자 윗면에 누워 얇은 선이 됨
-  wordsOut: [.37, .45],                                // 선이 사라짐 → 상자와 옆면 단어만 남음
-  centre: [.40, .78],                                  // 상자만 남는 동안 가운데 상자를 화면 정중앙으로 천천히 옮김
-  floorIn: [.76, .82],                                 // 녹화 28초: 가운데 상자 바닥의 이미지가 작게 나타남
-  reveal: { at: .95, zoom: [.95, 1], scale: 1.25 },   // 바닥 이미지가 화면을 채운 뒤 화면 전체 이미지로 바뀌어 천천히 확대
+  orbit: { range: [.16, .39], dist: [8, 18.5], zoomOut: .6 },   // 반원 궤도: 거리 8 → 18.5(높이 약 25), 줌 1 → 0.6
+  cycle: { range: [.18, .25], steps: 3 },              // 가운데 층이 한 칸씩 3번 흐름
+  middleOut: [.25, .39],                               // 가운데 층·윗면 대각선이 사라지고 엇갈린 열이 반듯해짐
+  centre: [.16, .40],                                  // 피벗 단어 자리에서 화면 정중앙으로
+  hold: { range: [.39, .76], push: .85 },              // 상자만 남아 천천히 다가감
+  dive: { range: [.76, .95], fov: 30, view: .9 },      // 가운데 상자로 내려감 (화각 30°로 넓어지며 벽이 보임)
+  image: { in: [.76, .82], fill: [.90, .95], zoom: [.95, 1], scale: 1.25 },
+  tilt: { x: 6, y: 3, damp: 4, minWidth: 1024 },       // 마우스 기울임 (좌우·상하 최대 각도)
   calm: { second: [.08, .11], field: [.11, .16], wordsOut: [.37, .45], image: [.85, .95] },  // 동작 줄이기: 3단계부터 페이드로
 };
 
@@ -54,11 +69,10 @@ const CONFIG = {
   const seg = (p, [a, b]) => clamp((p - a) / (b - a));
   const io = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const mix = (a, b, t) => a + (b - a) * t;
-  let r = 7; const rnd = () => (r = (r * 9301 + 49297) % 233280) / 233280;   // 매번 같은 배치
-  const mobile = matchMedia("(max-width: 768px)").matches;
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const D = Math.PI / 180;
 
-  // ---------- 화면 요소 만들기 ----------
+  // ---------- 화면 요소 ----------
   stage.style.letterSpacing = C.type.tracking;
   stage.style.lineHeight = C.type.leading;
   const l1 = $(".j-l1"), l2 = $(".j-l2"), pivot = $(".j-pivot"), l4 = $(".j-l4"), l5 = $(".j-l5");
@@ -67,45 +81,131 @@ const CONFIG = {
   l4.style.color = l5.style.color = `rgba(255,255,255,${C.type.white2})`;
   journey.setAttribute("aria-label", `${Wd.first.join(" ")}. ${[Wd.first[2], ...Wd.second].join(" ")}.`);
   const shutT = $(".j-shut-t"), shutB = $(".j-shut-b"), bar = $(".j-bar");
-  const cam = $(".j-cam"), world = $(".j-world");
+  const canvas = $(".j-gl");
   const reveal = $(".j-reveal"), img = reveal.firstElementChild;
 
-  // 상자 공간: 높이가 다른 상자들이 격자로 서 있고, 윗면마다 단어가 몇 줄씩 놓임 (높이 차이 때문에 단어가 앞뒤로 겹쳐 보임)
-  let centreWord = null, floor = null, builtFor = 0;
-  function buildWorld(fs) {
-    r = 7;
-    const B = C.boxes, G = B.pitch * fs, S = G - B.gap, k = fs / 54, N = mobile ? B.rangeMobile : B.range;
-    const steps = Math.round((B.tops[1] - B.tops[0]) / B.tops[2]);
-    let html = "", n = 0;
-    for (let i = -N; i <= N; i++) for (let j = -N; j <= N; j++) {
-      const core = i === 0 && j === 0;
-      const top = core ? 0 : (B.tops[0] + Math.round(rnd() * steps) * B.tops[2]) * k;
-      const depth = core ? B.coreDepth : B.depth[0] + Math.round(rnd() * 4) * (B.depth[1] - B.depth[0]) / 4;
-      const side = () => rnd() < B.sideWords ? `<em>${Wd.sense[Math.floor(rnd() * 3)]}</em>` : "";
-      html += `<b class="cube${core ? " core" : ""}" style="--s:${S.toFixed(0)}px;--h:${depth}px;transform:translate3d(${(i * G).toFixed(0)}px,${(j * G).toFixed(0)}px,${(top - depth).toFixed(0)}px)">` +
-        `<i class="t"></i><i class="n">${side()}</i><i class="s">${side()}</i><i class="w">${side()}</i><i class="e">${side()}</i></b>`;
-      const lines = core ? [0] : Array.from({ length: B.lines }, (_, m) => (m - (B.lines - 1) / 2) * 1.05);
-      for (const dy of lines) {
-        let word, cls = "", op = 1;
-        if (core) { word = Wd.first[2]; cls = "c"; }
-        else if (rnd() < B.senseShare) { word = Wd.sense[n % 3]; cls = "sn"; }
-        else {
-          word = Wd.field[n % Wd.field.length];
-          const v = rnd() + Math.hypot(i, j) * .06;               // 가운데일수록 밝게
-          op = C.levels[v < .3 ? 0 : v < .62 ? 1 : v < .95 ? 2 : 3];
-        }
-        n++;
-        const x = i * G + (core ? 0 : Math.round((rnd() - .5) * G * .5)), y = j * G + dy * fs;
-        html += `<span class="wd ${cls}" style="--o:${op};transform:translate3d(${x.toFixed(0)}px,${y.toFixed(0)}px,${(top + 2).toFixed(0)}px) rotateX(var(--wr,0deg))">${word}</span>`;
+  // ---------- 3D 상자 공간 (three.js) ----------
+  let gl = null;
+  try { gl = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { gl = null; }
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(15, 1, .5, 500);
+  const U = { uCycle: { value: 0 }, uAlign: { value: 0 }, uMid: { value: 1 }, uAlpha: { value: 0 }, uDiag: { value: 1 },
+              uCore: { value: 0 }, uWords: { value: 1 }, uMap: { value: null } };
+  const common = `
+    attribute vec4 aBox;   // x, 층 높이, z, 층 불투명도
+    attribute vec4 aInfo;  // 열 엇갈림, 가운데 층 여부, 피벗 단어 여부
+    uniform float uCycle, uAlign, uMid, uAlpha;
+    varying float vOp;
+    float lstag(float y) { return y <= 0. ? 0. : y <= 1. ? .25 * y : y <= 2. ? .25 + .5 * (y - 1.) : .75 + (y - 2.); }
+    float midOp(float y) { return y < -1. ? .4 * (y + 1.5) : y < 0. ? mix(.2, 1., y + 1.) : y <= 4. ? 1. : max(0., 1. - (y - 4.) * 2.); }
+    vec3 boxAt() {
+      float y = aBox.y; vOp = aBox.w;
+      if (aInfo.y > .5) { y = mod(aBox.y - uCycle + 1.5, 6.) - 1.5; vOp = midOp(y) * uMid; }
+      vOp *= uAlpha;
+      return vec3(aBox.x, y, aBox.z - (aInfo.x + lstag(y)) * (1. - uAlign));
+    }`;
+  const proj = `gl_Position = projectionMatrix * modelViewMatrix * vec4(boxAt() + local, 1.);`;
+  const mat = (vs, fs, depthWrite, order) => {
+    const m = new THREE.ShaderMaterial({ uniforms: U, vertexShader: common + vs, fragmentShader: fs, transparent: true, depthWrite, side: THREE.DoubleSide });
+    m._order = order; return m;
+  };
+  const faceMat = mat(`attribute float aFace; varying float vFace; void main(){ vec3 local = position; vFace = aFace; ${proj} }`,
+    `varying float vOp; varying float vFace; void main(){ gl_FragColor = vec4(vec3(.067), vFace * vOp); }`, false, 2);
+  const lineMat = mat(`attribute float aDiag; uniform float uDiag; void main(){ vec3 local = position; vOp *= mix(1., uDiag, aDiag); ${proj} }`,
+    `varying float vOp; void main(){ gl_FragColor = vec4(.949, .941, .941, ${C.cubes.line} * vOp); if (gl_FragColor.a < .003) discard; }`, true, 0);
+  const wordFS = `uniform sampler2D uMap; uniform float uWords; varying float vOp; varying vec2 vUv;
+    void main(){ float a = texture2D(uMap, vUv).a * vOp * uWords; if (a < .02) discard; gl_FragColor = vec4(.941, .941, .941, a); }`;
+  const wordVS = (place) => `attribute vec4 aUV; attribute vec2 aSize; uniform float uCore, uWords; varying vec2 vUv;
+    void main(){ vUv = mix(aUV.xy, aUV.zw, uv); ${place} vOp *= mix(1., uCore, aInfo.z); ${proj} }`;
+  const frontMat = mat(wordVS(`vec3 local = vec3(position.xy * aSize, .502);`), wordFS, true, 1);
+  // 옆면 단어: 왼쪽 면에 90° 돌려 붙임 (아래에서 위로 읽힘)
+  const sideMat = mat(wordVS(`vec3 local = vec3(-.502, position.x * aSize.x, -position.y * aSize.y);`), wordFS, true, 1);
+
+  // 상자 하나의 면 4개(앞, 왼쪽, 오른쪽, 위)와 모서리 12개 + 윗면 대각선
+  function boxGeometries() {
+    const F = C.cubes.faces, P = [], A = [], I = [];
+    const quad = (pts, a) => { const n = P.length / 3; pts.forEach(p => P.push(...p)); A.push(a, a, a, a); I.push(n, n + 1, n + 2, n, n + 2, n + 3); };
+    const h = .5;
+    quad([[-h, -h, h], [h, -h, h], [h, h, h], [-h, h, h]], F.front);
+    quad([[-h, -h, -h], [-h, -h, h], [-h, h, h], [-h, h, -h]], F.left);
+    quad([[h, -h, h], [h, -h, -h], [h, h, -h], [h, h, h]], F.right);
+    quad([[-h, h, h], [h, h, h], [h, h, -h], [-h, h, -h]], F.top);
+    const faces = new THREE.BufferGeometry();
+    faces.setAttribute("position", new THREE.Float32BufferAttribute(P, 3));
+    faces.setAttribute("aFace", new THREE.Float32BufferAttribute(A, 1));
+    faces.setIndex(I);
+    const c = [[-h, -h, -h], [h, -h, -h], [h, h, -h], [-h, h, -h], [-h, -h, h], [h, -h, h], [h, h, h], [-h, h, h]];
+    const E = [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7], [7, 2]];   // 마지막: 윗면 대각선
+    const LP = [], LD = [];
+    E.forEach(([a, b], k) => { LP.push(...c[a], ...c[b]); LD.push(k === 12 ? 1 : 0, k === 12 ? 1 : 0); });
+    const lines = new THREE.BufferGeometry();
+    lines.setAttribute("position", new THREE.Float32BufferAttribute(LP, 3));
+    lines.setAttribute("aDiag", new THREE.Float32BufferAttribute(LD, 1));
+    return { faces, lines };
+  }
+
+  // 단어 그림판: 글자를 한 장의 텍스처에 모아 그림 (HTML 글자와 같은 서체·자간·줄 높이)
+  function buildAtlas() {
+    const words = [...Wd.field, ...Wd.sense, Wd.first[2]];
+    const F = 160, lead = C.type.leading, pad = 12, fam = getComputedStyle(stage).fontFamily;
+    const cv = document.createElement("canvas"), cx = cv.getContext("2d");
+    const font = () => { cx.font = `400 ${F}px ${fam}`; cx.letterSpacing = (-.02 * F) + "px"; cx.fillStyle = "#fff"; };
+    font();
+    const ms = words.map(w => cx.measureText(w));
+    const asc = ms[0].fontBoundingBoxAscent || F * .8, desc = ms[0].fontBoundingBoxDescent || F * .2;
+    const rowH = Math.ceil(F * lead) + pad * 2, Wt = 2048;
+    let x = 0, y = 0; const pos = [];
+    ms.forEach(m => { const w = Math.ceil(m.width) + pad * 2; if (x + w > Wt) { x = 0; y += rowH; } pos.push([x, y, w]); x += w; });
+    cv.width = Wt; cv.height = y + rowH;
+    font();
+    const base = pad + (F * lead - (asc + desc)) / 2 + asc;
+    const rects = words.map((w, i) => {
+      const [px, py, pw] = pos[i];
+      cx.fillText(w, px + pad, py + base);
+      return { uv: [px / Wt, 1 - (py + rowH) / cv.height, (px + pw) / Wt, 1 - py / cv.height], w: pw / F, h: rowH / F };
+    });
+    const tex = new THREE.CanvasTexture(cv);
+    tex.anisotropy = 4; tex.colorSpace = THREE.NoColorSpace;
+    U.uMap.value?.dispose(); U.uMap.value = tex;
+    return rects;
+  }
+
+  const plane = new THREE.PlaneGeometry(1, 1);
+  const inst = (base, attrs, n) => {
+    const g = new THREE.InstancedBufferGeometry();
+    g.index = base.index;
+    for (const k in base.attributes) g.setAttribute(k, base.attributes[k]);
+    for (const k in attrs) g.setAttribute(k, new THREE.InstancedBufferAttribute(new Float32Array(attrs[k].a), attrs[k].n));
+    g.instanceCount = n;
+    return g;
+  };
+  function buildWorld() {
+    scene.clear();
+    const K = C.cubes, rects = buildAtlas(), nf = Wd.field.length, ns = Wd.sense.length;
+    const box = [], info = [], fUV = [], fSize = [], sUV = [], sSize = [];
+    const mod = (a, n) => ((a % n) + n) % n;
+    for (const [L, cols, depth, op] of K.layers) {
+      const mid = L >= C.cubes.middle[0] && L <= C.cubes.middle[1];
+      for (let c = -(cols - 1) / 2; c <= (cols - 1) / 2; c++) for (let d = -(depth - 1) / 2; d <= (depth - 1) / 2; d++) {
+        if (K.well && L === K.layers[0][0] && c === 0 && d === 0) continue;
+        const core = L === 0 && c === 0 && d === (depth - 1) / 2;   // 맨 앞줄 가운데 상자의 앞면 = 피벗 단어 "Place"
+        box.push(c, L, d, op);
+        info.push(Math.min(K.stagger.colMax, Math.abs(c) * K.stagger.col), mid ? 1 : 0, core ? 1 : 0, 0);
+        const sh = K.shift, k = L * sh.layer + c * sh.col - d * sh.depth;
+        const fr = core ? rects[nf + ns] : rects[mod(k, nf)], sr = rects[nf + mod(k, ns)];
+        fUV.push(...fr.uv); fSize.push(fr.w * K.word, fr.h * K.word);
+        sUV.push(...sr.uv); sSize.push(sr.w * K.side, sr.h * K.side);
       }
     }
-    // 가운데 상자 바닥의 이미지: 카메라가 상자 안으로 내려가면 이 이미지가 화면을 채움
-    html += `<img class="floor" src="${img.getAttribute("src")}" alt="" style="width:${S.toFixed(0)}px;height:${S.toFixed(0)}px;transform:translate3d(-50%,-50%,${-B.floor}px)">`;
-    world.innerHTML = html;
-    centreWord = world.querySelector(".wd.c");
-    floor = world.querySelector(".floor");
-    builtFor = fs;
+    const n = box.length / 4, B = { aBox: { a: box, n: 4 }, aInfo: { a: info, n: 4 } };
+    const { faces, lines } = boxGeometries();
+    const add = (o, m) => { o.frustumCulled = false; o.renderOrder = m._order; scene.add(o); };
+    add(new THREE.LineSegments(inst(lines, B, n), lineMat), lineMat);
+    add(new THREE.Mesh(inst(plane, { ...B, aUV: { a: fUV, n: 4 }, aSize: { a: fSize, n: 2 } }, n), frontMat), frontMat);
+    add(new THREE.Mesh(inst(plane, { ...B, aUV: { a: sUV, n: 4 }, aSize: { a: sSize, n: 2 } }, n), sideMat), sideMat);
+    add(new THREE.Mesh(inst(faces, B, n), faceMat), faceMat);
   }
+  if (gl) buildWorld();
 
   // ---------- 자리 잡기 (창 크기가 바뀌면 다시) ----------
   let W, H, fs, lh, pv;   // pv: 피벗 단어의 위치
@@ -120,8 +220,53 @@ const CONFIG = {
     l5.style.left = pv.left + "px"; l5.style.top = (pv.top + 2 * lh) + "px";
     bar.style.width = (W * C.s1.barW) + "px";
     bar.style.left = (pv.left - W * C.s1.barW - fs * .4) + "px"; bar.style.top = (pv.top + lh * 1.25) + "px";
-    // 공간의 가운데(가운데 상자 윗면의 피벗 단어)가 정확히 피벗 단어 자리에 오도록
-    if (builtFor !== fs) buildWorld(fs);
+    if (gl) { gl.setPixelRatio(Math.min(devicePixelRatio, 2)); gl.setSize(W, H, false); }
+  }
+
+  // ---------- 카메라 ----------
+  const tilt = { x: 0, y: 0, tx: 0, ty: 0, on: false };
+  const qA = new THREE.Quaternion(), qB = new THREE.Quaternion(), ex = new THREE.Euler(), off = new THREE.Vector3();
+  function keyAt(p) {
+    const K = C.camera;
+    if (p <= K[0].p) return K[0];
+    for (let i = 0; i < K.length - 1; i++) {
+      const a = K[i], b = K[i + 1];
+      if (p <= b.p) { const t = io((p - a.p) / (b.p - a.p)); return { tilt: mix(a.tilt, b.tilt, t), roll: mix(a.roll, b.roll, t) }; }
+    }
+    return K[K.length - 1];
+  }
+  // 화면 세로에 보이는 높이(단위) V를, 바라보는 점까지 거리 d에서 맞추는 망원 카메라
+  function placeCamera(p) {
+    const V0 = C.cubes.word * H / fs;                   // 3D 글자 크기 = HTML 글자 크기 (피벗 단어가 그대로 이어짐)
+    const o = io(seg(p, C.orbit.range)), k = keyAt(p);
+    const top = C.cubes.layers[1][0] + .5;              // 우물 바닥(가운데 상자 윗면) 높이
+    const target = new THREE.Vector3(0, mix(0, top, o), mix(1.5, 0, o));
+    let V = mix(V0, V0 / C.orbit.zoomOut, o) * mix(1, C.hold.push, io(seg(p, C.hold.range)));
+    let d = mix(C.orbit.dist[0], C.orbit.dist[1], o);
+    let fov = 2 * Math.atan(V / 2 / d) / D;
+    const dv = io(seg(p, C.dive.range));
+    if (dv > 0) { V = mix(V, C.dive.view, dv); fov = mix(fov, C.dive.fov, dv); d = V / 2 / Math.tan(fov * D / 2); }
+    camera.fov = fov;
+    qA.setFromEuler(ex.set(-k.tilt * D, 0, 0));
+    qB.setFromEuler(ex.set(0, 0, k.roll * D)); qA.multiply(qB);
+    qB.setFromEuler(ex.set(tilt.y * C.tilt.y * D, -tilt.x * C.tilt.x * D, 0, "YXZ")); qA.multiply(qB);
+    camera.quaternion.copy(qA);
+    camera.position.copy(target).add(off.set(0, 0, d).applyQuaternion(qA));
+    // 피벗 단어 자리에서 화면 가운데로
+    const ct = io(seg(p, C.centre));
+    camera.setViewOffset(W, H, (W / 2 - pv.cx) * (1 - ct), (H / 2 - pv.cy) * (1 - ct), W, H);
+    camera.updateProjectionMatrix();
+  }
+  // 우물 바닥(가운데 상자 윗면)이 화면에서 차지하는 사각형
+  const corner = new THREE.Vector3();
+  function floorRect() {
+    const y = C.cubes.layers[1][0] + .5; let x0 = W, y0 = H, x1 = 0, y1 = 0;
+    for (const [x, z] of [[-.5, -.5], [.5, -.5], [.5, .5], [-.5, .5]]) {
+      corner.set(x, y, z).project(camera);
+      const sx = (corner.x + 1) / 2 * W, sy = (1 - corner.y) / 2 * H;
+      x0 = Math.min(x0, sx); x1 = Math.max(x1, sx); y0 = Math.min(y0, sy); y1 = Math.max(y1, sy);
+    }
+    return [y0, W - x1, H - y1, x0];   // inset: 위, 오른쪽, 아래, 왼쪽
   }
 
   // ---------- 장면 ----------
@@ -142,59 +287,57 @@ const CONFIG = {
     [l1, l2, bar].forEach(el => set(el, "visibility", closed ? "hidden" : "visible"));   // 검은 면 뒤로 사라진 1·2행
   }
 
-  function camAt(p) {
-    const K = C.camera;
-    if (p <= K[0].p) return K[0];
-    for (let i = 0; i < K.length - 1; i++) {
-      const a = K[i], b = K[i + 1];
-      if (p <= b.p) { const t = io((p - a.p) / (b.p - a.p)); return { rx: mix(a.rx, b.rx, t), rz: mix(a.rz, b.rz, t), z: mix(a.z, b.z, t) }; }
-    }
-    return K[K.length - 1];
-  }
+  let lastP = 0;
+  function paint() { if (gl && U.uAlpha.value > 0) gl.render(scene, camera); }
 
   function render(p) {
+    lastP = p;
     opening(p);
     // 3단계: 아래 두 줄이 마스크 아래에서 올라옴
     set(l4.firstElementChild, "transform", `translateY(${(1 - io(seg(p, C.s3.l2))) * 105}%)`);
     set(l5.firstElementChild, "transform", `translateY(${(1 - io(seg(p, C.s3.l3))) * 105}%)`);
 
-    // 4단계: 두 줄이 피벗 줄로 모여 겹치고, 상자와 단어 공간이 서서히 나타남
+    // 4단계: 두 줄이 피벗 줄로 모여 겹치고, 상자 공간이 서서히 나타남
     const g = io(seg(p, C.s4.merge));
     set(l4, "translate", `0 ${(-g * lh).toFixed(1)}px`);
     set(l5, "translate", `0 ${(-g * 2 * lh).toFixed(1)}px`);
-    set(cam, "opacity", String(seg(p, C.s4.field)));
-    const handOff = p >= C.s4.handOff;   // 이 뒤로는 공간 속 가운데 단어가 이어받음
+    const handOff = p >= C.s4.handOff;   // 이 뒤로는 맨 앞 가운데 상자의 앞면 단어가 이어받음
     [pivot, l4, l5].forEach(el => set(el, "visibility", handOff ? "hidden" : "visible"));
-    set(centreWord, "visibility", handOff ? "visible" : "hidden");
 
-    // 5~7단계: 카메라가 녹화처럼 움직임 (시계 방향으로 돌며 기울고 → 단어가 누움 → 상자 사이로 다가감)
-    const c = camAt(p);
-    set(world, "transform", `translateZ(${c.z.toFixed(1)}px) rotateX(${c.rx.toFixed(2)}deg) rotateZ(${c.rz.toFixed(2)}deg)`);
-    set(world, "--wr", (io(seg(p, C.lieDown)) * 90).toFixed(1) + "deg");
-    set(world, "--wo", (1 - seg(p, C.wordsOut)).toFixed(3));
-    const ct = io(seg(p, C.centre)), cx = mix(pv.cx, W / 2, ct), cy = mix(pv.cy, H / 2, ct);
-    set(cam, "left", cx.toFixed(1) + "px"); set(cam, "top", cy.toFixed(1) + "px");
-    set(stage, "perspectiveOrigin", `${cx.toFixed(1)}px ${cy.toFixed(1)}px`);
-    if (floor) set(floor, "opacity", seg(p, C.floorIn).toFixed(3));
+    // 5~9단계: 상자 공간
+    tilt.on = !calm && p > C.s4.handOff && p < C.dive.range[0];
+    U.uAlpha.value = seg(p, C.s4.field);
+    U.uCore.value = handOff ? 1 : 0;
+    U.uCycle.value = C.cycle.steps * seg(p, C.cycle.range);
+    const m = io(seg(p, C.middleOut));
+    U.uMid.value = 1 - m; U.uDiag.value = 1 - m; U.uAlign.value = m;
+    set(canvas, "opacity", U.uAlpha.value > 0 ? "1" : "0");
+    placeCamera(p);
+    paint();
 
-    // 8~9단계: 가운데 상자 바닥의 이미지가 화면을 채우면 화면 전체 이미지로 이어받아 천천히 확대됨
-    set(reveal, "clipPath", p >= C.reveal.at ? "none" : "inset(50% 50% 50% 50%)");
-    set(img, "transform", `scale(${1 + (C.reveal.scale - 1) * seg(p, C.reveal.zoom)})`);
+    // 우물 바닥의 이미지: 작게 나타나 화면을 채운 뒤 천천히 확대
+    const show = seg(p, C.image.in);
+    if (show > 0) {
+      const f = io(seg(p, C.image.fill)), r = floorRect().map(v => Math.max(0, v) * (1 - f));
+      set(reveal, "clipPath", `inset(${r.map(v => v.toFixed(1) + "px").join(" ")})`);
+    } else set(reveal, "clipPath", "inset(50% 50% 50% 50%)");
+    set(reveal, "opacity", show.toFixed(3));
+    set(img, "transform", `scale(${1 + (C.image.scale - 1) * seg(p, C.image.zoom)})`);
   }
 
   // 동작 줄이기: 3단계부터는 회전·이동 없이 페이드로만 바뀜
   function renderCalm(p) {
+    lastP = p;
     opening(p);
     const K = C.calm;
-    set(cam, "left", pv.cx + "px"); set(cam, "top", pv.cy + "px");
-    set(stage, "perspectiveOrigin", `${pv.cx}px ${pv.cy}px`);
-    if (floor) set(floor, "opacity", "0");
     [l4, l5].forEach(el => { set(el.firstElementChild, "transform", "none"); set(el, "opacity", String(seg(p, K.second))); });
     const f = seg(p, K.field);
-    set(cam, "opacity", String(f));
     [pivot, l4, l5].forEach(el => set(el, "visibility", f >= 1 ? "hidden" : "visible"));
-    set(centreWord, "visibility", f >= 1 ? "visible" : "hidden");
-    set(world, "--wo", (1 - seg(p, K.wordsOut)).toFixed(3));
+    U.uAlpha.value = f * (1 - seg(p, K.image)); U.uCore.value = f >= 1 ? 1 : 0;
+    U.uWords.value = 1 - seg(p, K.wordsOut);
+    set(canvas, "opacity", U.uAlpha.value > 0 ? "1" : "0");
+    placeCamera(C.s4.handOff);
+    paint();
     set(reveal, "clipPath", "none");
     set(reveal, "opacity", String(seg(p, K.image)));
   }
@@ -221,6 +364,19 @@ const CONFIG = {
     return rc.top > 0 ? 0 : rc.bottom < innerHeight ? last : p;
   }
   addEventListener("scroll", () => { const rc = journey.getBoundingClientRect(); if (rc.top > 0 || rc.bottom < innerHeight) draw(edge(state.p)); }, { passive: true });
+
+  // 마우스 기울임: 넓은 화면·마우스에서만, 부드럽게 따라옴
+  if (!calm && matchMedia(`(min-width: ${C.tilt.minWidth}px) and (hover: hover) and (pointer: fine)`).matches) {
+    addEventListener("pointermove", e => { tilt.tx = e.clientX / innerWidth * 2 - 1; tilt.ty = e.clientY / innerHeight * 2 - 1; }, { passive: true });
+    gsap.ticker.add((t, dt) => {
+      const gx = tilt.on ? tilt.tx : 0, gy = tilt.on ? tilt.ty : 0, k = 1 - Math.exp(-C.tilt.damp * dt / 1000);
+      if (Math.abs(gx - tilt.x) + Math.abs(gy - tilt.y) < 1e-4) return;
+      tilt.x += (gx - tilt.x) * k; tilt.y += (gy - tilt.y) * k;
+      const rc = journey.getBoundingClientRect();
+      if (rc.top <= 0 && rc.bottom >= innerHeight) { placeCamera(lastP); paint(); }
+    });
+  }
+
   // 부드러운 스크롤(Lenis)은 단독 페이지에서만. 미리보기처럼 다른 화면 안에 들어가 있으면 스크롤을 막을 수 있어서 끔
   let framed = true; try { framed = window.self !== window.top; } catch (e) {}
   if (window.Lenis && !calm && !framed) {
@@ -231,5 +387,6 @@ const CONFIG = {
     gsap.ticker.lagSmoothing(0);
   }
   addEventListener("resize", () => { layout(); draw(state.p); });
-  document.fonts && document.fonts.ready.then(() => { layout(); draw(state.p); ScrollTrigger.refresh(); });
+  // 글꼴이 다 받아진 뒤 단어 그림판을 그 글꼴로 다시 그림
+  document.fonts && document.fonts.ready.then(() => { if (gl) buildWorld(); layout(); draw(state.p); ScrollTrigger.refresh(); });
 })();
