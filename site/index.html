@@ -307,7 +307,7 @@
     const ind = fixnav.querySelector(".nav-ind");
     ind.style.left = on ? on.offsetLeft + "px" : "0px";
     ind.style.width = on ? on.offsetWidth + "px" : "0px";
-    fixnav.classList.toggle("show", navs[0].getBoundingClientRect().bottom < 0);
+    fixnav.classList.toggle("show", mast.getBoundingClientRect().bottom < 44);   // 첫 화면 글자와 겹치지 않게, 첫 화면이 다 지나간 뒤에 나타남
     fixnav.setAttribute("aria-hidden", !fixnav.classList.contains("show"));
     fixnav.querySelectorAll("a, button").forEach(el => el.tabIndex = fixnav.classList.contains("show") ? 0 : -1);
   }

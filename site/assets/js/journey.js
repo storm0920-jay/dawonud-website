@@ -215,8 +215,14 @@ const CONFIG = {
     p: last, ease: "none",
     // 고정은 CSS sticky가 맡고(미리보기 창 같은 iframe 안에서도 안정적), ScrollTrigger는 진행도만 읽음
     scrollTrigger: { trigger: journey, start: "top top", end: "bottom bottom", scrub: calm ? true : C.scroll.scrub, invalidateOnRefresh: true },
-    onUpdate: () => draw(state.p),
+    onUpdate: () => draw(edge(state.p)),
   });
+  // 섹션 밖에서는 관성 때문에 지난 장면이 남아 보이지 않도록 처음·끝 장면으로 바로 맞춤 (스크롤바를 빠르게 끌 때)
+  function edge(p) {
+    const rc = journey.getBoundingClientRect();
+    return rc.top > 0 ? 0 : rc.bottom < innerHeight ? last : p;
+  }
+  addEventListener("scroll", () => { const rc = journey.getBoundingClientRect(); if (rc.top > 0 || rc.bottom < innerHeight) draw(edge(state.p)); }, { passive: true });
   // 부드러운 스크롤(Lenis)은 단독 페이지에서만. 미리보기처럼 다른 화면 안에 들어가 있으면 스크롤을 막을 수 있어서 끔
   let framed = true; try { framed = window.self !== window.top; } catch (e) {}
   if (window.Lenis && !calm && !framed) {
