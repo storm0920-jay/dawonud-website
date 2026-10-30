@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사업실적 상세 | 다원 도시디자인</title>
+<meta name="description" content="다원 도시디자인 사업실적 상세">
+<meta property="og:title" content="사업실적 상세 | 다원 도시디자인">
+<meta property="og:description" content="다원 도시디자인 사업실적 상세">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="projects.html">
+<header data-site-header></header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <a class="more-link" href="projects.html">← 사업실적 목록</a>
+      <h1 id="title" style="margin-top:24px">사업실적</h1>
+      <div class="project-meta" id="meta"></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:56px">
+    <div class="wrap detail-grid" id="detail"></div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="section-title" style="margin-bottom:32px">관련 실적</h2>
+      <div class="project-grid" id="related"></div>
+    </div>
+  </section>
+</main>
+
+<footer data-site-footer></footer>
+<script src="assets/js/site.js"></script>
+<script src="data/projects.js"></script>
+<script>
+  const id = new URLSearchParams(location.search).get("id");
+  const p = PROJECTS.find(x => x.id === id) || PROJECTS[0];
+  document.title = `${p.title} | ${SITE.name}`;
+  document.getElementById("title").innerHTML = p.title + phTag(p);
+  document.getElementById("meta").innerHTML =
+    `<span class="chip field-${FIELD_SLUG[p.field]}">${p.field}</span><span class="year">${p.year}</span>`;
+
+  const rows = [["발주처", p.client], ["위치", p.location], ["기간", p.period], ["업무 범위", p.scope]].filter(r => r[1]);
+  const gallery = (p.gallery || []).map(src => `<div class="thumb"><img src="${src}" alt="" loading="lazy"></div>`).join("");
+  document.getElementById("detail").innerHTML = `
+    <div>
+      <div class="thumb" style="margin-bottom:16px">${projectThumb(p)}</div>
+      ${gallery}
+    </div>
+    <div>
+      <h2 style="font-size:22px">사업 개요</h2>
+      <dl class="overview" style="grid-template-columns:110px 1fr;margin-bottom:32px">
+        ${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}
+      </dl>
+      ${p.summary ? `<p>${p.summary}</p>` : ""}
+      ${p.challenge ? `<h3>과제</h3><p>${p.challenge}</p>` : ""}
+      ${p.solution ? `<h3>해법</h3><p>${p.solution}</p>` : ""}
+    </div>`;
+
+  const related = PROJECTS.filter(x => x.field === p.field && x.id !== p.id).slice(0, 3);
+  document.getElementById("related").innerHTML = related.length
+    ? related.map(projectCard).join("") : '<p class="note">관련 실적이 없습니다.</p>';
+</script>
+</body>
+</html>

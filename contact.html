@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact us | 다원 도시디자인</title>
+<meta name="description" content="다원 도시디자인 문의하기와 오시는 길입니다.">
+<meta property="og:title" content="Contact us | 다원 도시디자인">
+<meta property="og:description" content="다원 도시디자인 문의하기와 오시는 길입니다.">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="contact.html">
+<header data-site-header></header>
+
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">Contact us</span>
+      <h1>문의하기</h1>
+      <p class="lead">사업 문의, 자문 요청, 협업 제안 모두 환영합니다. 남겨 주시면 확인 후 연락드립니다.</p>
+      <nav class="subnav"><a href="#form">문의 양식</a><a href="#location">오시는 길</a></nav>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:56px">
+    <div class="wrap">
+      <dl class="contact-cards" id="contact-cards"></dl>
+    </div>
+  </section>
+
+  <section class="section" id="form">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">Inquiry</span>
+        <h2>문의 양식</h2>
+        <p class="note">보내 주신 내용은 <a data-site-email></a> 로 전달됩니다.</p>
+      </div>
+      <form class="form" id="inquiry" method="POST">
+        <input type="hidden" name="_subject" value="[홈페이지 문의] 새 문의가 도착했습니다">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="_next" id="next">
+        <div><label for="f-name">이름 <span class="req">*</span></label><input id="f-name" name="이름" required autocomplete="name"></div>
+        <div><label for="f-org">소속(기관·회사)</label><input id="f-org" name="소속" autocomplete="organization"></div>
+        <div><label for="f-tel">연락처 <span class="req">*</span></label><input id="f-tel" name="연락처" type="tel" required autocomplete="tel"></div>
+        <div><label for="f-email">이메일 <span class="req">*</span></label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+        <div class="full">
+          <label for="f-field">문의 분야</label>
+          <select id="f-field" name="문의 분야">
+            <option>경관</option><option>공공디자인</option><option>색채디자인</option><option>유니버설디자인</option><option>자문·심의</option><option>채용</option><option>기타</option>
+          </select>
+        </div>
+        <div class="full"><label for="f-msg">문의 내용 <span class="req">*</span></label><textarea id="f-msg" name="문의 내용" required placeholder="사업명, 위치, 일정 등을 알려주시면 더 빠르게 안내드릴 수 있습니다."></textarea></div>
+        <div class="full agree">
+          <input type="checkbox" id="f-agree" name="개인정보 수집 동의" value="동의함" required>
+          <label for="f-agree"><strong>개인정보 수집·이용에 동의합니다. (필수)</strong><br>
+            수집 항목: 이름, 소속, 연락처, 이메일 / 목적: 문의 답변 / 보관: 답변 후 1년.
+            <a href="privacy.html" target="_blank">자세히 보기</a></label>
+        </div>
+        <div class="full"><button class="btn" type="submit">문의 보내기</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section" id="location">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Location</span>
+          <h2 class="section-title">오시는 길</h2>
+        </div>
+      </div>
+      <iframe class="map" title="다원 도시디자인 위치 지도" loading="lazy"
+        src="https://maps.google.com/maps?q=%EC%84%9C%EC%9A%B8%20%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC%20%EC%97%AC%EC%9D%98%EB%82%98%EB%A3%A8%EB%A1%9C%2067&hl=ko&z=16&output=embed"></iframe>
+      <div class="map-links">
+        <a class="btn btn-line" target="_blank" rel="noopener" href="https://map.naver.com/p/search/%EC%97%AC%EC%9D%98%EB%82%98%EB%A3%A8%EB%A1%9C%2067">네이버 지도로 보기</a>
+        <a class="btn btn-line" target="_blank" rel="noopener" href="https://map.kakao.com/?q=%EC%97%AC%EC%9D%98%EB%82%98%EB%A3%A8%EB%A1%9C%2067">카카오맵으로 보기</a>
+      </div>
+      <dl class="overview" style="margin-top:40px">
+        <dt>주소</dt><dd data-site="address"></dd>
+        <dt>대중교통</dt><dd><span class="ph-tag">예시</span> 가까운 지하철역, 출구, 도보 시간 입력 예정</dd>
+        <dt>주차</dt><dd><span class="ph-tag">예시</span> 건물 주차 안내 입력 예정</dd>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer data-site-footer></footer>
+<script src="assets/js/site.js"></script>
+<script>
+  const cards = [["이메일", `<a href="mailto:${SITE.email}">${SITE.email}</a>`], ["전화", SITE.phone], ["팩스", SITE.fax], ["주소", SITE.addressShort]]
+    .filter(c => c[1]).slice(0, 3);
+  document.getElementById("contact-cards").innerHTML = cards.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+
+  const form = document.getElementById("inquiry");
+  form.action = SITE.formEndpoint;
+  document.getElementById("next").value = new URL("thanks.html", location.href).href;
+</script>
+</body>
+</html>
