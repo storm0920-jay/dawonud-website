@@ -17,7 +17,12 @@
 </head>
 <body data-page="index.html">
 
-<button class="plus float" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay"><i></i></button>
+<nav class="fixnav" aria-label="고정 메뉴" aria-hidden="true">
+  <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay" tabindex="-1"><i></i></button>
+  <span class="nav-ind"></span>
+  <a href="#about" class="c2" tabindex="-1">About</a><a href="#business" class="c4" tabindex="-1">Business</a><a href="#projects" class="c5" tabindex="-1">Projects</a>
+  <a href="#news" class="c6" tabindex="-1">News</a><a href="#careers" class="c7" tabindex="-1">Careers</a><a href="#contact" class="c8" tabindex="-1">Contact</a>
+</nav>
 
 <div class="overlay pad" id="overlay" role="dialog" aria-modal="true" aria-label="전체 메뉴" inert>
   <div class="bar"><span class="label">Dawon Urban Design</span><button class="close" type="button">Close ✕</button></div>
@@ -56,10 +61,19 @@
     <svg class="ray" aria-hidden="true"><line x1="0" y1="0" x2="0" y2="0"/><circle r="3.5"/></svg>
   </section>
 
-  <!-- 3D 단어 공간: 마우스를 움직이면 공간이 돌아갑니다 -->
-  <section class="space" id="space" aria-label="Landscape shapes the city">
-    <div class="space-cam"><div class="space-world" id="world"></div></div>
-    <p class="space-cap"><span>Landscape</span> <span>Shapes</span> <span>the City</span></p>
+  <!-- 스크롤 장면: 문구 → 검정 막 → 단어 공간 회전 → 위에서 본 상자 → 가운데 상자로 들어감 -->
+  <section class="journey" id="journey" aria-label="Landscape shapes cities. Cities shape everyday life.">
+    <div class="j-stage">
+      <div class="j-cam"><div class="j-world" id="world"></div></div>
+      <p class="j-line j1"><span>Landscape</span></p>
+      <p class="j-line j2"><span>Shapes</span></p>
+      <p class="j-line j3"><span>Cities</span></p>
+      <i class="j-band top"></i><i class="j-band bot"></i>
+      <p class="j-line jc"><span>Cities</span></p>
+      <p class="j-line j4"><span>Shape</span></p>
+      <p class="j-line j5"><span>Everyday Life</span></p>
+      <i class="j-fade"></i>
+    </div>
   </section>
 
   <!-- 세 가지 태도 -->
@@ -111,19 +125,6 @@
     </div>
   </section>
 
-  <!-- Projects -->
-  <section class="sec pad" id="projects">
-    <div class="sec-head">
-      <span class="label">Projects <span class="ko">사업실적</span></span>
-      <h2 class="mid"><span id="pj-total">91</span> projects across landscape and public design.</h2>
-    </div>
-    <ul class="works" id="works"></ul>
-    <div class="works-foot">
-      <button class="btn-o" type="button" id="more-works" data-magnet=".3">Load more</button>
-      <a class="btn-o" href="projects.html" data-magnet=".3">All Projects</a>
-    </div>
-  </section>
-
   <!-- Business -->
   <section class="light sec pad" id="business">
     <div class="sec-head">
@@ -136,6 +137,19 @@
       <li><a class="service fc-color" href="business.html#color" data-cursor="Explore"><span class="n">03</span><h3>Color Design<small>색채디자인</small></h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="ico" data-icon="color"></span></a></li>
       <li><a class="service fc-universal" href="business.html#universal" data-cursor="Explore"><span class="n">04</span><h3>Universal Design<small>유니버설디자인</small></h3><p>누구나 편하게 이동하고 쓰는 공간과 안내 체계를 설계합니다.</p><span class="ico" data-icon="universal"></span></a></li>
     </ul>
+  </section>
+
+  <!-- Projects -->
+  <section class="sec pad" id="projects">
+    <div class="sec-head">
+      <span class="label">Projects <span class="ko">사업실적</span></span>
+      <h2 class="mid"><span id="pj-total">91</span> projects across landscape and public design.</h2>
+    </div>
+    <ul class="works" id="works"></ul>
+    <div class="works-foot">
+      <button class="btn-o" type="button" id="more-works" data-magnet=".3">Load more</button>
+      <a class="btn-o" href="projects.html" data-magnet=".3">All Projects</a>
+    </div>
   </section>
 
   <!-- Process -->
@@ -238,62 +252,131 @@
   document.getElementById("pj-total").textContent = PROJECTS.length;
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // 첫 화면을 지나면 왼쪽 위에 + 버튼이 떠 있게
-  const mast = document.getElementById("mast"), floatPlus = document.querySelector(".plus.float");
-  new IntersectionObserver(([e]) => floatPlus.classList.toggle("show", !e.isIntersecting), { threshold: .05 }).observe(mast);
+  const mast = document.getElementById("mast");
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const seg = (p, a, b) => clamp((p - a) / (b - a));
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const mix = (a, b, t) => a + (b - a) * t;
 
-  // 메뉴에 올리면 왼쪽 + 에서 그 메뉴 눈금까지 굵은 선이 늘어남
-  const ind = mast.querySelector(".nav-ind");
-  mast.querySelectorAll(".mast-nav a").forEach(a => {
-    a.addEventListener("mouseenter", () => { ind.style.width = (a.offsetLeft - 20 + 16) + "px"; });
-    a.addEventListener("focus", () => { ind.style.width = (a.offsetLeft - 20 + 16) + "px"; });
-    a.addEventListener("mouseleave", () => { ind.style.width = "0px"; });
-    a.addEventListener("blur", () => { ind.style.width = "0px"; });
-  });
-
-  // 3D 단어 공간
-  (function space() {
-    const sec = document.getElementById("space"), world = document.getElementById("world");
-    const WORDS = ["Landscape", "Shapes", "Color", "Place", "People", "Street", "City", "Light", "Defines", "Refines"];
-    const SOFT = ["See", "Walk", "Feel", "Touch", "Hear", "Rest"];
-    const rnd = (a, b) => a + Math.random() * (b - a);
-    const G = 420;                     // 격자 한 칸
-    let html = "";
-    // 바닥 격자 위의 투명한 판과 상자
-    for (let x = -3; x <= 3; x++) for (let y = -3; y <= 3; y++) {
-      const z = Math.round(rnd(-1, 2)) * G * .5;
-      if (Math.random() < .55) html += `<i class="pane" style="transform:translate3d(${x * G}px,${y * G}px,${z}px)"></i>`;
-      if (Math.random() < .12) html += `<b class="box" style="transform:translate3d(${x * G}px,${y * G}px,${z}px)"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i><i class="f5"></i></b>`;
+  // ---------- 메뉴 줄: 첫 화면을 지나면 위에 고정, 굵은 선은 지금 보는 위치 ----------
+  const fixnav = document.querySelector(".fixnav");
+  const navs = [mast.querySelector(".mast-nav"), fixnav];
+  const order = ["about", "business", "projects", "news", "careers", "contact"];
+  let hoverX = null;
+  navs.forEach(nav => nav.querySelectorAll("a").forEach(a => {
+    a.addEventListener("mouseenter", () => { hoverX = a.offsetLeft + 16; });
+    a.addEventListener("mouseleave", () => { hoverX = null; });
+  }));
+  function navProgress() {
+    const links = [...navs[0].querySelectorAll("a")];
+    const ticks = links.map(a => a.offsetLeft + 16);
+    const tops = order.map(id => { const el = document.getElementById(id); return el ? el.getBoundingClientRect().top + scrollY : Infinity; });
+    const y = scrollY + innerHeight * .4;
+    let x;
+    if (y < tops[0]) x = mix(20, ticks[0], clamp((y - innerHeight) / (tops[0] - innerHeight)));
+    else {
+      let i = tops.length - 1;
+      while (i > 0 && y < tops[i]) i--;
+      const next = i + 1 < tops.length ? tops[i + 1] : document.documentElement.scrollHeight;
+      const endX = i + 1 < ticks.length ? ticks[i + 1] : navs[0].clientWidth;
+      x = mix(ticks[i], endX, clamp((y - tops[i]) / (next - tops[i])));
     }
-    // 판 위에 놓인 단어
-    for (let k = 0; k < 46; k++) {
-      const soft = Math.random() < .35;
-      const w = soft ? SOFT[k % SOFT.length] : WORDS[k % WORDS.length];
-      const x = rnd(-3.2, 3.2) * G, y = rnd(-3.2, 3.2) * G, z = rnd(-.2, 1.4) * G * .5;
-      const tone = soft ? "soft" : (Math.random() < .5 ? "far" : "");
-      const stand = soft ? ` rotateX(-90deg)` : "";
-      html += `<span class="word ${tone}" style="transform:translate3d(${x}px,${y}px,${z}px)${stand}">${w}</span>`;
+    const w = Math.max(0, (hoverX ?? x) - 20);
+    navs.forEach(n => { n.querySelector(".nav-ind").style.width = w + "px"; });
+    fixnav.classList.toggle("show", navs[0].getBoundingClientRect().bottom < 0);
+    fixnav.setAttribute("aria-hidden", !fixnav.classList.contains("show"));
+    fixnav.querySelectorAll("a, button").forEach(el => el.tabIndex = fixnav.classList.contains("show") ? 0 : -1);
+  }
+
+  // ---------- 스크롤 장면 ----------
+  const journey = document.getElementById("journey"), world = document.getElementById("world");
+  const J = s => journey.querySelector(s);
+  const L = { j1: J(".j1"), j2: J(".j2"), j3: J(".j3"), jc: J(".jc"), j4: J(".j4"), j5: J(".j5") };
+  const bandT = J(".j-band.top"), bandB = J(".j-band.bot"), fade = J(".j-fade"), stage = J(".j-stage"), cam = J(".j-cam");
+
+  (function build() {
+    const BRIGHT = ["Landscape", "Shapes", "Cities", "Color", "Place", "People", "Street", "Defines", "Everyday", "Public"];
+    const SOFT = ["See", "Walk", "Feel", "Touch", "Rest", "Hear"];
+    let r = 7; const rnd = () => (r = (r * 9301 + 49297) % 233280) / 233280;   // 매번 같은 배치
+    const G = 340;
+    let html = "";
+    // 바닥 위에 서 있는 투명한 상자들
+    for (let i = -4; i <= 4; i++) for (let j = -4; j <= 4; j++) {
+      if ((i + j) % 2 && !(i === 0 && j === 0)) continue;
+      const h = i === 0 && j === 0 ? 150 : 60 + Math.round(rnd() * 3) * 45;
+      html += `<b class="cube${i === 0 && j === 0 ? " core" : ""}" style="--h:${h}px;transform:translate3d(${i * G}px,${j * G}px,0)">
+        <i class="t"></i><i class="n"></i><i class="s"></i><i class="w"></i><i class="e"></i></b>`;
+    }
+    // 바닥에 줄지어 놓인 단어들
+    let k = 0;
+    for (let row = -11; row <= 11; row++) {
+      let x = -1900 + rnd() * 200;
+      while (x < 1900) {
+        const soft = rnd() < .3;
+        const word = soft ? SOFT[k % SOFT.length] : BRIGHT[k % BRIGHT.length];
+        const cls = soft ? "soft" : rnd() < .45 ? "dim" : "";
+        const center = row === 0 && Math.abs(x) < 240;
+        html += `<span class="w ${center ? "hero" : cls}" style="transform:translate3d(${center ? 0 : x}px,${row * 96}px,${soft ? 1 : 2}px)">${center ? "Everyday" : word}</span>`;
+        x += (soft ? 200 : 360) + rnd() * 120;
+        k++;
+      }
     }
     world.innerHTML = html;
-
-    const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let tx = 0, ty = 0, cx = 0, cy = 0, visible = false;
-    if (fine) sec.addEventListener("mousemove", e => {
-      const r = sec.getBoundingClientRect();
-      tx = (e.clientX - r.left) / r.width - .5; ty = (e.clientY - r.top) / r.height - .5;
-    });
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(sec);
-    function tick(t) {
-      if (visible) {
-        if (!fine && !calm) { tx = Math.sin(t / 3000) * .35; ty = Math.cos(t / 3700) * .25; }
-        cx += (tx - cx) * .06; cy += (ty - cy) * .06;
-        world.style.transform = `rotateX(${56 - cy * 22}deg) rotateZ(${-24 + cx * 40}deg) translate3d(${cx * -260}px, ${cy * -200}px, 0)`;
-      }
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
   })();
+
+  // 카메라 장면 (p: 0~1 스크롤 위치) — 정면 → 비스듬히 → 세로 → 옆에서 → 위에서 → 가운데 상자로
+  const KEYS = [
+    { p: .34, rx: 0, rz: 0, z: -300 },
+    { p: .46, rx: 18, rz: -20, z: -120 },
+    { p: .56, rx: 32, rz: -68, z: 0 },
+    { p: .64, rx: 74, rz: -92, z: 60 },
+    { p: .74, rx: 0, rz: -90, z: -200 },
+    { p: .95, rx: 0, rz: -90, z: 760 },
+  ];
+  function camAt(p) {
+    if (p <= KEYS[0].p) return KEYS[0];
+    for (let i = 0; i < KEYS.length - 1; i++) {
+      const a = KEYS[i], b = KEYS[i + 1];
+      if (p <= b.p) { const t = ease((p - a.p) / (b.p - a.p)); return { rx: mix(a.rx, b.rx, t), rz: mix(a.rz, b.rz, t), z: mix(a.z, b.z, t) }; }
+    }
+    return KEYS[KEYS.length - 1];
+  }
+  const fineJ = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  let mx = 0, my = 0, sx = 0, sy = 0;
+  if (fineJ) addEventListener("mousemove", e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; }, { passive: true });
+
+  const rise = (el, t) => { el.firstElementChild.style.transform = `translateY(${(1 - ease(t)) * 110}%)`; };
+  function scene() {
+    const r = journey.getBoundingClientRect();
+    const p = clamp(-r.top / (r.height - innerHeight));
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    // 1) 밝은 바탕에 문구 세 줄이 차례로 올라옴
+    rise(L.j1, seg(p, .0, .06)); rise(L.j2, seg(p, .02, .08)); rise(L.j3, seg(p, .04, .10));
+    const out1 = seg(p, .12, .17);
+    L.j1.style.opacity = L.j2.style.opacity = L.j3.style.opacity = 1 - out1;
+    // 2) 위아래에서 검정 막이 닫히고 가운데 단어만 남음
+    const band = ease(seg(p, .12, .2));
+    bandT.style.transform = bandB.style.transform = `scaleY(${band})`;
+    L.jc.style.opacity = seg(p, .12, .15) * (1 - seg(p, .3, .34));
+    L.jc.classList.toggle("on-dark", band > .96);
+    stage.classList.toggle("dark", band > .96);
+    // 3) 다음 문구
+    rise(L.j4, seg(p, .2, .25)); rise(L.j5, seg(p, .22, .27));
+    L.j4.style.opacity = L.j5.style.opacity = 1 - seg(p, .3, .34);
+    // 4) 단어 공간
+    sx += (mx - sx) * .08; sy += (my - sy) * .08;
+    const c = camAt(p);
+    cam.style.opacity = seg(p, .29, .35);
+    world.style.transform = `translateZ(${c.z}px) rotateX(${c.rx + sy * 6}deg) rotateZ(${c.rz + sx * 8}deg)`;
+    // 5) 가운데 상자 안으로 들어가며 다음 화면(밝은 바탕)으로
+    world.style.setProperty("--core", seg(p, .8, .9));
+    fade.style.opacity = seg(p, .9, .97);
+  }
+
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (calm) journey.classList.add("calm");
+  function loop() { navProgress(); if (!calm) scene(); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
 
   // 흑백 반전
   const inv = document.querySelector(".invert");
@@ -323,7 +406,7 @@
 
   // 전체 화면 메뉴
   const ov = document.getElementById("overlay"), pluses = document.querySelectorAll(".plus");
-  let mb = pluses[1];
+  let mb = pluses[0];
   function menu(open) {
     ov.classList.toggle("open", open);
     ov.inert = !open;
