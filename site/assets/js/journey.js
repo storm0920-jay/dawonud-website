@@ -22,7 +22,7 @@ const CONFIG = {
   s1: { from: 0, to: .04, rise: .4, right: .62, centerY: .45, barW: .09 },     // 녹화 1~2초
   s2: { close: [.04, .06], narrow: [.06, .075], end: .08 },                    // 녹화 2초
   s3: { l2: [.08, .10], l3: [.09, .11], indent: 2 },                           // 녹화 3초
-  s4: { merge: [.11, .15], field: [.11, .16], handOff: .16 },                  // 녹화 4~5초
+  s4: { merge: [.11, .15], reveal: [.14, .19], handOff: .11 },                 // 녹화 4~5초. 세 줄이 모두 3D 상자 앞면으로 넘어가 3D 안에서 모이고, 모인 뒤 주변이 가까운 순서로 나타남
 
   // 상자 공간 (단위: 상자 한 변 = 1). 층: [층 번호(높이), 열, 깊이, 불투명도]
   cubes: {
@@ -90,34 +90,45 @@ const CONFIG = {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(15, 1, .5, 500);
   const U = { uCycle: { value: 0 }, uAlign: { value: 0 }, uMid: { value: 1 }, uAlpha: { value: 0 }, uDiag: { value: 1 },
-              uCore: { value: 0 }, uWords: { value: 1 }, uMap: { value: null } };
+              uWords: { value: 1 }, uMap: { value: null }, uReveal: { value: 0 }, uSeq: { value: 1 }, uD: { value: 8 },
+              uO2: { value: new THREE.Vector2() }, uO3: { value: new THREE.Vector2() } };
   const common = `
     attribute vec4 aBox;   // x, 층 높이, z, 층 불투명도
-    attribute vec4 aInfo;  // 열 엇갈림, 가운데 층 여부, 피벗 단어 여부
-    uniform float uCycle, uAlign, uMid, uAlpha;
+    attribute vec4 aInfo;  // 열 엇갈림, 가운데 층 여부, 세 줄 상자 번호(1 Place, 2 Defines, 3 Life), 가운데에서의 거리(0~1)
+    uniform float uCycle, uAlign, uMid, uAlpha, uReveal;
     varying float vOp;
+    float rev;
     float lstag(float y) { return y <= 0. ? 0. : y <= 1. ? .25 * y : y <= 2. ? .25 + .5 * (y - 1.) : .75 + (y - 2.); }
     float midOp(float y) { return y < -1. ? .4 * (y + 1.5) : y < 0. ? mix(.2, 1., y + 1.) : y <= 4. ? 1. : max(0., 1. - (y - 4.) * 2.); }
     vec3 boxAt() {
       float y = aBox.y; vOp = aBox.w;
       if (aInfo.y > .5) { y = mod(aBox.y - uCycle + 1.5, 6.) - 1.5; vOp = midOp(y) * uMid; }
-      vOp *= uAlpha;
+      rev = clamp(uReveal * 1.8 - aInfo.w * .8, 0., 1.);
+      vOp *= uAlpha * rev;
       return vec3(aBox.x, y, aBox.z - (aInfo.x + lstag(y)) * (1. - uAlign));
     }`;
-  const proj = `gl_Position = projectionMatrix * modelViewMatrix * vec4(boxAt() + local, 1.);`;
+  const proj = `gl_Position = projectionMatrix * modelViewMatrix * vec4(bp + local, 1.);`;
   const mat = (vs, fs, depthWrite, order) => {
     const m = new THREE.ShaderMaterial({ uniforms: U, vertexShader: common + vs, fragmentShader: fs, transparent: true, depthWrite, side: THREE.DoubleSide });
     m._order = order; return m;
   };
-  const faceMat = mat(`attribute float aFace; varying float vFace; void main(){ vec3 local = position; vFace = aFace; ${proj} }`,
+  const faceMat = mat(`attribute float aFace; varying float vFace; void main(){ vec3 bp = boxAt(); vec3 local = position; vFace = aFace; ${proj} }`,
     `varying float vOp; varying float vFace; void main(){ gl_FragColor = vec4(vec3(.067), vFace * vOp); }`, false, 2);
-  const lineMat = mat(`attribute float aDiag; uniform float uDiag; void main(){ vec3 local = position; vOp *= mix(1., uDiag, aDiag); ${proj} }`,
+  const lineMat = mat(`attribute float aDiag; uniform float uDiag; void main(){ vec3 bp = boxAt(); vec3 local = position; vOp *= mix(1., uDiag, aDiag); ${proj} }`,
     `varying float vOp; void main(){ gl_FragColor = vec4(.949, .941, .941, ${C.cubes.line} * vOp); if (gl_FragColor.a < .003) discard; }`, true, 0);
   const wordFS = `uniform sampler2D uMap; uniform float uWords; varying float vOp; varying vec2 vUv;
     void main(){ float a = texture2D(uMap, vUv).a * vOp * uWords; if (a < .02) discard; gl_FragColor = vec4(.941, .941, .941, a); }`;
-  const wordVS = (place) => `attribute vec4 aUV; attribute vec2 aSize; uniform float uCore, uWords; varying vec2 vUv;
-    void main(){ vUv = mix(aUV.xy, aUV.zw, uv); ${place} vOp *= mix(1., uCore, aInfo.z); ${proj} }`;
-  const frontMat = mat(wordVS(`vec3 local = vec3(position.xy * aSize, .502);`), wordFS, true, 1);
+  // 세 줄 상자(Place·Defines·Life)의 단어는 주변보다 먼저 보이고, Defines·Life는 처음엔 HTML 때와 같은 자리·크기(깊이 보정)에서 시작해 Place 자리로 모임
+  const wordVS = (place, front) => `attribute vec4 aUV; attribute vec2 aSize; uniform float uWords, uSeq, uD; uniform vec2 uO2, uO3; varying vec2 vUv;
+    void main(){ vec3 bp = boxAt(); vUv = mix(aUV.xy, aUV.zw, uv);
+      float z = ${front ? "aInfo.z" : "0."}, k = max(z - 1., 0.), comp = mix(1., (uD + k) / uD, uSeq);
+      vec2 off = z > 2.5 ? uO3 : z > 1.5 ? uO2 : vec2(0.);
+      off = vec2(off.x, off.y * uSeq) * comp;
+      ${place}
+      local.xy = local.xy * (z > 1.5 ? comp : 1.) + (z > 1.5 ? off : vec2(0.));
+      if (z > .5) vOp = uAlpha * (z > 1.5 ? .75 : 1.);
+      ${proj} }`;
+  const frontMat = mat(wordVS(`vec3 local = vec3(position.xy * aSize, .502);`, true), wordFS, true, 1);
   // 옆면 단어: 왼쪽 면에 90° 돌려 붙임 (아래에서 위로 읽힘)
   const sideMat = mat(wordVS(`vec3 local = vec3(-.502, position.x * aSize.x, -position.y * aSize.y);`), wordFS, true, 1);
 
@@ -146,7 +157,7 @@ const CONFIG = {
 
   // 단어 그림판: 글자를 한 장의 텍스처에 모아 그림 (HTML 글자와 같은 서체·자간·줄 높이)
   function buildAtlas() {
-    const words = [...Wd.field, ...Wd.sense, Wd.first[2]];
+    const words = [...Wd.field, ...Wd.sense, Wd.first[2], ...Wd.second];
     const F = 160, lead = C.type.leading, pad = 12, fam = getComputedStyle(stage).fontFamily;
     const cv = document.createElement("canvas"), cx = cv.getContext("2d");
     const font = () => { cx.font = `400 ${F}px ${fam}`; cx.letterSpacing = (-.02 * F) + "px"; cx.fillStyle = "#fff"; };
@@ -188,11 +199,12 @@ const CONFIG = {
       const mid = L >= C.cubes.middle[0] && L <= C.cubes.middle[1];
       for (let c = -(cols - 1) / 2; c <= (cols - 1) / 2; c++) for (let d = -(depth - 1) / 2; d <= (depth - 1) / 2; d++) {
         if (K.well && L === K.layers[0][0] && c === 0 && d === 0) continue;
-        const core = L === 0 && c === 0 && d === (depth - 1) / 2;   // 맨 앞줄 가운데 상자의 앞면 = 피벗 단어 "Place"
+        // 가운데 줄 세 상자(앞에서부터 Place, Defines, Life)가 화면에서 겹쳐 서 있음. 망원 카메라라 한 점에 모여 보임
+        const stack = L === 0 && c === 0 ? 1 + ((depth - 1) / 2 - d) : 0;
         box.push(c, L, d, op);
-        info.push(Math.min(K.stagger.colMax, Math.abs(c) * K.stagger.col), mid ? 1 : 0, core ? 1 : 0, 0);
+        info.push(Math.min(K.stagger.colMax, Math.abs(c) * K.stagger.col), mid ? 1 : 0, stack, Math.min(1, Math.hypot(c, L * .5, d - (depth - 1) / 2) / 7));
         const sh = K.shift, k = L * sh.layer + c * sh.col - d * sh.depth;
-        const fr = core ? rects[nf + ns] : rects[mod(k, nf)], sr = rects[nf + mod(k, ns)];
+        const fr = stack ? rects[nf + ns + stack - 1] : rects[mod(k, nf)], sr = rects[nf + mod(k, ns)];
         fUV.push(...fr.uv); fSize.push(fr.w * K.word, fr.h * K.word);
         sUV.push(...sr.uv); sSize.push(sr.w * K.side, sr.h * K.side);
       }
@@ -220,6 +232,10 @@ const CONFIG = {
     l5.style.left = pv.left + "px"; l5.style.top = (pv.top + 2 * lh) + "px";
     bar.style.width = (W * C.s1.barW) + "px";
     bar.style.left = (pv.left - W * C.s1.barW - fs * .4) + "px"; bar.style.top = (pv.top + lh * 1.25) + "px";
+    // 3D로 넘어갈 때 Defines·Life가 HTML과 같은 자리에서 시작하도록 (1단위 = 글자 크기 / word)
+    const u = fs / C.cubes.word;
+    U.uO2.value.set((pv.left + C.s3.indent * fs + l4.offsetWidth / 2 - pv.cx) / u, -lh / u);
+    U.uO3.value.set((pv.left + l5.offsetWidth / 2 - pv.cx) / u, -2 * lh / u);
     if (gl) { gl.setPixelRatio(Math.min(devicePixelRatio, 2)); gl.setSize(W, H, false); }
   }
 
@@ -246,7 +262,7 @@ const CONFIG = {
     let fov = 2 * Math.atan(V / 2 / d) / D;
     const dv = io(seg(p, C.dive.range));
     if (dv > 0) { V = mix(V, C.dive.view, dv); fov = mix(fov, C.dive.fov, dv); d = V / 2 / Math.tan(fov * D / 2); }
-    camera.fov = fov;
+    camera.fov = fov; U.uD.value = d;
     qA.setFromEuler(ex.set(-k.tilt * D, 0, 0));
     qB.setFromEuler(ex.set(0, 0, k.roll * D)); qA.multiply(qB);
     qB.setFromEuler(ex.set(tilt.y * C.tilt.y * D, -tilt.x * C.tilt.x * D, 0, "YXZ")); qA.multiply(qB);
@@ -306,8 +322,9 @@ const CONFIG = {
 
     // 5~9단계: 상자 공간
     tilt.on = !calm && p > C.s4.handOff && p < C.dive.range[0];
-    U.uAlpha.value = seg(p, C.s4.field);
-    U.uCore.value = handOff ? 1 : 0;
+    U.uAlpha.value = handOff ? 1 : 0;
+    U.uSeq.value = 1 - io(seg(p, C.s4.merge));          // 1: 세 줄이 HTML 때처럼 벌어진 상태, 0: 한 점으로 모인 상태
+    U.uReveal.value = seg(p, C.s4.reveal);
     U.uCycle.value = C.cycle.steps * seg(p, C.cycle.range);
     const m = io(seg(p, C.middleOut));
     U.uMid.value = 1 - m; U.uDiag.value = 1 - m; U.uAlign.value = m;
@@ -333,7 +350,7 @@ const CONFIG = {
     [l4, l5].forEach(el => { set(el.firstElementChild, "transform", "none"); set(el, "opacity", String(seg(p, K.second))); });
     const f = seg(p, K.field);
     [pivot, l4, l5].forEach(el => set(el, "visibility", f >= 1 ? "hidden" : "visible"));
-    U.uAlpha.value = f * (1 - seg(p, K.image)); U.uCore.value = f >= 1 ? 1 : 0;
+    U.uAlpha.value = f * (1 - seg(p, K.image)); U.uSeq.value = 0; U.uReveal.value = 1;
     U.uWords.value = 1 - seg(p, K.wordsOut);
     set(canvas, "opacity", U.uAlpha.value > 0 ? "1" : "0");
     placeCamera(C.s4.handOff);
@@ -350,7 +367,7 @@ const CONFIG = {
   draw(0);
   gsap.registerPlugin(ScrollTrigger);
   // 1~4단계만 확인할 때는 4단계 끝(단어 공간이 다 깔린 상태)에서 멈추고 스크롤 길이도 그만큼만
-  const last = C.upTo >= 9 ? 1 : C.s4.field[1];
+  const last = C.upTo >= 9 ? 1 : C.s4.reveal[1];
   journey.style.height = `calc(100vh + ${C.scroll.length * last}vh)`;
   gsap.to(state, {
     p: last, ease: "none",
