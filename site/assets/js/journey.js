@@ -31,7 +31,7 @@ const CONFIG = {
     middle: [-1, 4],                                   // 흐르다 사라지는 가운데 층(11×3)
     faces: { front: .7, left: .4, right: .2, top: .6 }, // 면 불투명도
     line: .2,                                          // 모서리 선 불투명도 (1px)
-    word: .175, side: .12,                             // 글자 크기 (상자 높이 대비)
+    word: .175, side: .175,                            // 글자 크기 (상자 높이 대비). 옆면 동사도 앞면 명사와 같은 크기·재질
     shift: { layer: 5, col: 2, depth: 1 },             // 단어 순환: 층마다 5칸, 열마다 2칸, 깊이마다 1칸 밀기
     stagger: { col: .25, colMax: 1 },                  // 가운데에서 먼 열일수록 뒤로 밀림 (층 엇갈림은 셰이더의 lstag)
     well: true,                                        // 꼭대기 층 가운데 상자를 비워 우물처럼 (바닥에 이미지)
@@ -85,7 +85,7 @@ const CONFIG = {
   const reveal = $(".j-reveal"), img = reveal.firstElementChild;
 
   // ---------- 3D 상자 공간 (three.js) ----------
-  let gl = null;
+  let gl = null, sorter = null;
   try { gl = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { gl = null; }
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(15, 1, .5, 500);
@@ -112,10 +112,10 @@ const CONFIG = {
     const m = new THREE.ShaderMaterial({ uniforms: U, vertexShader: common + vs, fragmentShader: fs, transparent: true, depthWrite, side: THREE.DoubleSide });
     m._order = order; return m;
   };
-  const faceMat = mat(`attribute float aFace; varying float vFace; void main(){ vec3 bp = boxAt(); vec3 local = position; vFace = aFace; ${proj} }`,
+  const faceMat = mat(`attribute float aFace; varying float vFace; void main(){ vec3 bp = boxAt(); vec3 local = position; vFace = aFace; if (abs(bp.y) < .5 && abs(aFace - ${C.cubes.faces.top}) < .001) vFace = 0.; ${proj} }`,   // 층 0은 위판 없음
     `varying float vOp; varying float vFace; void main(){ gl_FragColor = vec4(vec3(.067), vFace * vOp); }`, false, 2);
   const lineMat = mat(`attribute float aDiag; uniform float uDiag; void main(){ vec3 bp = boxAt(); vec3 local = position; vOp *= mix(1., uDiag, aDiag); ${proj} }`,
-    `varying float vOp; void main(){ gl_FragColor = vec4(.949, .941, .941, ${C.cubes.line} * vOp); if (gl_FragColor.a < .003) discard; }`, true, 0);
+    `varying float vOp; void main(){ gl_FragColor = vec4(.949, .941, .941, ${C.cubes.line} * vOp); if (gl_FragColor.a < .003) discard; }`, false, 0);   // 선·면은 깊이를 기록하지 않음 (뒤의 선이 비쳐 보임)
   const wordFS = `uniform sampler2D uMap; uniform float uWords; varying float vOp; varying vec2 vUv;
     void main(){ float a = texture2D(uMap, vUv).a * vOp * uWords; if (a < .02) discard; gl_FragColor = vec4(.941, .941, .941, a); }`;
   // 세 줄 상자(Place·Defines·Life)의 단어는 주변보다 먼저 보이고, Defines·Life는 처음엔 HTML 때와 같은 자리·크기(깊이 보정)에서 시작해 Place 자리로 모임
@@ -126,11 +126,11 @@ const CONFIG = {
       off = vec2(off.x, off.y * uSeq) * comp;
       ${place}
       local.xy = local.xy * (z > 1.5 ? comp : 1.) + (z > 1.5 ? off : vec2(0.));
-      if (z > .5) vOp = uAlpha * (z > 1.5 ? .75 : 1.);
+      if (z > .5) vOp = uAlpha * (z > 1.5 ? mix(1., .75, uSeq) : 1.);
       ${proj} }`;
-  const frontMat = mat(wordVS(`vec3 local = vec3(position.xy * aSize, .502);`, true), wordFS, true, 1);
+  const frontMat = mat(wordVS(`vec3 local = vec3(position.xy * aSize, .501);`, true), wordFS, true, 1);
   // 옆면 단어: 왼쪽 면에 90° 돌려 붙임 (아래에서 위로 읽힘)
-  const sideMat = mat(wordVS(`vec3 local = vec3(-.502, position.x * aSize.x, -position.y * aSize.y);`), wordFS, true, 1);
+  const sideMat = mat(wordVS(`vec3 local = vec3(-.501, position.y * aSize.y, -position.x * aSize.x);`), wordFS, true, 1);
 
   // 상자 하나의 면 4개(앞, 왼쪽, 오른쪽, 위)와 모서리 12개 + 윗면 대각선
   function boxGeometries() {
@@ -213,8 +213,11 @@ const CONFIG = {
     const { faces, lines } = boxGeometries();
     const add = (o, m) => { o.frustumCulled = false; o.renderOrder = m._order; scene.add(o); };
     add(new THREE.LineSegments(inst(lines, B, n), lineMat), lineMat);
-    add(new THREE.Mesh(inst(plane, { ...B, aUV: { a: fUV, n: 4 }, aSize: { a: fSize, n: 2 } }, n), frontMat), frontMat);
-    add(new THREE.Mesh(inst(plane, { ...B, aUV: { a: sUV, n: 4 }, aSize: { a: sSize, n: 2 } }, n), sideMat), sideMat);
+    const fg = inst(plane, { ...B, aUV: { a: fUV, n: 4 }, aSize: { a: fSize, n: 2 } }, n), sg = inst(plane, { ...B, aUV: { a: sUV, n: 4 }, aSize: { a: sSize, n: 2 } }, n);
+    add(new THREE.Mesh(fg, frontMat), frontMat);
+    add(new THREE.Mesh(sg, sideMat), sideMat);
+    // 단어는 깊이를 기록하므로 먼 것부터 그려야 겹친 글자가 깨지지 않음 (three.js가 조각마다 정렬하는 것과 같은 효과)
+    sorter = { n, box, info, sets: [[fg, { aBox: box, aInfo: info, aUV: fUV, aSize: fSize }], [sg, { aBox: box, aInfo: info, aUV: sUV, aSize: sSize }]], key: "" };
     add(new THREE.Mesh(inst(faces, B, n), faceMat), faceMat);
   }
   if (gl) buildWorld();
@@ -304,7 +307,25 @@ const CONFIG = {
   }
 
   let lastP = 0;
-  function paint() { if (gl && U.uAlpha.value > 0) gl.render(scene, camera); }
+  const lstag = y => y <= 0 ? 0 : y <= 1 ? .25 * y : y <= 2 ? .25 + .5 * (y - 1) : .75 + (y - 2);
+  function sortWords() {
+    const S = sorter; if (!S) return;
+    camera.updateMatrixWorld();
+    const e = camera.matrixWorldInverse.elements, key = [...e, U.uAlign.value].map(v => v.toFixed(3)).join();
+    if (key === S.key) return; S.key = key;
+    const vz = new Float32Array(S.n);
+    for (let i = 0; i < S.n; i++) {
+      const x = S.box[i * 4], y = S.box[i * 4 + 1], z = S.box[i * 4 + 2] - (S.info[i * 4] + lstag(y)) * (1 - U.uAlign.value);
+      vz[i] = e[2] * x + e[6] * y + e[10] * z + e[14];     // 카메라 기준 깊이 (작을수록 멂)
+    }
+    const order = Array.from(vz.keys()).sort((a, b) => vz[a] - vz[b]);
+    for (const [g, src] of S.sets) for (const k in src) {
+      const at = g.attributes[k], sz = at.itemSize, a = at.array, s = src[k];
+      order.forEach((o, j) => { for (let m = 0; m < sz; m++) a[j * sz + m] = s[o * sz + m]; });
+      at.needsUpdate = true;
+    }
+  }
+  function paint() { if (gl && U.uAlpha.value > 0) { sortWords(); gl.render(scene, camera); } }
 
   function render(p) {
     lastP = p;
