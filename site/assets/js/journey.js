@@ -22,7 +22,7 @@ const CONFIG = {
   s1: { from: 0, to: .04, rise: .4, right: .62, centerY: .45, barW: .09 },     // 녹화 1~2초
   s2: { close: [.04, .06], narrow: [.06, .075], end: .08 },                    // 녹화 2초
   s3: { l2: [.08, .10], l3: [.09, .11], indent: 2 },                           // 녹화 3초
-  s4: { merge: [.11, .15], reveal: [.14, .19], handOff: .11 },                 // 녹화 4~5초. 세 줄이 모두 3D 상자 앞면으로 넘어가 3D 안에서 모이고, 모인 뒤 주변이 가까운 순서로 나타남
+  s4: { merge: [.11, .15], reveal: [.135, .17], handOff: .11 },                 // 녹화 4~5초. 세 줄이 모두 3D 상자 앞면으로 넘어가 3D 안에서 모이고, 모인 뒤 주변이 가까운 순서로 나타남
 
   // 상자 공간 (단위: 상자 한 변 = 1). 층: [층 번호(높이), 열, 깊이, 불투명도]
   cubes: {
@@ -38,7 +38,7 @@ const CONFIG = {
   },
   // 카메라: tilt 정면→위(도), roll 화면 시계 방향 회전(도). 녹화 기준
   camera: [
-    { p: .16, tilt: 0, roll: 0 },            // 5초: 정면
+    { p: .17, tilt: 0, roll: 0 },            // 5초: 정면 (주변 단어가 다 나타난 뒤 회전 시작)
     { p: .20, tilt: 12, roll: 25 },          // 6초
     { p: .23, tilt: 25, roll: 45 },          // 7~8초
     { p: .26, tilt: 40, roll: 62 },          // 9~10초
@@ -48,10 +48,10 @@ const CONFIG = {
     { p: .55, tilt: 90, roll: 176 },         // 16~21초: 위에서 본 상자 격자
     { p: .78, tilt: 90, roll: 180 },         // 27초
   ],
-  orbit: { range: [.16, .39], dist: [8, 18.5], zoomOut: .6 },   // 반원 궤도: 거리 8 → 18.5(높이 약 25), 줌 1 → 0.6
+  orbit: { range: [.17, .39], dist: [8, 18.5], zoomOut: .6 },   // 반원 궤도: 거리 8 → 18.5(높이 약 25), 줌 1 → 0.6
   cycle: { range: [.18, .25], steps: 3 },              // 가운데 층이 한 칸씩 3번 흐름
   middleOut: [.25, .39],                               // 가운데 층·윗면 대각선이 사라지고 엇갈린 열이 반듯해짐
-  centre: [.16, .40],                                  // 피벗 단어 자리에서 화면 정중앙으로
+  centre: [.17, .40],                                  // 피벗 단어 자리에서 화면 정중앙으로
   hold: { range: [.39, .76], push: .85 },              // 상자만 남아 천천히 다가감
   dive: { range: [.76, .95], fov: 30, view: .9 },      // 가운데 상자로 내려감 (화각 30°로 넓어지며 벽이 보임)
   image: { in: [.76, .82], fill: [.90, .95], zoom: [.95, 1], scale: 1.25 },
@@ -88,7 +88,7 @@ const CONFIG = {
   let gl = null, sorter = null;
   try { gl = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { gl = null; }
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(15, 1, .5, 500);
+  const camera = new THREE.PerspectiveCamera(15, 1, .1, 1000);
   const U = { uCycle: { value: 0 }, uAlign: { value: 0 }, uMid: { value: 1 }, uAlpha: { value: 0 }, uDiag: { value: 1 },
               uWords: { value: 1 }, uMap: { value: null }, uReveal: { value: 0 }, uSeq: { value: 1 }, uD: { value: 8 },
               uO2: { value: new THREE.Vector2() }, uO3: { value: new THREE.Vector2() } };
