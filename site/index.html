@@ -17,14 +17,7 @@
 </head>
 <body data-page="index.html">
 
-<header class="top pad">
-  <a class="logo" href="#top" aria-label="다원 도시디자인 처음으로">DAWON<span>Urban Design</span></a>
-  <nav aria-label="주 메뉴">
-    <a href="#about">About</a><a href="#business">Business</a><a href="#projects">Projects</a>
-    <a href="#news">News</a><a href="#careers">Careers</a><a href="#contact">Contact</a>
-  </nav>
-  <button class="menu-btn" data-magnet=".3" type="button" aria-expanded="false" aria-controls="overlay">Menu <i></i></button>
-</header>
+<button class="plus float" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay"><i></i></button>
 
 <div class="overlay pad" id="overlay" role="dialog" aria-modal="true" aria-label="전체 메뉴" inert>
   <div class="bar"><span class="label">Dawon Urban Design</span><button class="close" type="button">Close ✕</button></div>
@@ -41,17 +34,25 @@
 
 <main id="top">
   <!-- 첫 화면 -->
-  <section class="hero pad">
-    <img class="hero-art" src="assets/img/line-city.svg" alt="" aria-hidden="true">
-    <div>
-      <h1>Urban design studio<br>built on place,<br><em>color and people.</em></h1>
-      <p class="ko-line">도시의 풍경과 색을 디자인합니다.</p>
+  <section class="mast" id="mast">
+    <h1 class="mast-word" aria-label="DAWON"><span>D</span><span>A</span><span>W</span><span>O</span><span>N</span></h1>
+    <nav class="mast-nav" aria-label="주 메뉴">
+      <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay"><i></i></button>
+      <a href="#about" class="c2">About</a>
+      <a href="#business" class="c4">Business</a>
+      <a href="#projects" class="c5">Projects</a>
+      <a href="#news" class="c6">News</a>
+      <a href="#careers" class="c7">Careers</a>
+      <a href="#contact" class="c8">Contact</a>
+    </nav>
+    <span class="vline v2" aria-hidden="true"></span><span class="vline v5" aria-hidden="true"></span>
+    <p class="mast-note">Clear plans.<br>Quiet streets.</p>
+    <div class="mast-lead">
+      <p class="mast-head"><span>Urban design studio</span><span>built on place, color</span><span>and people.</span></p>
+      <p class="mast-ko">도시의 풍경과 색을 디자인합니다.</p>
     </div>
-    <div class="hero-foot">
-      <p>Landscape Shapes the City</p>
-      <p>Clear plans. Quiet streets.</p>
-      <p class="scroll-cue">Scroll to discover</p>
-    </div>
+    <button class="invert" type="button" aria-pressed="false">Invert color</button>
+    <svg class="ray" aria-hidden="true"><line x1="0" y1="0" x2="0" y2="0"/><circle r="3.5"/></svg>
   </section>
 
   <!-- 세 가지 태도 -->
@@ -230,17 +231,39 @@
   document.getElementById("pj-total").textContent = PROJECTS.length;
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // 아래로 내릴 때는 머리말을 숨기고, 위로 올리면 다시 보여줍니다
-  let lastY = scrollY;
-  const topBar = document.querySelector(".top");
-  addEventListener("scroll", () => {
-    const y = scrollY;
-    topBar.classList.toggle("hide", y > 200 && y > lastY);
-    lastY = y;
-  }, { passive: true });
+  // 첫 화면을 지나면 왼쪽 위에 + 버튼이 떠 있게
+  const mast = document.getElementById("mast"), floatPlus = document.querySelector(".plus.float");
+  new IntersectionObserver(([e]) => floatPlus.classList.toggle("show", !e.isIntersecting), { threshold: .05 }).observe(mast);
+
+  // 흑백 반전
+  const inv = document.querySelector(".invert");
+  try { if (localStorage.getItem("dawon-invert") === "1") document.documentElement.classList.add("inverted"); } catch (e) {}
+  inv.setAttribute("aria-pressed", document.documentElement.classList.contains("inverted"));
+  inv.addEventListener("click", () => {
+    const on = document.documentElement.classList.toggle("inverted");
+    inv.setAttribute("aria-pressed", on);
+    try { localStorage.setItem("dawon-invert", on ? "1" : "0"); } catch (e) {}
+  });
+
+  // 왼쪽 위 모서리에서 마우스를 지나 화면 끝까지 이어지는 가는 사선
+  const ray = mast.querySelector(".ray"), line = ray.querySelector("line"), dot = ray.querySelector("circle");
+  let rx = innerWidth * .27, ry = innerHeight * .3, tx = rx, ty = ry;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (fine) mast.addEventListener("mousemove", e => { const r = mast.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; });
+  function drawRay(t) {
+    const W = mast.clientWidth, H = mast.clientHeight;
+    if (!fine) { tx = W * (.27 + Math.sin(t / 2400) * .06); ty = H * (.3 + Math.cos(t / 3100) * .05); }
+    rx += (tx - rx) * .12; ry += (ty - ry) * .12;
+    const k = Math.min(W / Math.max(rx, 1), H / Math.max(ry, 1));
+    line.setAttribute("x2", rx * k); line.setAttribute("y2", ry * k);
+    dot.setAttribute("cx", rx); dot.setAttribute("cy", ry);
+    requestAnimationFrame(drawRay);
+  }
+  requestAnimationFrame(drawRay);
 
   // 전체 화면 메뉴
-  const ov = document.getElementById("overlay"), mb = document.querySelector(".menu-btn");
+  const ov = document.getElementById("overlay"), pluses = document.querySelectorAll(".plus");
+  let mb = pluses[1];
   function menu(open) {
     ov.classList.toggle("open", open);
     ov.inert = !open;
@@ -248,7 +271,7 @@
     document.body.style.overflow = open ? "hidden" : "";
     if (open) ov.querySelector(".close").focus(); else mb.focus();
   }
-  mb.addEventListener("click", () => menu(true));
+  pluses.forEach(b => b.addEventListener("click", () => { mb = b; menu(true); }));
   ov.querySelector(".close").addEventListener("click", () => menu(false));
   document.addEventListener("keydown", e => { if (e.key === "Escape" && ov.classList.contains("open")) menu(false); });
 </script>

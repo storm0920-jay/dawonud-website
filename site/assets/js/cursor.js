@@ -31,7 +31,7 @@
   addEventListener("mouseup", () => cur.classList.remove("press"));
 
   // 2) 첫 화면
-  const hero = document.querySelector(".hero");
+  const hero = document.querySelector("[data-parallax]");
   const art = hero && hero.querySelector(".hero-art");
   const title = hero && hero.querySelector("h1");
   let hx = 0, hy = 0;
