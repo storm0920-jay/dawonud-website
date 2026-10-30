@@ -327,7 +327,8 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 /* ===== 스크롤 장면 ===== */
 .journey { position: relative; height: 760vh; background: #0E0E0E; }
 .j-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #EFEFED; color: #0E0E0E; perspective: 900px; }
-.j-stage.dark { background: #0E0E0E; }
+.j-stage.dark { background: #111110; }
+.j-stage.dark .j-band { visibility: hidden; }
 .j-line { position: absolute; margin: 0; font: 400 clamp(40px, 4.6vw, 92px)/1 var(--en); letter-spacing: -0.045em; overflow: hidden; padding-bottom: .08em; white-space: nowrap; }
 .j-line span { display: block; transform: translateY(110%); will-change: transform; }
 .j1 { right: 79%; bottom: calc(6vh + 2.1em); text-align: right; } .j1 span { margin-right: -1.6em; }
@@ -345,13 +346,16 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .j-cam { position: absolute; inset: 0; display: grid; place-items: center; transform-style: preserve-3d; opacity: 0; z-index: 1; }
 .j-world { position: relative; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
 .j-world > * { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
-.j-world .w { font: 400 60px/1 var(--en); letter-spacing: -0.03em; white-space: nowrap; color: #F4F2ED; translate: -50% -50%; }
-.j-world .w.dim { opacity: .3; }
-.j-world .w.soft { font-size: 34px; font-style: italic; font-weight: 300; opacity: .2; }
-.j-world .w.hero { font-size: 64px; }
-.cube { width: 0; height: 0; --s: 200px; }
-.cube i { position: absolute; left: calc(var(--s) / -2); top: calc(var(--s) / -2); width: var(--s); height: var(--s); border: 1px solid rgba(244,242,237,.2); background: rgba(255,255,255,.015); backface-visibility: visible; }
-.cube .t { transform: translateZ(var(--h)); }
+.j-world .row { margin: 0; display: flex; gap: 1.05em; translate: -50% -50%; font: 400 clamp(44px, 4.3vw, 80px)/1 var(--en); letter-spacing: -0.035em; white-space: nowrap; transition: none; }
+.j-world .row span { color: #5E5E5C; }
+.j-world .row .b { color: #F4F2ED; }
+.j-world .row .s { color: #3E3E3C; font-style: italic; font-size: .72em; align-self: center; }
+.j-world .row .hw { color: #fff; }
+.cube { width: 0; height: 0; --s: 300px; }
+.cube i { position: absolute; left: calc(var(--s) / -2); top: calc(var(--s) / -2); width: var(--s); height: var(--s); border: 1px solid rgba(244,242,237,.17); background: rgba(16,16,16,.5); backface-visibility: visible; display: grid; place-items: center; }
+.cube i em { font: italic 400 46px/1 var(--en); letter-spacing: -0.02em; color: #4A4A48; white-space: nowrap; }
+.cube .w em, .cube .e em { rotate: 90deg; }
+.cube .t { background: transparent; transform: translateZ(var(--h)); }
 .cube .n, .cube .s { height: var(--h); top: calc(var(--h) / -2); }
 .cube .n { transform: translate3d(0, calc(var(--s) / -2), calc(var(--h) / 2)) rotateX(90deg); }
 .cube .s { transform: translate3d(0, calc(var(--s) / 2), calc(var(--h) / 2)) rotateX(90deg); }
@@ -359,6 +363,7 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .cube .w { transform: translate3d(calc(var(--s) / -2), 0, calc(var(--h) / 2)) rotateY(90deg); }
 .cube .e { transform: translate3d(calc(var(--s) / 2), 0, calc(var(--h) / 2)) rotateY(90deg); }
 .cube.core .t { background: rgba(244,242,237,var(--core,0)); }
+.cube.core i:not(.t) { background: rgba(8,8,8,.85); }
 .j-fade { position: absolute; inset: 0; background: var(--white); opacity: 0; z-index: 4; pointer-events: none; }
 html.inverted .j-fade { background: var(--white); }
 .journey.calm { height: auto; }
