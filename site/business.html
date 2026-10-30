@@ -10,7 +10,8 @@
 <meta property="og:description" content="경관, 공공디자인, 색채디자인, 유니버설디자인 4개 분야의 업무를 소개합니다.">
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body data-page="business.html">
@@ -115,7 +116,7 @@
 <script src="assets/js/projects-ui.js"></script>
 <script>
   document.querySelectorAll("[data-field]").forEach(el => {
-    const list = PROJECTS.filter(p => p.field === el.dataset.field).slice(0, 4);
+    const list = PROJECTS.filter(p => p.field === el.dataset.field).slice(-4);
     el.innerHTML = list.map(projectRow).join("");
     el.insertAdjacentHTML("afterend", `<p style="margin-top:16px"><a class="more-link" href="projects.html?field=${encodeURIComponent(el.dataset.field)}">${el.dataset.field} 실적 전체 보기</a></p>`);
   });

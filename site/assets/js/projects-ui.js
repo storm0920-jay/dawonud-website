@@ -10,7 +10,7 @@ function projectRow(p) {
   return `
     <li class="proj-row">
       <span class="proj-year">${projectYears(p)}</span>
-      <span class="chip field-${FIELD_SLUG[p.field]}">${p.field}</span>
       <span class="proj-name">${p.name}<small>${p.type}</small></span>
+      <span class="chip field-${FIELD_SLUG[p.field]}">${p.field}</span>
     </li>`;
 }

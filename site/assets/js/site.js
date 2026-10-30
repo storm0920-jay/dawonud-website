@@ -90,6 +90,7 @@ const NAV = [
           ${info.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}
         </dl>
       </div>
+      <div class="wrap"><div class="footer-mark" aria-hidden="true">${SITE.nameEn}</div></div>
       <div class="wrap footer-bottom">
         <span>© ${new Date().getFullYear()} ${SITE.name}. All rights reserved.</span>
         <a href="privacy.html">개인정보처리방침</a>

@@ -26,7 +26,7 @@ const pub = P.map(p => {
   const y0 = year(p.start);
   const y1 = p.ongoing ? null : Math.max(year(p.end), y0);
   return { no: p.no, name: p.name, type: p.type, field: p.field, y0, y1, ongoing: p.ongoing };
-}).sort((a, b) => b.y0 - a.y0 || b.no - a.no);
+}).sort((a, b) => a.no - b.no); // 오래된 순(번호 순)
 
 fs.writeFileSync(path.join(ROOT, "site/data/projects.js"),
 `/* 이 파일은 tools/build.js 가 만듭니다. 직접 고치지 마세요.
@@ -41,12 +41,13 @@ const rowsHtml = P.slice().sort((a, b) => a.no - b.no).map(p => `
   <tr><td class="c">${p.no}</td><td>${esc(p.name)}</td><td class="c">${esc(p.type)}</td>
   <td class="c">${fmt(p.start)}~<br>${p.ongoing ? "현재진행중" : fmt(p.end)}</td></tr>`).join("");
 const asof = src.asof.replace(/-/g, ".");
+const suit = fs.readFileSync(path.join(ROOT, "site/assets/fonts/SUIT-Variable.woff2")).toString("base64");
 const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
+@font-face { font-family: "SUIT Variable"; src: url(data:font/woff2;base64,${suit}) format("woff2-variations"); font-weight: 100 900; }
 @page { size: A4 portrait; margin: 16mm 14mm 16mm; }
 * { box-sizing: border-box; }
-body { font-family: Pretendard, "Noto Sans CJK KR", "WenQuanYi Zen Hei", sans-serif; font-size: 9.5pt; color: #111; margin: 0; }
+body { font-family: "SUIT Variable", "Noto Sans CJK KR", "WenQuanYi Zen Hei", sans-serif; font-size: 9.5pt; color: #111; margin: 0; }
 h1 { font-size: 18pt; text-align: center; margin: 0 0 4mm; letter-spacing: .08em; }
 .meta { display: flex; justify-content: space-between; font-size: 9pt; color: #333; margin-bottom: 3mm; }
 table { width: 100%; border-collapse: collapse; table-layout: fixed; }
