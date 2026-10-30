@@ -21,8 +21,7 @@
 <nav class="fixnav" aria-label="고정 메뉴" aria-hidden="true">
   <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay" tabindex="-1"><i></i></button>
   <span class="nav-ind"></span>
-  <a href="#about" class="c2" tabindex="-1">About</a><a href="#business" class="c4" tabindex="-1">Business</a><a href="#projects" class="c5" tabindex="-1">Projects</a>
-  <a href="#news" class="c6" tabindex="-1">News</a><a href="#careers" class="c7" tabindex="-1">Careers</a><a href="#contact" class="c8" tabindex="-1">Contact</a>
+  <a href="#philosophy" class="c2" tabindex="-1">Philosophy</a><a href="#projects" class="c4" tabindex="-1">Works</a><a href="#business" class="c5" tabindex="-1">Services</a><a href="#process" class="c6" tabindex="-1">Process</a><a href="#company" class="c7" tabindex="-1">Company</a><a href="#contact" class="c8" tabindex="-1">Contact</a>
 </nav>
 
 <div class="overlay pad" id="overlay" role="dialog" aria-modal="true" aria-label="전체 메뉴" inert>
@@ -45,11 +44,11 @@
     <nav class="mast-nav" aria-label="주 메뉴">
       <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay"><i></i></button>
       <span class="nav-ind" aria-hidden="true"></span>
-      <a href="#about" class="c2">About</a>
-      <a href="#business" class="c4">Business</a>
-      <a href="#projects" class="c5">Projects</a>
-      <a href="#news" class="c6">News</a>
-      <a href="#careers" class="c7">Careers</a>
+      <a href="#philosophy" class="c2">Philosophy</a>
+      <a href="#projects" class="c4">Works</a>
+      <a href="#business" class="c5">Services</a>
+      <a href="#process" class="c6">Process</a>
+      <a href="#company" class="c7">Company</a>
       <a href="#contact" class="c8">Contact</a>
     </nav>
     <span class="vline v2" aria-hidden="true"></span><span class="vline v5" aria-hidden="true"></span>
@@ -62,7 +61,7 @@
     <svg class="ray" aria-hidden="true"><line x1="0" y1="0" x2="0" y2="0"/><circle r="3.5"/></svg>
   </section>
 
-  <!-- 스크롤 장면: 문구 → 검정 막 → 단어 공간 회전 → 위에서 본 상자 → 가운데 상자로 들어감 -->
+  <!-- 스크롤 장면: 작업지시서 1~9단계 (assets/js/journey.js) -->
   <section class="journey" id="journey" aria-label="Design shapes place. Place defines life.">
     <div class="j-stage">
       <div class="j-cam" aria-hidden="true">
@@ -91,7 +90,7 @@
   </section>
 
   <!-- 세 가지 태도 -->
-  <section class="light sec pad">
+  <section class="light sec pad" id="philosophy">
     <div class="sec-head">
       <span class="label">Philosophy <span class="ko">일하는 태도</span></span>
       <h2 class="mid">Three things we keep in every street, square and facade.</h2>
@@ -139,7 +138,20 @@
     </div>
   </section>
 
-  <!-- Business -->
+  <!-- Works (사업실적) -->
+  <section class="sec pad" id="projects">
+    <div class="sec-head">
+      <span class="label">Projects <span class="ko">사업실적</span></span>
+      <h2 class="mid"><span id="pj-total">91</span> projects across landscape and public design.</h2>
+    </div>
+    <ul class="works" id="works"></ul>
+    <div class="works-foot">
+      <button class="btn-o" type="button" id="more-works" data-magnet=".3">Load more</button>
+      <a class="btn-o" href="projects.html" data-magnet=".3">All Projects</a>
+    </div>
+  </section>
+
+  <!-- Services (사업분야) -->
   <section class="light sec pad" id="business">
     <div class="sec-head">
       <span class="label">Business <span class="ko">사업분야</span></span>
@@ -151,19 +163,6 @@
       <li><a class="service fc-color" href="business.html#color" data-cursor="Explore"><span class="n">03</span><h3>Color Design<small>색채디자인</small></h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="ico" data-icon="color"></span></a></li>
       <li><a class="service fc-universal" href="business.html#universal" data-cursor="Explore"><span class="n">04</span><h3>Universal Design<small>유니버설디자인</small></h3><p>누구나 편하게 이동하고 쓰는 공간과 안내 체계를 설계합니다.</p><span class="ico" data-icon="universal"></span></a></li>
     </ul>
-  </section>
-
-  <!-- Projects -->
-  <section class="sec pad" id="projects">
-    <div class="sec-head">
-      <span class="label">Projects <span class="ko">사업실적</span></span>
-      <h2 class="mid"><span id="pj-total">91</span> projects across landscape and public design.</h2>
-    </div>
-    <ul class="works" id="works"></ul>
-    <div class="works-foot">
-      <button class="btn-o" type="button" id="more-works" data-magnet=".3">Load more</button>
-      <a class="btn-o" href="projects.html" data-magnet=".3">All Projects</a>
-    </div>
   </section>
 
   <!-- Process -->
@@ -201,7 +200,7 @@
   </section>
 
   <!-- Company -->
-  <section class="light sec pad" style="padding-top:0">
+  <section class="light sec pad" style="padding-top:0" id="company">
     <div class="sec-head">
       <span class="label">Company <span class="ko">사람들</span></span>
       <h2 class="mid">A small team that stays with each project to the end.</h2>
@@ -279,7 +278,7 @@
   // ---------- 메뉴 줄: 첫 화면을 지나면 위에 고정, 굵은 선은 지금 보는 위치 ----------
   const fixnav = document.querySelector(".fixnav");
   const navs = [mast.querySelector(".mast-nav"), fixnav];
-  const order = ["about", "business", "projects", "news", "careers", "contact"];
+  const order = ["philosophy", "projects", "business", "process", "company", "contact"];
   let hoverX = null;
   navs.forEach(nav => nav.querySelectorAll("a").forEach(a => {
     a.addEventListener("mouseenter", () => { hoverX = a.offsetLeft + 16; });
