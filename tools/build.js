@@ -28,7 +28,7 @@ const pub = P.map(p => {
   return { no: p.no, name: p.name, type: p.type, field: p.field, y0, y1, ongoing: p.ongoing };
 }).sort((a, b) => b.y0 - a.y0 || b.no - a.no);
 
-fs.writeFileSync(path.join(ROOT, "data/projects.js"),
+fs.writeFileSync(path.join(ROOT, "site/data/projects.js"),
 `/* 이 파일은 tools/build.js 가 만듭니다. 직접 고치지 마세요.
    원본은 private/projects.json 이고, 홈페이지에는 연도까지만 나옵니다. */
 const PROJECTS_ASOF = ${JSON.stringify(src.asof)};
@@ -82,7 +82,7 @@ col.n { width: 11mm; } col.t { width: 32mm; } col.d { width: 29mm; }
   const key = crypto.pbkdf2Sync(pass, salt, iter, 32, "sha256");
   const c = crypto.createCipheriv("aes-256-gcm", key, iv);
   const enc = Buffer.concat([c.update(pdf), c.final(), c.getAuthTag()]); // WebCrypto 형식: 암호문 뒤에 태그
-  fs.writeFileSync(path.join(ROOT, "data/records.pdf.enc"), JSON.stringify({
+  fs.writeFileSync(path.join(ROOT, "site/data/records.pdf.enc"), JSON.stringify({
     v: 1, iter, asof: src.asof, count: P.length,
     salt: salt.toString("base64"), iv: iv.toString("base64"), data: enc.toString("base64"),
   }));
