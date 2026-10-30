@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 640" preserveAspectRatio="xMidYMax slice" fill="none">
+<style>
+.l{stroke:#F2EFE8;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;
+   stroke-dasharray:1400;stroke-dashoffset:0;animation:draw 2.8s cubic-bezier(.6,0,.2,1) both}
+.thin{stroke-width:.8;opacity:.55;animation-delay:.6s}
+.far{opacity:.45;animation-duration:3.6s}
+@keyframes draw{from{stroke-dashoffset:1400}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.l{animation:none}}
+</style>
+<path class="l far" d="M0 300 Q80.0 258.39902387700715 160 292 Q240.0 244.66075213232614 320 290 Q400.0 249.49295581911906 480 297 Q560.0 269.5640451594623 640 300 Q720.0 270.4251823454366 800 298 Q880.0 269.066072209866 960 290 Q1040.0 254.17019405601442 1120 308 Q1200.0 266.8003176317149 1280 293 Q1360.0 245.64780465896524 1440 311 Q1520.0 247.76167615806506 1600 298"/>
+<path class="l far" d="M0 360 Q60.0 314.6553590856354 120 349 Q180.0 317.90627053025645 240 355 Q300.0 337.6185596993347 360 351 Q420.0 333.0859016547866 480 368 Q540.0 336.61195191409934 600 362 Q660.0 323.9659882576373 720 357 Q780.0 326.4822527464162 840 350 Q900.0 339.955007708932 960 353 Q1020.0 322.8209607401827 1080 358 Q1140.0 332.9295380976005 1200 362 Q1260.0 329.0921112121666 1320 355 Q1380.0 319.67512630997925 1440 365 Q1500.0 334.86293630406857 1560 362 Q1620.0 327.10457649480395 1680 369"/>
+<path class="l" d="M40 520V350H150V520"/>
+<path class="l thin" d="M48 400H142"/>
+<path class="l thin" d="M48 426H142"/>
+<path class="l thin" d="M48 452H142"/>
+<path class="l thin" d="M48 478H142"/>
+<path class="l" d="M164 520V200H224V520"/>
+<path class="l thin" d="M172 224H216"/>
+<path class="l thin" d="M172 328H216"/>
+<path class="l thin" d="M172 354H216"/>
+<path class="l thin" d="M172 380H216"/>
+<path class="l thin" d="M172 432H216"/>
+<path class="l thin" d="M172 458H216"/>
+<path class="l thin" d="M172 484H216"/>
+<path class="l" d="M248 520V430H308V520"/>
+<path class="l thin" d="M256 480H300"/>
+<path class="l" d="M332 520V350H442V520"/>
+<path class="l thin" d="M340 426H434"/>
+<path class="l thin" d="M340 478H434"/>
+<path class="l" d="M456 520V390H516V520"/>
+<path class="l thin" d="M464 440H508"/>
+<path class="l thin" d="M464 466H508"/>
+<path class="l thin" d="M464 492H508"/>
+<path class="l" d="M860 520V310H970V520"/>
+<path class="l thin" d="M868 334H962"/>
+<path class="l thin" d="M868 438H962"/>
+<path class="l thin" d="M868 464H962"/>
+<path class="l thin" d="M868 490H962"/>
+<path class="l" d="M984 520V390H1064V520"/>
+<path class="l thin" d="M992 414H1056"/>
+<path class="l thin" d="M992 440H1056"/>
+<path class="l thin" d="M992 492H1056"/>
+<path class="l" d="M1088 520V350H1168V520"/>
+<path class="l thin" d="M1096 374H1160"/>
+<path class="l thin" d="M1096 400H1160"/>
+<path class="l thin" d="M1096 426H1160"/>
+<path class="l thin" d="M1096 478H1160"/>
+<path class="l thin" d="M1096 504H1160"/>
+<path class="l" d="M1192 520V200H1322V520"/>
+<path class="l thin" d="M1200 250H1314"/>
+<path class="l thin" d="M1200 380H1314"/>
+<path class="l thin" d="M1200 406H1314"/>
+<path class="l thin" d="M1200 432H1314"/>
+<path class="l thin" d="M1200 484H1314"/>
+<path class="l" d="M1330 520V310H1410V520"/>
+<path class="l thin" d="M1338 334H1402"/>
+<path class="l thin" d="M1338 360H1402"/>
+<path class="l thin" d="M1338 386H1402"/>
+<path class="l thin" d="M1338 412H1402"/>
+<path class="l thin" d="M1338 438H1402"/>
+<path class="l thin" d="M1338 464H1402"/>
+<path class="l thin" d="M1338 490H1402"/>
+<path class="l" d="M1418 520V390H1478V520"/>
+<path class="l thin" d="M1426 440H1470"/>
+<path class="l thin" d="M1426 466H1470"/>
+<path class="l thin" d="M1426 492H1470"/>
+<path class="l" d="M1492 520V430H1602V520"/>
+<path class="l thin" d="M1500 454H1594"/>
+<path class="l thin" d="M1500 480H1594"/>
+<path class="l" d="M560 520V400H586M578 400v10h16v-10"/>
+<path class="l" d="M820 520V400H846M838 400v10h16v-10"/>
+<path class="l" d="M620 494h70M626 494v26M684 494v26M620 480h70"/>
+<path class="l" d="M740 520V460"/>
+<path class="l" d="M710 430a30 30 0 1 0 60 0a30 30 0 1 0 -60 0"/>
+<path class="l" d="M785 520V460"/>
+<path class="l" d="M763 438a22 22 0 1 0 44 0a22 22 0 1 0 -44 0"/>
+<path class="l" d="M600 474a6 6 0 1 0 0.1 0M600 486v20M600 506l-7 14M600 506l7 14M591 492h18"/>
+<path class="l" d="M712 474a6 6 0 1 0 0.1 0M712 486v20M712 506l-7 14M712 506l7 14M703 492h18"/>
+<path class="l" d="M846 474a6 6 0 1 0 0.1 0M846 486v20M846 506l-7 14M846 506l7 14M837 492h18"/>
+<path class="l" d="M0 520H1600"/>
+<path class="l thin" d="M0 530l-18 110"/>
+<path class="l thin" d="M48 530l-18 110"/>
+<path class="l thin" d="M96 530l-18 110"/>
+<path class="l thin" d="M144 530l-18 110"/>
+<path class="l thin" d="M192 530l-18 110"/>
+<path class="l thin" d="M240 530l-18 110"/>
+<path class="l thin" d="M288 530l-18 110"/>
+<path class="l thin" d="M336 530l-18 110"/>
+<path class="l thin" d="M384 530l-18 110"/>
+<path class="l thin" d="M432 530l-18 110"/>
+<path class="l thin" d="M480 530l-18 110"/>
+<path class="l thin" d="M528 530l-18 110"/>
+<path class="l thin" d="M576 530l-18 110"/>
+<path class="l thin" d="M624 530l-18 110"/>
+<path class="l thin" d="M672 530l-18 110"/>
+<path class="l thin" d="M720 530l-18 110"/>
+<path class="l thin" d="M768 530l-18 110"/>
+<path class="l thin" d="M816 530l-18 110"/>
+<path class="l thin" d="M864 530l-18 110"/>
+<path class="l thin" d="M912 530l-18 110"/>
+<path class="l thin" d="M960 530l-18 110"/>
+<path class="l thin" d="M1008 530l-18 110"/>
+<path class="l thin" d="M1056 530l-18 110"/>
+<path class="l thin" d="M1104 530l-18 110"/>
+<path class="l thin" d="M1152 530l-18 110"/>
+<path class="l thin" d="M1200 530l-18 110"/>
+<path class="l thin" d="M1248 530l-18 110"/>
+<path class="l thin" d="M1296 530l-18 110"/>
+<path class="l thin" d="M1344 530l-18 110"/>
+<path class="l thin" d="M1392 530l-18 110"/>
+<path class="l thin" d="M1440 530l-18 110"/>
+<path class="l thin" d="M1488 530l-18 110"/>
+<path class="l thin" d="M1536 530l-18 110"/>
+<path class="l thin" d="M1584 530l-18 110"/>
+<path class="l thin" d="M0 566H1600"/>
+</svg>

@@ -18,38 +18,79 @@
 <header data-site-header></header>
 
 <main>
-  <section class="hero">
-    <div class="wrap hero-top">
-      <span class="eyebrow">다원 도시디자인 · Dawon Urban Design</span>
-      <h1>도시의 풍경과<br><span class="o">색</span>을 디자인합니다</h1>
-      <div class="hero-foot">
-        <p>경관, 공공디자인, 색채디자인, 유니버설디자인. 사람이 머무는 도시의 얼굴을 함께 만듭니다.</p>
+  <section class="hero" data-tone="dark">
+    <img class="hero-art" src="assets/img/line-city.svg" alt="" aria-hidden="true">
+    <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="wrap hero-inner">
+      <p class="hero-mark" aria-label="Dawon Urban Design"><span>Dawon</span><span>Urban Design<span class="dot">.</span></span></p>
+      <div class="hero-box" data-reveal>
+        <span class="eyebrow" style="font-family:var(--sans);letter-spacing:0;font-weight:600">경관 · 공공디자인 · 색채디자인 · 유니버설디자인</span>
+        <h1>도시의 풍경과<br><span class="o">색</span>을 디자인합니다</h1>
+        <p>사람이 머무는 도시의 얼굴을 지자체, 공공기관과 함께 만듭니다.</p>
         <div class="hero-actions">
           <a class="btn" href="projects.html">사업실적 보기</a>
           <a class="btn btn-line" href="contact.html">문의하기</a>
         </div>
       </div>
+      <div class="hero-meta"><span>Seoul · Yeouido</span><span>Landscape / Public / Color / Universal</span></div>
     </div>
-    <nav class="field-strip" aria-label="사업분야">
-      <a class="field-panel fc-landscape" href="business.html#landscape">
-        <span class="en">LANDSCAPE</span>
-        <div><h3>경관</h3><p>도시와 지역의 경관을 계획하고, 경관심의와 야간경관까지 다룹니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-public" href="business.html#public">
-        <span class="en">PUBLIC DESIGN</span>
-        <div><h3>공공디자인</h3><p>거리, 광장, 공공시설물을 시민이 쓰기 좋고 보기 좋게 만듭니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-color" href="business.html#color">
-        <span class="en">COLOR DESIGN</span>
-        <div><h3>색채디자인</h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-universal" href="business.html#universal">
-        <span class="en">UNIVERSAL DESIGN</span>
-        <div><h3>유니버설디자인</h3><p>나이, 장애와 상관없이 누구나 편하게 쓰는 공간을 설계합니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-    </nav>
   </section>
 
+  <section class="section stats">
+    <div class="wrap">
+      <div class="section-head" style="border-bottom:0">
+        <div>
+          <span class="eyebrow">In numbers</span>
+          <h2 class="section-title">숫자로 보는 다원</h2>
+        </div>
+      </div>
+      <div class="stat-grid" data-reveal>
+        <div class="stat"><span class="ico" data-icon="list"></span><span class="num"><span id="st-total" data-count="91">91</span><small>건</small></span><span class="label">사업실적</span><p class="sub" id="st-span">2019년부터</p></div>
+        <div class="stat"><span class="ico" data-icon="pin"></span><span class="num o"><span id="st-ongoing" data-count="3">3</span><small>건</small></span><span class="label">진행 중인 사업</span><p class="sub">지금 수행하고 있는 용역</p></div>
+        <div class="stat"><span class="ico" data-icon="advisory"></span><span class="num"><span data-count="5">5</span><small>곳</small></span><span class="label">자문·심의 위원회</span><p class="sub">한국도로공사, 경기도, 대전시 등</p></div>
+        <div class="stat"><span class="ico" data-icon="public"></span><span class="num"><span id="st-public" data-count="60">60</span><small>건</small></span><span class="label">공공디자인 실적</span><p class="sub">가장 많이 수행한 분야</p></div>
+      </div>
+      <p class="note" style="margin-top:20px">매출액, 신용평가등급도 자료를 주시면 같은 방식으로 넣을 수 있습니다. <span class="ph-tag">자료 필요</span></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" style="border-bottom:0">
+        <div>
+          <span class="eyebrow">Business</span>
+          <h2 class="section-title">사업분야</h2>
+        </div>
+        <a class="more-link" href="business.html">사업분야 자세히</a>
+      </div>
+    </div>
+    <div class="wrap field-rows">
+      <div data-tone="landscape"><a class="field-row fc-landscape" href="business.html#landscape" data-reveal>
+        <span class="n">01</span>
+        <h3><span class="ico" data-icon="landscape"></span><span>경관</span></h3>
+        <p>도시와 지역의 경관을 계획하고, 경관심의와 야간경관까지 다룹니다.</p>
+        <span class="cnt" data-field-count="경관">29<small>건 수행</small></span>
+      </a></div>
+      <div data-tone="public"><a class="field-row fc-public" href="business.html#public" data-reveal>
+        <span class="n">02</span>
+        <h3><span class="ico" data-icon="public"></span><span>공공디자인</span></h3>
+        <p>거리, 광장, 공공시설물을 시민이 쓰기 좋고 보기 좋게 만듭니다.</p>
+        <span class="cnt" data-field-count="공공디자인">60<small>건 수행</small></span>
+      </a></div>
+      <div data-tone="color"><a class="field-row fc-color" href="business.html#color" data-reveal>
+        <span class="n">03</span>
+        <h3><span class="ico" data-icon="color"></span><span>색채디자인</span></h3>
+        <p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p>
+        <span class="cnt" data-field-count="색채디자인">1<small>건 수행</small></span>
+      </a></div>
+      <div data-tone="universal"><a class="field-row fc-universal" href="business.html#universal" data-reveal>
+        <span class="n">04</span>
+        <h3><span class="ico" data-icon="universal"></span><span>유니버설디자인</span></h3>
+        <p>나이, 장애와 상관없이 누구나 편하게 쓰는 공간을 설계합니다.</p>
+        <span class="cnt" data-field-count="유니버설디자인">1<small>건 수행</small></span>
+      </a></div>
+    </div>
+  </section>
 
   <section class="section">
     <div class="wrap">
@@ -80,10 +121,11 @@
   </section>
 </main>
 
-<section class="cta-band">
+<section class="cta-band dark">
+  <div class="grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="wrap">
     <div>
-      <h2>프로젝트를 함께 고민하고 싶으신가요?</h2>
+      <h2>프로젝트를 함께<br>고민하고 싶으신가요<span class="o">?</span></h2>
       <p>메일 <a class="mail" data-site-email></a> 로 연락 주시거나 문의 양식을 남겨 주세요.</p>
     </div>
     <a class="btn" href="contact.html">문의하기</a>
@@ -96,6 +138,15 @@
 <script src="assets/js/projects-ui.js"></script>
 <script>
   document.getElementById("featured").innerHTML = PROJECTS.slice(-6).map(projectRow).join("");
+  // 숫자는 실적 자료에서 바로 계산합니다
+  const setCount = (id, n) => { const el = document.getElementById(id); if (el) { el.dataset.count = n; el.textContent = n; } };
+  setCount("st-total", PROJECTS.length);
+  setCount("st-ongoing", PROJECTS.filter(p => p.ongoing).length);
+  setCount("st-public", PROJECTS.filter(p => p.field === "공공디자인").length);
+  document.getElementById("st-span").textContent = `${Math.min(...PROJECTS.map(p => p.y0))}년부터`;
+  document.querySelectorAll("[data-field-count]").forEach(el => {
+    el.firstChild.textContent = PROJECTS.filter(p => p.field === el.dataset.fieldCount).length;
+  });
 </script>
 </body>
 </html>
