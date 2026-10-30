@@ -54,8 +54,8 @@
         <ul class="check-list"><li>경관계획(기본·특정 경관계획)</li><li>경관심의 대응과 경관 검토</li><li>야간경관 계획</li><li>경관 가이드라인 수립</li><li>경관사업 기본·실시 설계</li></ul>
       </div>
     </div>
-    <h3>경관 대표 실적</h3>
-    <div class="project-grid" data-field="경관"></div>
+    <h3>경관 최근 실적</h3>
+    <ul class="proj-list" data-field="경관"></ul>
   </section>
   <section class="wrap field-detail fc-public" id="public">
     <div class="field-detail-head">
@@ -69,8 +69,8 @@
         <ul class="check-list"><li>공공디자인 진흥계획</li><li>가로환경 개선</li><li>공공시설물 디자인</li><li>공공 사인·안내 체계</li><li>공공디자인 가이드라인</li></ul>
       </div>
     </div>
-    <h3>공공디자인 대표 실적</h3>
-    <div class="project-grid" data-field="공공디자인"></div>
+    <h3>공공디자인 최근 실적</h3>
+    <ul class="proj-list" data-field="공공디자인"></ul>
   </section>
   <section class="wrap field-detail fc-color" id="color">
     <div class="field-detail-head">
@@ -84,8 +84,8 @@
         <ul class="check-list"><li>도시 색채계획</li><li>건축물 색채 가이드라인</li><li>지역 색채 조사와 분석</li><li>공공시설물 색채 기준</li><li>색채 자문</li></ul>
       </div>
     </div>
-    <h3>색채디자인 대표 실적</h3>
-    <div class="project-grid" data-field="색채디자인"></div>
+    <h3>색채디자인 최근 실적</h3>
+    <ul class="proj-list" data-field="색채디자인"></ul>
   </section>
   <section class="wrap field-detail fc-universal" id="universal">
     <div class="field-detail-head">
@@ -99,8 +99,8 @@
         <ul class="check-list"><li>유니버설디자인 기본계획</li><li>보행·이동 환경 개선</li><li>누구나 읽기 쉬운 안내 체계</li><li>공공시설 이용 편의 진단</li><li>유니버설디자인 가이드라인</li></ul>
       </div>
     </div>
-    <h3>유니버설디자인 대표 실적</h3>
-    <div class="project-grid" data-field="유니버설디자인"></div>
+    <h3>유니버설디자인 최근 실적</h3>
+    <ul class="proj-list" data-field="유니버설디자인"></ul>
   </section>
 
   <section class="wrap" style="padding-top:80px;text-align:center">
@@ -112,11 +112,12 @@
 <footer data-site-footer></footer>
 <script src="assets/js/site.js"></script>
 <script src="data/projects.js"></script>
+<script src="assets/js/projects-ui.js"></script>
 <script>
   document.querySelectorAll("[data-field]").forEach(el => {
-    const list = PROJECTS.filter(p => p.field === el.dataset.field).slice(0, 3);
-    el.innerHTML = list.length ? list.map(projectCard).join("")
-      : '<p class="note">이 분야 실적은 준비 중입니다.</p>';
+    const list = PROJECTS.filter(p => p.field === el.dataset.field).slice(0, 4);
+    el.innerHTML = list.map(projectRow).join("");
+    el.insertAdjacentHTML("afterend", `<p style="margin-top:16px"><a class="more-link" href="projects.html?field=${encodeURIComponent(el.dataset.field)}">${el.dataset.field} 실적 전체 보기</a></p>`);
   });
 </script>
 </body>

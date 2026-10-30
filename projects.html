@@ -21,32 +21,16 @@
     <div class="wrap">
       <span class="eyebrow">Projects</span>
       <h1>사업실적</h1>
-      <p class="lead">분야와 연도를 골라 원하는 실적을 찾아보세요.</p>
+      <p class="lead">다원 도시디자인이 수행한 주요 사업입니다. 분야와 연도를 골라 볼 수 있습니다.</p>
     </div>
   </section>
 
   <section class="section" style="padding-top:56px">
     <div class="wrap">
       <div class="filters" id="filters" role="group" aria-label="분야 선택"></div>
-      <div class="project-grid" id="grid"></div>
+      <p class="note" id="count" style="margin:-12px 0 16px"></p>
+      <ul class="proj-list" id="list"></ul>
       <p class="empty-state" id="empty" hidden>조건에 맞는 실적이 없습니다.</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">All projects</span>
-          <h2 class="section-title">전체 실적 목록</h2>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table class="data">
-          <thead><tr><th style="width:90px">연도</th><th style="width:140px">분야</th><th>사업명</th><th>발주처</th></tr></thead>
-          <tbody id="table"></tbody>
-        </table>
-      </div>
     </div>
   </section>
 </main>
@@ -54,32 +38,28 @@
 <footer data-site-footer></footer>
 <script src="assets/js/site.js"></script>
 <script src="data/projects.js"></script>
+<script src="assets/js/projects-ui.js"></script>
 <script>
   const state = { field: new URLSearchParams(location.search).get("field") || "전체", year: "전체" };
-  const years = [...new Set(PROJECTS.map(p => p.year))].sort((a, b) => b - a);
+  const years = [...new Set(PROJECTS.map(p => p.y0))].sort((a, b) => b - a);
   const filters = document.getElementById("filters");
 
   filters.innerHTML =
     ["전체", ...SITE.fields].map(f => `<button type="button" data-f="${f}">${f}</button>`).join("") +
-    `<select id="year" aria-label="연도 선택"><option>전체</option>${years.map(y => `<option>${y}</option>`).join("")}</select>`;
+    `<select id="year" aria-label="연도 선택"><option value="전체">전체 연도</option>${years.map(y => `<option value="${y}">${y}년 시작</option>`).join("")}</select>`;
 
   function render() {
     filters.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === state.field));
     const list = PROJECTS.filter(p =>
       (state.field === "전체" || p.field === state.field) &&
-      (state.year === "전체" || String(p.year) === state.year));
-    document.getElementById("grid").innerHTML = list.map(projectCard).join("");
+      (state.year === "전체" || String(p.y0) === state.year));
+    document.getElementById("list").innerHTML = list.map(projectRow).join("");
+    document.getElementById("count").textContent = `${list.length}건`;
     document.getElementById("empty").hidden = list.length > 0;
   }
-  filters.addEventListener("click", e => {
-    if (e.target.dataset.f) { state.field = e.target.dataset.f; render(); }
-  });
+  filters.addEventListener("click", e => { if (e.target.dataset.f) { state.field = e.target.dataset.f; render(); } });
   document.getElementById("year").addEventListener("change", e => { state.year = e.target.value; render(); });
   render();
-
-  document.getElementById("table").innerHTML = [...PROJECTS].sort((a, b) => b.year - a.year).map(p => `
-    <tr><td class="num">${p.year}</td><td><span class="chip field-${FIELD_SLUG[p.field]}">${p.field}</span></td>
-    <td><a href="project.html?id=${encodeURIComponent(p.id)}">${p.title}</a>${phTag(p)}</td><td>${p.client || ""}</td></tr>`).join("");
 </script>
 </body>
 </html>

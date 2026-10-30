@@ -324,3 +324,19 @@ table.data td.num { white-space: nowrap; color: var(--gray); font-weight: 600; }
 .note { font-size: 14px; color: var(--gray); }
 .prose { max-width: 800px; }
 .prose h2 { font-size: 20px; margin-top: 40px; }
+
+/* 사업실적 목록 */
+.proj-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.proj-row { display: grid; grid-template-columns: 120px 120px 1fr; gap: 16px; align-items: baseline; padding: 16px 4px; border-bottom: 1px solid var(--line); }
+.proj-year { font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.proj-name { font-weight: 600; }
+.proj-name small { display: block; font-weight: 400; color: var(--gray); font-size: 14px; margin-top: 2px; }
+.proj-row .chip { justify-self: start; }
+@media (max-width: 700px) {
+  .proj-row { grid-template-columns: auto 1fr; gap: 6px 10px; }
+  .proj-name { grid-column: 1 / -1; }
+}
+.manage-box { max-width: 520px; border: 1px solid var(--line); border-top: 3px solid var(--orange); padding: 32px; }
+.manage-box input { width: 100%; padding: 14px; border: 1px solid #CFC8C1; border-radius: var(--radius); font: inherit; font-size: 18px; letter-spacing: .08em; margin: 8px 0 16px; }
+.manage-msg { min-height: 1.6em; margin: 16px 0 0; font-size: 15px; }
+.manage-msg.err { color: #B3261E; }

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><!-- 내부용 페이지라 오픈 후에도 이 줄을 지우지 않습니다 -->
+<title>사업수행실적 내려받기 | 다원 도시디자인</title>
+<meta name="description" content="내부용 페이지입니다.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="manage.html">
+<header data-site-header></header>
+<main>
+  <section class="page-hero">
+    <div class="wrap">
+      <span class="eyebrow">Internal</span>
+      <h1>사업수행실적 내려받기</h1>
+      <p class="lead">심의위원·평가위원 지원 서류에 붙이는 A4 세로 PDF입니다. 용역 기간이 날짜까지 들어 있어 비밀번호가 필요합니다.</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:56px">
+    <div class="wrap">
+      <form class="manage-box" id="f">
+        <label for="pw"><strong>비밀번호</strong></label>
+        <input id="pw" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호 입력" required>
+        <button class="btn" type="submit" id="go">PDF 내려받기</button>
+        <p class="manage-msg" id="msg" role="status"></p>
+      </form>
+      <p class="note" style="margin-top:20px" id="info"></p>
+    </div>
+  </section>
+</main>
+<footer data-site-footer></footer>
+<script src="assets/js/site.js"></script>
+<script>
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const msg = document.getElementById("msg"), info = document.getElementById("info");
+  const say = (t, err) => { msg.textContent = t; msg.className = "manage-msg" + (err ? " err" : ""); };
+
+  fetch("data/records.pdf.enc").then(r => r.json()).then(j => {
+    info.textContent = `기준일 ${j.asof.replace(/-/g, ".")} · 사업 ${j.count}건`;
+  }).catch(() => {});
+
+  document.getElementById("f").addEventListener("submit", async e => {
+    e.preventDefault();
+    const btn = document.getElementById("go"); btn.disabled = true; say("확인하는 중입니다...");
+    try {
+      const j = await (await fetch("data/records.pdf.enc", { cache: "no-store" })).json();
+      const pw = document.getElementById("pw").value.replace(/[\s-]/g, "");
+      const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+      const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(j.salt), iterations: j.iter, hash: "SHA-256" },
+        base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+      const pdf = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(j.iv) }, key, b64(j.data));
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([pdf], { type: "application/pdf" }));
+      a.download = `사업수행실적_다원_${j.asof.replace(/-/g, "").slice(2)}.pdf`;
+      document.body.appendChild(a); a.click(); a.remove();
+      say("내려받기를 시작했습니다.");
+    } catch (err) {
+      say("비밀번호가 맞지 않습니다. 다시 확인해 주세요.", true);
+    }
+    btn.disabled = false;
+  });
+</script>
+</body>
+</html>
