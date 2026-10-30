@@ -184,10 +184,10 @@ html.js-tone main [data-tone]:not([data-tone="dark"]) { background: transparent;
 
 /* 분야: 한 줄에 하나, 스크롤하면 배경이 그 분야 파스텔로 */
 .field-rows > div:first-child .field-row { border-top: 1px solid var(--ink); }
-.field-row { display: grid; grid-template-columns: 80px 1fr 1.2fr 140px; gap: 24px; align-items: center; padding: 40px 0; border-bottom: 1px solid var(--ink); text-decoration: none; color: var(--ink); position: relative; }
+.field-row { display: grid; grid-template-columns: 64px 1.3fr 1fr 120px; gap: 24px; align-items: center; padding: 40px 0; border-bottom: 1px solid var(--ink); text-decoration: none; color: var(--ink); position: relative; }
 .field-row .n { font: 500 13px/1 var(--mono); letter-spacing: .1em; }
 .field-row .ico { width: 72px; height: 72px; color: var(--fc); }
-.field-row h3 { font-size: clamp(30px, 3.6vw, 52px); font-weight: 900; letter-spacing: -0.06em; margin: 0; line-height: 1; display: flex; gap: 20px; align-items: center; }
+.field-row h3 { font-size: clamp(28px, 3vw, 44px); font-weight: 900; letter-spacing: -0.06em; margin: 0; line-height: 1; display: flex; gap: 20px; align-items: center; }
 .field-row h3 .en { font: 500 12px/1.3 var(--mono); letter-spacing: .1em; color: var(--ink-2); }
 .field-row p { margin: 0; color: var(--ink-2); max-width: 40ch; }
 .field-row .cnt { justify-self: end; text-align: right; font: 800 40px/1 var(--disp); font-variant-numeric: tabular-nums; }
@@ -382,3 +382,13 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 
 /* 사업분야 상세: 펜선 픽토그램 */
 .field-detail-head .ico { width: 64px; height: 64px; color: var(--fc); align-self: center; }
+
+/* 영문 제목 + 한글 보조 표기 */
+.eyebrow { font: 600 13px/1.2 var(--sans); letter-spacing: .02em; text-transform: none; }
+.page-hero h1, .section-title, .field-detail-head h2, .field-row h3, .split h2, .greeting h2 { font-family: var(--disp); letter-spacing: -0.035em; }
+.page-hero h1 { letter-spacing: -0.045em; }
+.field-row h3 small, .field-detail-head h2 small { display: block; font: 700 15px/1.3 var(--sans); letter-spacing: -0.01em; color: var(--ink-2); margin-top: 8px; }
+.field-row h3 > span:last-child { display: block; }
+.field-detail-head h2 small { font-size: 17px; }
+.stat .label small { display: block; font-weight: 500; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
+.site-nav a { font-family: var(--disp); font-weight: 600; letter-spacing: 0; }

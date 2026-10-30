@@ -20,8 +20,8 @@
 <main>
   <section class="page-hero">
     <div class="wrap">
-      <span class="eyebrow">Projects</span>
-      <h1>사업실적</h1>
+      <span class="eyebrow">사업실적</span>
+      <h1>Projects</h1>
       <p class="lead">다원 도시디자인이 수행한 주요 사업입니다. 분야와 연도를 골라 보고, 목록형과 카드형으로 바꿔 볼 수 있습니다.</p>
     </div>
   </section>
@@ -47,9 +47,9 @@
   const filters = document.getElementById("filters");
 
   filters.innerHTML =
-    ["전체", ...SITE.fields].map(f => `<button type="button" data-f="${f}">${f}</button>`).join("") +
-    `<select id="year" aria-label="연도 선택"><option value="전체">전체 연도</option>${years.map(y => `<option value="${y}">${y}년 시작</option>`).join("")}</select>` +
-    `<span class="view-toggle" role="group" aria-label="보기 방식"><button type="button" data-v="list">목록형</button><button type="button" data-v="cards">카드형</button></span>`;
+    ["전체", ...SITE.fields].map(f => `<button type="button" data-f="${f}">${f === "전체" ? "All" : SITE.fieldsEn[f]}</button>`).join("") +
+    `<select id="year" aria-label="연도 선택"><option value="전체">All Years</option>${years.map(y => `<option value="${y}">${y}</option>`).join("")}</select>` +
+    `<span class="view-toggle" role="group" aria-label="보기 방식"><button type="button" data-v="list">List</button><button type="button" data-v="cards">Cards</button></span>`;
 
   function render() {
     filters.querySelectorAll("button[data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === state.field));
@@ -60,7 +60,7 @@
     const ul = document.getElementById("list");
     ul.className = state.view === "cards" ? "proj-cards" : "proj-list";
     ul.innerHTML = list.map(state.view === "cards" ? projectCard : projectRow).join("");
-    document.getElementById("count").textContent = `${list.length}건`;
+    document.getElementById("count").textContent = `${list.length} Projects`;
     document.getElementById("empty").hidden = list.length > 0;
   }
   filters.addEventListener("click", e => {

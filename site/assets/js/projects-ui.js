@@ -11,7 +11,7 @@ function projectRow(p) {
     <li class="proj-row">
       <span class="proj-year">${projectYears(p)}</span>
       <span class="proj-name">${p.name}<small>${p.type}</small></span>
-      <span class="chip field-${FIELD_SLUG[p.field]}">${p.field}</span>
+      <span class="chip field-${FIELD_SLUG[p.field]}" title="${p.field}">${SITE.fieldsEn[p.field]}</span>
     </li>`;
 }
 
@@ -23,6 +23,6 @@ function projectCard(p) {
       <span class="pc-art"><svg viewBox="0 0 48 48" aria-hidden="true">${ICONS[slug]}</svg></span>
       <span class="proj-year">${projectYears(p)}</span>
       <span class="proj-name">${p.name}<small>${p.type}</small></span>
-      <span class="chip field-${slug}">${p.field}</span>
+      <span class="chip field-${slug}" title="${p.field}">${SITE.fieldsEn[p.field]}</span>
     </li>`;
 }

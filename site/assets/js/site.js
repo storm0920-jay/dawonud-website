@@ -7,6 +7,7 @@ const SITE = {
   name: "다원 도시디자인",
   nameEn: "DAWON URBAN DESIGN",
   fields: ["경관", "공공디자인", "색채디자인", "유니버설디자인"],
+  fieldsEn: { "경관": "Landscape", "공공디자인": "Public Design", "색채디자인": "Color Design", "유니버설디자인": "Universal Design" },
   ceo: "김현호",
   ceoTitle: "소장",
   address: "서울시 영등포구 여의나루로 67, 신송빌딩 1205호",
@@ -28,12 +29,12 @@ const SITE = {
 };
 
 const NAV = [
-  { href: "about.html", label: "회사소개" },
-  { href: "business.html", label: "사업분야" },
-  { href: "projects.html", label: "사업실적" },
-  { href: "news.html", label: "소식" },
-  { href: "careers.html", label: "채용" },
-  { href: "contact.html", label: "Contact us" },
+  { href: "about.html", label: "About" },
+  { href: "business.html", label: "Business" },
+  { href: "projects.html", label: "Projects" },
+  { href: "news.html", label: "News" },
+  { href: "careers.html", label: "Careers" },
+  { href: "contact.html", label: "Contact" },
 ];
 
 (function renderChrome() {
@@ -72,19 +73,19 @@ const NAV = [
   const footer = document.querySelector("[data-site-footer]");
   if (footer) {
     const info = [
-      ["대표", `${SITE.ceo}`],
-      ["주소", SITE.address],
-      ["이메일", SITE.email && `<a href="mailto:${SITE.email}">${SITE.email}</a>`],
-      ["전화", SITE.phone],
-      ["팩스", SITE.fax],
-      ["사업자등록번호", SITE.bizNo],
+      ["CEO", `${SITE.ceo}`],
+      ["Address", SITE.address],
+      ["E-mail", SITE.email && `<a href="mailto:${SITE.email}">${SITE.email}</a>`],
+      ["Tel", SITE.phone],
+      ["Fax", SITE.fax],
+      ["Business No.", SITE.bizNo],
     ].filter(([, v]) => v);
     footer.className = "site-footer";
     footer.innerHTML = `
       <div class="wrap footer-inner">
         <div>
           <img src="${SITE.logoWhite}" alt="${SITE.name}" width="148" height="48">
-          <p class="footer-fields">${SITE.fields.join(" · ")}</p>
+          <p class="footer-fields">${SITE.fields.map(f => SITE.fieldsEn[f]).join(" · ")}</p>
         </div>
         <dl class="footer-info">
           ${info.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}
@@ -93,7 +94,7 @@ const NAV = [
       <div class="wrap"><div class="footer-mark" aria-hidden="true">${SITE.nameEn}</div></div>
       <div class="wrap footer-bottom">
         <span>© ${new Date().getFullYear()} ${SITE.name}. All rights reserved.</span>
-        <a href="privacy.html">개인정보처리방침</a>
+        <a href="privacy.html">Privacy Policy</a>
       </div>`;
   }
 
