@@ -210,3 +210,18 @@ html.js-reveal [data-reveal].in { transform: none; opacity: 1; }
 @media (prefers-reduced-motion: reduce) { *, *::after { transition: none !important; animation: none !important; } html { scroll-behavior: auto; } }
 .top { transition: transform .5s cubic-bezier(.2,.7,.2,1); }
 .top.hide { transform: translateY(-100%); }
+
+/* 마우스 반응 효과 (cursor.js) */
+.has-cursor, .has-cursor a, .has-cursor button, .has-cursor summary { cursor: none; }
+.cursor { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: opacity .3s; }
+.cursor.on { opacity: 1; }
+.cursor::before { content: ""; position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+.cursor.big::before { transform: scale(4.5); }
+.cursor.has-label::before { transform: scale(7); }
+.cursor.press::before { transform: scale(.7); }
+.cursor-label { position: absolute; transform: translate(-50%, -50%); font: 700 14px/1 var(--en); letter-spacing: .02em; color: #000; white-space: nowrap; opacity: 0; transition: opacity .2s; mix-blend-mode: normal; }
+.cursor.has-label .cursor-label { opacity: 1; }
+.hero-art, .hero h1 { will-change: transform; }
+.work .art { transition: transform .5s cubic-bezier(.2,.7,.2,1); will-change: transform; }
+.work .art.tilt { transition: transform .1s linear; }
+[data-magnet] { display: inline-block; will-change: transform; }

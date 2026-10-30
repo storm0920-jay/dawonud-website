@@ -23,7 +23,7 @@
     <a href="#about">About</a><a href="#business">Business</a><a href="#projects">Projects</a>
     <a href="#news">News</a><a href="#careers">Careers</a><a href="#contact">Contact</a>
   </nav>
-  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="overlay">Menu <i></i></button>
+  <button class="menu-btn" data-magnet=".3" type="button" aria-expanded="false" aria-controls="overlay">Menu <i></i></button>
 </header>
 
 <div class="overlay pad" id="overlay" role="dialog" aria-modal="true" aria-label="전체 메뉴" inert>
@@ -74,7 +74,7 @@
       <h2 class="mid">Dawon Urban Design plans the face of the city with local governments and public agencies.</h2>
     </div>
     <div class="vision">
-      <p class="we" aria-hidden="true">WE<span>.</span></p>
+      <p class="we" aria-hidden="true"><span data-magnet=".12" style="color:inherit">WE<span>.</span></span></p>
       <div>
         <ol class="vlist" data-reveal>
           <li><span class="n">00</span><div><h3>Who we are</h3><p>경관, 공공디자인, 색채디자인, 유니버설디자인을 하는 도시디자인 전문 회사입니다.</p></div></li>
@@ -111,8 +111,8 @@
     </div>
     <ul class="works" id="works"></ul>
     <div class="works-foot">
-      <button class="btn-o" type="button" id="more-works">Load more</button>
-      <a class="btn-o" href="projects.html">All Projects</a>
+      <button class="btn-o" type="button" id="more-works" data-magnet=".3">Load more</button>
+      <a class="btn-o" href="projects.html" data-magnet=".3">All Projects</a>
     </div>
   </section>
 
@@ -123,10 +123,10 @@
       <h2 class="mid">Four fields, planned as one cityscape.</h2>
     </div>
     <ul class="services">
-      <li><a class="service fc-landscape" href="business.html#landscape"><span class="n">01</span><h3>Landscape<small>경관</small></h3><p>경관계획, 경관심의와 경관성 검토, 도로경관과 야간경관을 다룹니다.</p><span class="ico" data-icon="landscape"></span></a></li>
-      <li><a class="service fc-public" href="business.html#public"><span class="n">02</span><h3>Public Design<small>공공디자인</small></h3><p>정비사업 공공디자인, 가로환경, 공공시설물과 공공미술을 디자인합니다.</p><span class="ico" data-icon="public"></span></a></li>
-      <li><a class="service fc-color" href="business.html#color"><span class="n">03</span><h3>Color Design<small>색채디자인</small></h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="ico" data-icon="color"></span></a></li>
-      <li><a class="service fc-universal" href="business.html#universal"><span class="n">04</span><h3>Universal Design<small>유니버설디자인</small></h3><p>누구나 편하게 이동하고 쓰는 공간과 안내 체계를 설계합니다.</p><span class="ico" data-icon="universal"></span></a></li>
+      <li><a class="service fc-landscape" href="business.html#landscape" data-cursor="Explore"><span class="n">01</span><h3>Landscape<small>경관</small></h3><p>경관계획, 경관심의와 경관성 검토, 도로경관과 야간경관을 다룹니다.</p><span class="ico" data-icon="landscape"></span></a></li>
+      <li><a class="service fc-public" href="business.html#public" data-cursor="Explore"><span class="n">02</span><h3>Public Design<small>공공디자인</small></h3><p>정비사업 공공디자인, 가로환경, 공공시설물과 공공미술을 디자인합니다.</p><span class="ico" data-icon="public"></span></a></li>
+      <li><a class="service fc-color" href="business.html#color" data-cursor="Explore"><span class="n">03</span><h3>Color Design<small>색채디자인</small></h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="ico" data-icon="color"></span></a></li>
+      <li><a class="service fc-universal" href="business.html#universal" data-cursor="Explore"><span class="n">04</span><h3>Universal Design<small>유니버설디자인</small></h3><p>누구나 편하게 이동하고 쓰는 공간과 안내 체계를 설계합니다.</p><span class="ico" data-icon="universal"></span></a></li>
     </ul>
   </section>
 
@@ -188,7 +188,7 @@
   <!-- Contact -->
   <section class="sec pad" id="contact" style="padding-bottom:64px">
     <span class="label">Contact <span class="ko">문의하기</span></span>
-    <p class="talk" style="margin-top:28px">Let's Talk<span>.</span></p>
+    <p class="talk" style="margin-top:28px"><a href="contact.html" data-magnet=".1" data-cursor="Contact">Let's Talk<span>.</span></a></p>
     <div class="enquire">
       <div><span class="label">Projects &amp; General</span><a data-site-email></a></div>
       <div><span class="label">Careers</span><a data-site-email></a></div>
@@ -206,6 +206,7 @@
 <script src="assets/js/site.js"></script>
 <script src="data/projects.js"></script>
 <script src="assets/js/projects-ui.js"></script>
+<script src="assets/js/cursor.js" defer></script>
 <script>
   // 사업실적: 최근 것부터 12개씩
   const recent = PROJECTS.slice().reverse();
@@ -215,7 +216,7 @@
     works.insertAdjacentHTML("beforeend", recent.slice(shown, shown + 12).map(p => {
       const slug = FIELD_SLUG[p.field];
       return `<li class="work fc-${slug}" data-reveal>
-        <a href="projects.html?field=${encodeURIComponent(p.field)}" class="art"><span class="no">${String(p.no).padStart(3, "0")}</span><svg viewBox="0 0 48 48" aria-hidden="true">${ICONS[slug]}</svg></a>
+        <a href="projects.html?field=${encodeURIComponent(p.field)}" class="art" data-cursor="View"><span class="no">${String(p.no).padStart(3, "0")}</span><svg viewBox="0 0 48 48" aria-hidden="true">${ICONS[slug]}</svg></a>
         <div class="meta"><span>${SITE.fieldsEn[p.field]}</span><span>${projectYears(p)}</span></div>
         <h3>${p.name}<small>${p.type}</small></h3>
       </li>`;
@@ -231,10 +232,10 @@
 
   // 아래로 내릴 때는 머리말을 숨기고, 위로 올리면 다시 보여줍니다
   let lastY = scrollY;
-  const top = document.querySelector(".top");
+  const topBar = document.querySelector(".top");
   addEventListener("scroll", () => {
     const y = scrollY;
-    top.classList.toggle("hide", y > 200 && y > lastY);
+    topBar.classList.toggle("hide", y > 200 && y > lastY);
     lastY = y;
   }, { passive: true });
 
