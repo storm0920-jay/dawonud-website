@@ -17,6 +17,7 @@
 </head>
 <body data-page="index.html">
 
+<i class="scroll-dot" aria-hidden="true"></i>
 <nav class="fixnav" aria-label="고정 메뉴" aria-hidden="true">
   <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay" tabindex="-1"><i></i></button>
   <span class="nav-ind"></span>
@@ -64,15 +65,28 @@
   <!-- 스크롤 장면: 문구 → 검정 막 → 단어 공간 회전 → 위에서 본 상자 → 가운데 상자로 들어감 -->
   <section class="journey" id="journey" aria-label="Landscape shapes cities. Cities shape everyday life.">
     <div class="j-stage">
-      <div class="j-cam"><div class="j-world" id="world"></div></div>
-      <p class="j-line j1"><span>Landscape</span></p>
-      <p class="j-line j2"><span>Shapes</span></p>
-      <p class="j-line j3"><span>Cities</span></p>
-      <i class="j-band top"></i><i class="j-band bot"></i>
-      <p class="j-line jc"><span>Cities</span></p>
-      <p class="j-line j4"><span>Shape</span></p>
-      <p class="j-line j5"><span>Everyday Life</span></p>
-      <i class="j-fade"></i>
+      <div class="j-cam" aria-hidden="true">
+        <div class="j-grid"></div>
+        <div class="j-words"></div>
+        <div class="j-sense"></div>
+      </div>
+      <div class="j-cards" aria-hidden="true">
+        <i class="j-card" style="--x:-3"><b>Walk</b></i>
+        <i class="j-card" style="--x:-2" data-flip="1"><b>Feel</b></i>
+        <i class="j-card" style="--x:-1"><b>Rest</b></i>
+        <i class="j-card mid"></i>
+        <i class="j-card" style="--x:1" data-flip="1"><b>Feel</b></i>
+        <i class="j-card" style="--x:2"><b>Rest</b></i>
+        <i class="j-card" style="--x:3"><b>Walk</b></i>
+      </div>
+      <div class="j-reveal" aria-hidden="true"><img src="assets/img/plan-top.svg" alt=""></div>
+      <p class="j-line j-l1"></p>
+      <p class="j-line j-l2"></p>
+      <i class="j-bar"></i>
+      <i class="j-shut j-shut-t"></i><i class="j-shut j-shut-b"></i>
+      <p class="j-line j-pivot"></p>
+      <p class="j-line j-l4"><span></span></p>
+      <p class="j-line j-l5"><span></span></p>
     </div>
   </section>
 
@@ -229,6 +243,10 @@
 <script src="data/projects.js"></script>
 <script src="assets/js/projects-ui.js"></script>
 <script src="assets/js/cursor.js" defer></script>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script src="assets/js/journey.js"></script>
 <script>
   // 사업실적: 최근 것부터 12개씩
   const recent = PROJECTS.slice().reverse();
@@ -288,105 +306,7 @@
     fixnav.querySelectorAll("a, button").forEach(el => el.tabIndex = fixnav.classList.contains("show") ? 0 : -1);
   }
 
-  // ---------- 스크롤 장면 ----------
-  const journey = document.getElementById("journey"), world = document.getElementById("world");
-  const J = s => journey.querySelector(s);
-  const L = { j1: J(".j1"), j2: J(".j2"), j3: J(".j3"), jc: J(".jc"), j4: J(".j4"), j5: J(".j5") };
-  const bandT = J(".j-band.top"), bandB = J(".j-band.bot"), fade = J(".j-fade"), stage = J(".j-stage"), cam = J(".j-cam");
-
-  let rows = [];
-  (function build() {
-    const WORDS = ["Landscape", "Shapes", "Cities", "Defines", "Color", "Place", "Public", "People", "Street", "Everyday"];
-    const SOFT = ["See", "Walk", "Feel", "Touch", "Rest", "Hear"];
-    let r = 7; const rnd = () => (r = (r * 9301 + 49297) % 233280) / 233280;   // 매번 같은 배치
-    const G = 340, F = 54;
-    let html = "", k = 0;
-    // 높이가 다른 상자들이 격자로 서 있고, 상자 윗면마다 단어가 몇 줄씩 놓임
-    for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) {
-      const core = i === 0 && j === 0;
-      const top = core ? 0 : Math.round(rnd() * 5) * 50 - 100;     // 윗면 높이: 단어가 앞뒤로 겹쳐 보이는 이유
-      const depth = core ? 1500 : 700 + Math.round(rnd() * 4) * 150;
-      const g = () => rnd() < .5 ? `<em>${SOFT[Math.floor(rnd() * SOFT.length)]}</em>` : "";
-      html += `<b class="cube${core ? " core" : ""}" style="--h:${depth}px;transform:translate3d(${i * G}px,${j * G}px,${top - depth}px)">
-        <i class="t"></i><i class="n">${g()}</i><i class="s">${g()}</i><i class="w">${g()}</i><i class="e">${g()}</i></b>`;
-      const lines = core ? [0] : [-2.1, -1.05, 0, 1.05, 2.1];
-      for (const dy of lines) {
-        let word, cls = "";
-        if (core) { word = "Everyday"; cls = "hw"; }
-        else {
-          const v = rnd();
-          if (v < .3) { word = SOFT[k % SOFT.length]; cls = "s"; }
-          else { word = WORDS[k % WORDS.length]; if (v > .82) cls = "b"; }
-          k++;
-        }
-        const x = i * G + (core ? 0 : Math.round((rnd() - .5) * 180)), y = j * G + dy * F;
-        html += `<span class="wd ${cls}" style="transform:translate3d(${x}px,${y}px,${top + 2}px) rotateX(var(--wr,0deg))">${word}</span>`;
-      }
-    }
-    world.innerHTML = html;
-    rows = [...world.querySelectorAll(".wd")];
-  })();
-
-  // 카메라 장면 — 녹화 29초~45초를 1초 단위로 잰 값. 시계 방향으로 돌며 기울고, 단어가 누운 뒤 상자 사이로 들어감
-  const KEYS = [
-    { p: .34, rx: 0, rz: 0, z: 0 },
-    { p: .42, rx: 10, rz: 25, z: 0 },
-    { p: .50, rx: 20, rz: 50, z: 20 },
-    { p: .54, rx: 28, rz: 60, z: 30 },
-    { p: .60, rx: 34, rz: 86, z: 40 },
-    { p: .66, rx: 28, rz: 130, z: 60 },
-    { p: .70, rx: 18, rz: 155, z: 90 },
-    { p: .77, rx: 6, rz: 180, z: 160 },
-    { p: .85, rx: 0, rz: 180, z: 320 },
-    { p: .96, rx: 0, rz: 180, z: 1250 },
-  ];
-  function camAt(p) {
-    if (p <= KEYS[0].p) return KEYS[0];
-    for (let i = 0; i < KEYS.length - 1; i++) {
-      const a = KEYS[i], b = KEYS[i + 1];
-      if (p <= b.p) { const t = ease((p - a.p) / (b.p - a.p)); return { rx: mix(a.rx, b.rx, t), rz: mix(a.rz, b.rz, t), z: mix(a.z, b.z, t) }; }
-    }
-    return KEYS[KEYS.length - 1];
-  }
-  const fineJ = matchMedia("(hover: hover) and (pointer: fine)").matches;
-  let mx = 0, my = 0, sx = 0, sy = 0;
-  if (fineJ) addEventListener("mousemove", e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; }, { passive: true });
-
-  const rise = (el, t) => { el.firstElementChild.style.transform = `translateY(${(1 - ease(t)) * 110}%)`; };
-  function scene() {
-    const r = journey.getBoundingClientRect();
-    const p = clamp(-r.top / (r.height - innerHeight));
-    if (r.bottom < 0 || r.top > innerHeight) return;
-    // 1) 밝은 바탕에 문구 세 줄이 차례로 올라옴
-    rise(L.j1, seg(p, .0, .06)); rise(L.j2, seg(p, .02, .08)); rise(L.j3, seg(p, .04, .10));
-    const out1 = seg(p, .12, .17);
-    L.j1.style.opacity = L.j2.style.opacity = L.j3.style.opacity = 1 - out1;
-    // 2) 위아래에서 검정 막이 닫히고 가운데 단어만 남음
-    const band = ease(seg(p, .12, .2));
-    bandT.style.transform = bandB.style.transform = `scaleY(${band})`;
-    L.jc.style.opacity = seg(p, .12, .15) * (1 - seg(p, .3, .34));
-    L.jc.classList.toggle("on-dark", band > .96);
-    stage.classList.toggle("dark", band > .96);
-    // 3) 다음 문구
-    rise(L.j4, seg(p, .2, .25)); rise(L.j5, seg(p, .22, .27));
-    L.j4.style.opacity = L.j5.style.opacity = 1 - seg(p, .3, .34);
-    // 4) 단어 공간
-    sx += (mx - sx) * .08; sy += (my - sy) * .08;
-    const c = camAt(p);
-    cam.style.opacity = seg(p, .29, .35);
-    world.style.transform = `translateZ(${c.z}px) rotateX(${c.rx + sy * 6}deg) rotateZ(${c.rz + sx * 8}deg)`;
-    // 5) 가운데 상자 안으로 들어가며 다음 화면(밝은 바탕)으로
-    // 단어가 상자 윗면에 눕듯 얇은 선이 되었다가 사라짐
-    world.style.setProperty("--wr", ease(seg(p, .61, .67)) * 90 + "deg");
-    const wo = 1 - seg(p, .7, .76);
-    if (rows.wo !== wo) { rows.forEach(el => { el.style.opacity = wo; }); rows.wo = wo; }
-    world.style.setProperty("--core", seg(p, .9, .95));
-    fade.style.opacity = seg(p, .92, .97);
-  }
-
-  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (calm) journey.classList.add("calm");
-  function loop() { navProgress(); if (!calm) scene(); requestAnimationFrame(loop); }
+  function loop() { navProgress(); requestAnimationFrame(loop); }
   requestAnimationFrame(loop);
 
   // 흑백 반전

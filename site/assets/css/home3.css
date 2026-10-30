@@ -313,59 +313,46 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 /* ===== 위에 고정되는 메뉴 줄 (첫 화면을 지나면) ===== */
 .fixnav { position: fixed; left: 0; right: 0; top: 0; z-index: 45; height: 44px; --col: calc(100% / 8); color: #fff; mix-blend-mode: difference; border-bottom: 1px solid rgba(255,255,255,.25); opacity: 0; pointer-events: none; transform: translateY(-8px); transition: opacity .35s, transform .35s; }
 .fixnav.show { opacity: 1; pointer-events: auto; transform: none; }
-.fixnav a { position: absolute; top: 14px; font: 600 13px/1 var(--en); letter-spacing: -0.01em; }
+.fixnav a { position: absolute; top: 16px; font: 400 11px/1 var(--en); letter-spacing: -0.01em; }
 .fixnav a::before { content: ""; position: absolute; left: 0; top: 23px; width: 1px; height: 9px; background: currentColor; }
 .fixnav .c2 { left: calc(var(--col) * 1); } .fixnav .c4 { left: calc(var(--col) * 3); } .fixnav .c5 { left: calc(var(--col) * 4); }
 .fixnav .c6 { left: calc(var(--col) * 5); } .fixnav .c7 { left: calc(var(--col) * 6); } .fixnav .c8 { left: calc(var(--col) * 7); }
 .fixnav .plus { position: absolute; left: 20px; top: 11px; width: 18px; height: 18px; }
 .fixnav .plus i::before, .fixnav .plus i::after { width: 16px; height: 3px; }
-.fixnav .nav-ind { position: absolute; left: 20px; bottom: -2px; height: 3px; background: currentColor; width: 0; transition: width .25s; }
+.fixnav .nav-ind { position: absolute; left: 20px; bottom: -1px; height: 1px; background: currentColor; width: 0; transition: width .25s; }
 .mast .nav-ind { transition: width .25s; }
 .plus.float { display: none; }
 @media (max-width: 900px) { .fixnav a, .fixnav .nav-ind { display: none; } .fixnav { border: 0; } .fixnav .plus { left: auto; right: 20px; } }
 
-/* ===== 스크롤 장면 ===== */
-.journey { position: relative; height: 760vh; background: #0E0E0E; }
-.j-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #EFEFED; color: #0E0E0E; perspective: 900px; }
-.j-stage.dark { background: #111110; }
-.j-stage.dark .j-band { visibility: hidden; }
-.j-line { position: absolute; margin: 0; font: 400 clamp(40px, 4.6vw, 92px)/1 var(--en); letter-spacing: -0.045em; overflow: hidden; padding-bottom: .08em; white-space: nowrap; }
-.j-line span { display: block; transform: translateY(110%); will-change: transform; }
-.j1 { right: 79%; bottom: calc(6vh + 2.1em); text-align: right; } .j1 span { margin-right: -1.6em; }
-.j2 { right: 79%; bottom: calc(6vh + 1.05em); }
-.j3 { right: 79%; bottom: 6vh; } .j3 span { margin-right: .1em; }
-.j1, .j2, .j3 { right: auto; left: 10%; }
-.j1 span { margin: 0; } .j2 { left: calc(10% + 2.2em); } .j3 { left: calc(10% + .6em); }
-.j-band { position: absolute; left: 0; right: 0; height: 50%; background: #0E0E0E; transform: scaleY(0); z-index: 2; }
-.j-band.top { top: 0; transform-origin: top; } .j-band.bot { bottom: 0; transform-origin: bottom; }
-.jc, .j4, .j5 { z-index: 3; color: #0E0E0E; }
-.jc { left: 50%; top: 50%; translate: -50% -75%; opacity: 0; mix-blend-mode: difference; color: #fff; }
-.jc span, .jc.on-dark span { transform: none; }
-.j4 { left: calc(50% + .2em); top: calc(50% + .25em); color: #9A978F; }
-.j5 { left: calc(50% - 2.6em); top: calc(50% + 1.3em); color: #F4F2ED; }
-.j-cam { position: absolute; inset: 0; display: grid; place-items: center; transform-style: preserve-3d; opacity: 0; z-index: 1; }
-.j-world { position: relative; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
-.j-world > * { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
-.j-world .wd { font: 400 54px/1 var(--en); letter-spacing: -0.035em; white-space: nowrap; translate: -50% -50%; color: #5A5A58; backface-visibility: visible; }
-.j-world .wd.b { color: #F4F2ED; }
-.j-world .wd.s { color: #3C3C3A; font-style: italic; font-size: 40px; }
-.j-world .wd.hw { color: #fff; }
-.cube { width: 0; height: 0; --s: 322px; }
-.cube i { position: absolute; left: calc(var(--s) / -2); top: calc(var(--s) / -2); width: var(--s); height: var(--s); border: 1px solid rgba(244,242,237,.17); background: rgba(16,16,16,.5); backface-visibility: visible; display: grid; place-items: center; }
-.cube i em { font: italic 400 46px/1 var(--en); letter-spacing: -0.02em; color: #4A4A48; white-space: nowrap; }
-.cube .w em, .cube .e em { rotate: 90deg; }
-.cube .t { background: transparent; transform: translateZ(var(--h)); }
-.cube .n, .cube .s { height: var(--h); top: calc(var(--h) / -2); }
-.cube .n { transform: translate3d(0, calc(var(--s) / -2), calc(var(--h) / 2)) rotateX(90deg); }
-.cube .s { transform: translate3d(0, calc(var(--s) / 2), calc(var(--h) / 2)) rotateX(90deg); }
-.cube .w, .cube .e { width: var(--h); left: calc(var(--h) / -2); }
-.cube .w { transform: translate3d(calc(var(--s) / -2), 0, calc(var(--h) / 2)) rotateY(90deg); }
-.cube .e { transform: translate3d(calc(var(--s) / 2), 0, calc(var(--h) / 2)) rotateY(90deg); }
-.cube.core .t { background: rgba(244,242,237,var(--core,0)); }
-.cube.core i:not(.t) { background: rgba(8,8,8,.85); }
-.j-fade { position: absolute; inset: 0; background: var(--white); opacity: 0; z-index: 4; pointer-events: none; }
-html.inverted .j-fade { background: var(--white); }
+/* ===== 스크롤 장면 (작업지시서 1~9단계) ===== */
+.journey { position: relative; height: 820vh; background: #111; }
+.j-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #EFEFEF; color: #111; perspective: 1000px; isolation: isolate;
+  font: 400 4.2vw/.98 var(--en); letter-spacing: -0.02em; }
+.j-stage.dark { background: #111; }
+.j-line { position: absolute; margin: 0; white-space: nowrap; }
+.j-l1, .j-l2 { z-index: 2; text-align: right; }
+.j-bar { position: absolute; width: 9vw; height: 6px; background: #111; z-index: 2; }
+.j-shut { position: absolute; left: 0; right: 0; height: 0; background: #111; z-index: 3; }
+.j-shut-t { top: 0; } .j-shut-b { bottom: 0; }
+.j-pivot { z-index: 5; color: #fff; mix-blend-mode: difference; text-align: right; }
+.j-l4, .j-l5 { z-index: 4; overflow: hidden; color: rgba(255,255,255,.75); padding-bottom: .06em; }
+.j-l4 span, .j-l5 span { display: block; transform: translateY(105%); }
+.j-cam { position: absolute; width: 0; height: 0; transform-style: preserve-3d; opacity: 0; z-index: 1; }
+.j-cam > div { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
+.j-grid svg { position: absolute; fill: none; stroke: rgba(255,255,255,.07); stroke-width: 1; }
+.j-row { position: absolute; left: 0; top: 0; margin: 0; display: flex; gap: 1.2em; translate: -50% -50%; white-space: nowrap; color: #fff; }
+.j-row .c { visibility: hidden; }
+.j-sense span { position: absolute; left: 0; top: 0; font-size: .55em; color: rgba(255,255,255,.15); white-space: nowrap; translate: -50% -50%; }
+.j-cards { position: absolute; inset: 0; perspective: 1000px; z-index: 2; pointer-events: none; }
+.j-card { position: absolute; top: 12vh; bottom: 12vh; left: calc(50% + var(--x, 0) * 13vw - 5.5vw); width: 11vw; border: 1px solid rgba(255,255,255,.07); opacity: 0;
+  display: grid; place-items: center; backface-visibility: visible; }
+.j-card b { font: 400 6vw/1 var(--en); letter-spacing: -0.02em; writing-mode: vertical-rl; color: rgba(255,255,255,.3); }
+.j-card:nth-child(2n) b { color: rgba(255,255,255,.2); } .j-card:nth-child(3n) b { color: rgba(255,255,255,.4); }
+.j-card.mid { left: calc(50% - 5.5vw); }
+.j-reveal { position: absolute; inset: 0; z-index: 6; clip-path: inset(50% 50% 50% 50%); overflow: hidden; background: #E4E2DC; }
+.j-reveal img { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: 50% 50%; }
+.scroll-dot { position: fixed; left: 50%; bottom: 22px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: #fff; mix-blend-mode: difference; z-index: 70; pointer-events: none; }
 .journey.calm { height: auto; }
-.journey.calm .j-stage { position: relative; height: 70vh; background: #0E0E0E; }
-.journey.calm .j-line span { transform: none; }
-.journey.calm .j1, .journey.calm .j2, .journey.calm .j3, .journey.calm .jc, .journey.calm .j-band { display: none; }
+.journey.calm .j-stage { position: relative; height: 70vh; background: #111; display: grid; place-items: center; }
+.journey.calm .j-stage > :not(.j-pivot) { display: none; }
+.journey.calm .j-pivot { position: static; mix-blend-mode: normal; color: #fff; }
