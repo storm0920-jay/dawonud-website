@@ -1,4 +1,7 @@
-/* 메인 스크롤 장면: 세 줄 문장 → 셔터 → 두 번째 문장 → 단어 평면(3D) → 선 → 어두운 격자 → 감각 단어 카드 → 조감 이미지
+/* 메인 스크롤 장면
+   1~4단계: 작업지시서대로 (세 줄 문장 → 셔터 → 두 번째 문장 → 단어 공간 등장)
+   5단계부터: 참고 녹화(29~45초)를 1초 단위로 잰 움직임. 높이가 다른 상자들이 격자로 서 있고 상자 윗면마다 단어가 놓인 공간이
+   시계 방향으로 돌며 기울고 → 단어가 누워 얇은 선이 되고 → 상자 사이를 내려다보다 → 가운데 상자 안으로 들어가 이미지가 열림.
    스크롤 위치에 1:1로 묶여 있어서(scrub) 멈추면 멈추고, 올리면 거꾸로 돕니다.
    단어·구간(%)·수치는 모두 아래 CONFIG 에서 고칩니다. 구간 값은 이 섹션 스크롤 진행도(0~1)입니다. */
 const CONFIG = {
@@ -6,24 +9,39 @@ const CONFIG = {
     first: ["Design", "Shapes", "Place"],              // 1단계 세 줄. 마지막 줄이 피벗 단어
     second: ["Defines", "Life"],                       // 3단계: 피벗 단어 아래 두 줄 (Place / Defines / Life)
     field: ["Landscape", "Streetscape", "Community", "Shapes", "Connects", "Defines"],
-    sense: ["Walk", "Pause", "Gather"],                // 감각 단어 3종 (작은 레이어, 8단계 카드)
+    sense: ["Walk", "Pause", "Gather"],                // 감각 단어 3종 (작은 기울임 글자, 상자 옆면)
   },
-  scroll: { scrub: 1, length: 800 },                   // 관성(초), 이 섹션을 고정(pin)한 채 스크롤하는 길이(vh, 700~900)
-  upTo: 9,                                             // 확인 단계: 4면 1~4단계까지만 보여 줌. 확인 후 9로 바꾸면 5~9단계까지
-  type: { tracking: "-0.02em", leading: .98, white2: .75 },  // 두 번째 문장 2·3행 밝기
+  // 구간 비율은 밝은 녹화(Video Project_색반전, 0~33초)의 스크롤바 위치를 0.5초마다 재서 맞춤. 일정한 속도로 내리면 녹화와 같은 속도로 바뀜
+  scroll: { scrub: 1, length: 900 },                   // 관성(초), 장면을 붙잡아 둔 채 스크롤하는 길이(vh)
+  upTo: 9,                                             // 4면 1~4단계까지만 보여 줌
+  type: { tracking: "-0.02em", leading: .98, white2: .75 },
   levels: [1, .55, .25, .1],                           // 단어 밝기 4단계(흰색 불투명도)
 
-  s1: { from: 0, to: .10, rise: .4, right: .62, centerY: .45, barW: .09 },     // 아래 40vh에서 올라옴, 블록 오른쪽 끝 62vw, 피벗 줄 높이 45vh
-  s2: { close: [.10, .13], narrow: [.13, .158], end: .16 },                    // 검은 면이 닫힘 → 띠가 1px로 좁아짐 → 사라짐
-  s3: { l2: [.16, .20], l3: [.18, .22], indent: 2 },                           // 마스크가 걷히며 올라옴, 2행 들여쓰기(em)
-  s4: { merge: [.22, .29], field: [.22, .30], handOff: .30 },                  // 두 줄이 피벗 줄로 모임 + 단어 평면 등장
-  field: { rows: 17, rowsMobile: 8, perRow: 15, rowGap: 1.6, wordGap: 1.2, senseCount: 140, senseScale: .55, senseAlpha: .15, gridAlpha: .07 },
-  s5: { range: [.30, .45], rotZ: 90, rotX: 25, zoomZ: 130 },                   // Z 0→90°, X 0→25°, 약 15% 다가감
-  s6: { range: [.45, .55], rotY: 85, roll: 40, pushBack: 1500, senseRotY: 68, senseRotZ: 22, gridRotY: 48 },
-  s7: { range: [.55, .75], wordsOut: [.56, .66], senseOut: [.55, .64], shorten: .75, gridBack: [.55, .70], drift: [140, -70], gridZ: 90 },
-  s8: { start: .755, stagger: .013, each: .07, mid: [.76, .79], slit: [.80, .88], slitW: 4, inset: .12 },
-  s9: { open: [.88, .905], zoom: [.90, 1], scale: 1.25, gridOut: [.86, .90] },
-  calm: { second: [.16, .22], field: [.22, .30], wordsOut: [.45, .55], cards: [.75, .88], image: [.88, .93] },  // 동작 줄이기: 3~9단계를 페이드로
+  s1: { from: 0, to: .04, rise: .4, right: .62, centerY: .45, barW: .09 },     // 녹화 1~2초
+  s2: { close: [.04, .06], narrow: [.06, .075], end: .08 },                    // 녹화 2초
+  s3: { l2: [.08, .10], l3: [.09, .11], indent: 2 },                           // 녹화 3초
+  s4: { merge: [.11, .15], field: [.11, .16], handOff: .16 },                  // 녹화 4~5초
+  // 상자 공간: 격자 칸 크기(글자 크기의 배수), 칸 수, 윗면 높이 [최저, 최고, 간격](px), 깊이, 윗면마다 단어 줄 수
+  boxes: { pitch: 5.6, gap: 18, range: 6, rangeMobile: 4, tops: [-100, 150, 50], depth: [700, 1300], coreDepth: 1500, floor: 600, lines: 5, senseShare: .28, sideWords: .5 },
+  // 카메라 (rx: 앞뒤 기울기, rz: 시계 방향 회전, z: 다가감)
+  camera: [
+    { p: .16, rx: 0, rz: 0, z: 0 },          // 5초: 정면
+    { p: .20, rx: 10, rz: 25, z: 0 },        // 6초: 비스듬히
+    { p: .23, rx: 20, rz: 45, z: 20 },       // 7~8초
+    { p: .26, rx: 28, rz: 62, z: 30 },       // 9~10초
+    { p: .29, rx: 34, rz: 80, z: 40 },       // 11초: 거의 세로
+    { p: .34, rx: 30, rz: 115, z: 60 },      // 12~13초: 단어가 누우며 사선
+    { p: .39, rx: 18, rz: 150, z: 100 },     // 15초: 얇은 선
+    { p: .55, rx: 4, rz: 176, z: 160 },      // 16~21초: 상자만 남아 천천히 정렬
+    { p: .78, rx: 0, rz: 180, z: 320 },      // 27초: 위에서 내려다본 격자, 가운데 상자 바닥의 이미지가 작게 보임
+    { p: .95, rx: 0, rz: 180, z: 1380 },     // 28~32초: 가운데 상자 안으로 내려가 바닥 이미지가 화면을 채움
+  ],
+  lieDown: [.30, .37],                                 // 단어가 상자 윗면에 누워 얇은 선이 됨
+  wordsOut: [.37, .45],                                // 선이 사라짐 → 상자와 옆면 단어만 남음
+  centre: [.40, .78],                                  // 상자만 남는 동안 가운데 상자를 화면 정중앙으로 천천히 옮김
+  floorIn: [.76, .82],                                 // 녹화 28초: 가운데 상자 바닥의 이미지가 작게 나타남
+  reveal: { at: .95, zoom: [.95, 1], scale: 1.25 },   // 바닥 이미지가 화면을 채운 뒤 화면 전체 이미지로 바뀌어 천천히 확대
+  calm: { second: [.08, .11], field: [.11, .16], wordsOut: [.37, .45], image: [.85, .95] },  // 동작 줄이기: 3단계부터 페이드로
 };
 
 (function () {
@@ -49,54 +67,45 @@ const CONFIG = {
   l4.style.color = l5.style.color = `rgba(255,255,255,${C.type.white2})`;
   journey.setAttribute("aria-label", `${Wd.first.join(" ")}. ${[Wd.first[2], ...Wd.second].join(" ")}.`);
   const shutT = $(".j-shut-t"), shutB = $(".j-shut-b"), bar = $(".j-bar");
-  const cam = $(".j-cam"), grid = $(".j-grid"), words = $(".j-words"), sense = $(".j-sense");
-  const cards = [...stage.querySelectorAll(".j-card")], reveal = $(".j-reveal"), img = reveal.firstElementChild;
-  cards.filter(c => !c.classList.contains("mid")).forEach((c, i) => { c.firstElementChild.textContent = Wd.sense[i % 3]; });
+  const cam = $(".j-cam"), world = $(".j-world");
+  const reveal = $(".j-reveal"), img = reveal.firstElementChild;
 
-  // 단어 평면: 가로 줄마다 키워드를 돌려 쓰고, 줄마다 시작 단어를 엇갈리게. 가운데일수록 밝게
-  let centreWord = null;
-  (function buildWords() {
-    const R = mobile ? C.field.rowsMobile : C.field.rows, N = C.field.perRow, mid = Math.floor(N / 2), F = Wd.field;
-    let html = "";
-    for (let row = -R; row <= R; row++) {
-      let line = "";
-      const start = ((row * 4) % F.length + F.length) % F.length;
-      for (let c = 0; c < N; c++) {
-        const centre = row === 0 && c === mid;
-        const d = Math.hypot(row / 3, (c - mid) / 2.2);
-        const v = rnd() + d * .12;
-        const lv = centre ? 0 : v < .35 ? 0 : v < .65 ? 1 : v < .95 ? 2 : 3;
-        line += `<span style="opacity:${C.levels[lv]}"${centre ? ' class="c"' : ""}>${centre ? Wd.first[2] : F[(start + c) % F.length]}</span>`;
+  // 상자 공간: 높이가 다른 상자들이 격자로 서 있고, 윗면마다 단어가 몇 줄씩 놓임 (높이 차이 때문에 단어가 앞뒤로 겹쳐 보임)
+  let centreWord = null, floor = null, builtFor = 0;
+  function buildWorld(fs) {
+    r = 7;
+    const B = C.boxes, G = B.pitch * fs, S = G - B.gap, k = fs / 54, N = mobile ? B.rangeMobile : B.range;
+    const steps = Math.round((B.tops[1] - B.tops[0]) / B.tops[2]);
+    let html = "", n = 0;
+    for (let i = -N; i <= N; i++) for (let j = -N; j <= N; j++) {
+      const core = i === 0 && j === 0;
+      const top = core ? 0 : (B.tops[0] + Math.round(rnd() * steps) * B.tops[2]) * k;
+      const depth = core ? B.coreDepth : B.depth[0] + Math.round(rnd() * 4) * (B.depth[1] - B.depth[0]) / 4;
+      const side = () => rnd() < B.sideWords ? `<em>${Wd.sense[Math.floor(rnd() * 3)]}</em>` : "";
+      html += `<b class="cube${core ? " core" : ""}" style="--s:${S.toFixed(0)}px;--h:${depth}px;transform:translate3d(${(i * G).toFixed(0)}px,${(j * G).toFixed(0)}px,${(top - depth).toFixed(0)}px)">` +
+        `<i class="t"></i><i class="n">${side()}</i><i class="s">${side()}</i><i class="w">${side()}</i><i class="e">${side()}</i></b>`;
+      const lines = core ? [0] : Array.from({ length: B.lines }, (_, m) => (m - (B.lines - 1) / 2) * 1.05);
+      for (const dy of lines) {
+        let word, cls = "", op = 1;
+        if (core) { word = Wd.first[2]; cls = "c"; }
+        else if (rnd() < B.senseShare) { word = Wd.sense[n % 3]; cls = "sn"; }
+        else {
+          word = Wd.field[n % Wd.field.length];
+          const v = rnd() + Math.hypot(i, j) * .06;               // 가운데일수록 밝게
+          op = C.levels[v < .3 ? 0 : v < .62 ? 1 : v < .95 ? 2 : 3];
+        }
+        n++;
+        const x = i * G + (core ? 0 : Math.round((rnd() - .5) * G * .5)), y = j * G + dy * fs;
+        html += `<span class="wd ${cls}" style="--o:${op};transform:translate3d(${x.toFixed(0)}px,${y.toFixed(0)}px,${(top + 2).toFixed(0)}px) rotateX(var(--wr,0deg))">${word}</span>`;
       }
-      html += `<p class="j-row" data-row="${row}" style="gap:${C.field.wordGap}em">${line}</p>`;
     }
-    words.innerHTML = html;
-    centreWord = words.querySelector(".c");
-  })();
-
-  // 감각 단어: 작은 크기로 흩뿌림
-  (function buildSense() {
-    let html = "";
-    for (let i = 0; i < C.field.senseCount; i++) {
-      const x = (rnd() - .5) * 4200, y = (rnd() - .5) * 3600;
-      html += `<span style="transform:translate3d(${x.toFixed(0)}px,${y.toFixed(0)}px,0)">${Wd.sense[i % 3]}</span>`;
-    }
-    sense.innerHTML = html;
-    sense.style.fontSize = C.field.senseScale + "em";
-    sense.style.color = `rgba(255,255,255,${C.field.senseAlpha})`;
-  })();
-
-  // 격자: 크기가 다른 사각형이 모인 평면도·포장 패턴
-  (function buildGrid() {
-    const S = 4400, rects = [];
-    (function split(x, y, w, h, depth) {
-      if (depth > 5 || (w < 260 && h < 260) || (depth > 2 && rnd() < .22)) { rects.push([x, y, w, h]); return; }
-      if (w > h ? rnd() < .8 : rnd() < .2) { const k = w * (.3 + rnd() * .4); split(x, y, k, h, depth + 1); split(x + k, y, w - k, h, depth + 1); }
-      else { const k = h * (.3 + rnd() * .4); split(x, y, w, k, depth + 1); split(x, y + k, w, h - k, depth + 1); }
-    })(0, 0, S, S, 0);
-    grid.innerHTML = `<svg viewBox="0 0 ${S} ${S}" width="${S}" height="${S}" style="left:${-S / 2}px;top:${-S / 2}px;stroke:rgba(255,255,255,${C.field.gridAlpha})">` +
-      rects.map(([x, y, w, h]) => `<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="${w.toFixed(0)}" height="${h.toFixed(0)}"/>`).join("") + "</svg>";
-  })();
+    // 가운데 상자 바닥의 이미지: 카메라가 상자 안으로 내려가면 이 이미지가 화면을 채움
+    html += `<img class="floor" src="${img.getAttribute("src")}" alt="" style="width:${S.toFixed(0)}px;height:${S.toFixed(0)}px;transform:translate3d(-50%,-50%,${-B.floor}px)">`;
+    world.innerHTML = html;
+    centreWord = world.querySelector(".wd.c");
+    floor = world.querySelector(".floor");
+    builtFor = fs;
+  }
 
   // ---------- 자리 잡기 (창 크기가 바뀌면 다시) ----------
   let W, H, fs, lh, pv;   // pv: 피벗 단어의 위치
@@ -111,18 +120,12 @@ const CONFIG = {
     l5.style.left = pv.left + "px"; l5.style.top = (pv.top + 2 * lh) + "px";
     bar.style.width = (W * C.s1.barW) + "px";
     bar.style.left = (pv.left - W * C.s1.barW - fs * .4) + "px"; bar.style.top = (pv.top + lh * 1.25) + "px";
-    cam.style.left = pv.cx + "px"; cam.style.top = cy + "px";
-    stage.style.perspectiveOrigin = `${pv.cx}px ${cy}px`;
-    // 단어 평면의 가운데 단어가 정확히 피벗 단어 자리에 오도록 줄을 옮김
-    words.querySelectorAll(".j-row").forEach(row => {
-      const n = +row.dataset.row;
-      const shift = n === 0 ? row.offsetWidth / 2 - centreWord.offsetLeft - centreWord.offsetWidth / 2 : ((n * 137) % 300) - 150;
-      row.style.transform = `translate3d(${shift}px, ${n * C.field.rowGap * fs}px, 0)`;
-    });
+    // 공간의 가운데(가운데 상자 윗면의 피벗 단어)가 정확히 피벗 단어 자리에 오도록
+    if (builtFor !== fs) buildWorld(fs);
   }
 
   // ---------- 장면 ----------
-  const set = (el, k, v) => { if (el._s?.[k] !== v) { (el._s ||= {})[k] = v; el.style[k] = v; } };
+  const set = (el, k, v) => { if (el._s?.[k] !== v) { (el._s ||= {})[k] = v; k.startsWith("--") ? el.style.setProperty(k, v) : (el.style[k] = v); } };
 
   // 1~2단계는 동작 줄이기에서도 같음
   function opening(p) {
@@ -136,6 +139,17 @@ const CONFIG = {
     set(shutT, "height", (closed ? 0 : bandTop * a) + "px");
     set(shutB, "height", (closed ? 0 : (H - bandBot) * a) + "px");
     stage.classList.toggle("dark", closed);
+    [l1, l2, bar].forEach(el => set(el, "visibility", closed ? "hidden" : "visible"));   // 검은 면 뒤로 사라진 1·2행
+  }
+
+  function camAt(p) {
+    const K = C.camera;
+    if (p <= K[0].p) return K[0];
+    for (let i = 0; i < K.length - 1; i++) {
+      const a = K[i], b = K[i + 1];
+      if (p <= b.p) { const t = io((p - a.p) / (b.p - a.p)); return { rx: mix(a.rx, b.rx, t), rz: mix(a.rz, b.rz, t), z: mix(a.z, b.z, t) }; }
+    }
+    return K[K.length - 1];
   }
 
   function render(p) {
@@ -144,59 +158,43 @@ const CONFIG = {
     set(l4.firstElementChild, "transform", `translateY(${(1 - io(seg(p, C.s3.l2))) * 105}%)`);
     set(l5.firstElementChild, "transform", `translateY(${(1 - io(seg(p, C.s3.l3))) * 105}%)`);
 
-    // 4단계: 두 줄이 피벗 줄로 모여 겹치고, 단어 평면이 서서히 나타남
+    // 4단계: 두 줄이 피벗 줄로 모여 겹치고, 상자와 단어 공간이 서서히 나타남
     const g = io(seg(p, C.s4.merge));
     set(l4, "translate", `0 ${(-g * lh).toFixed(1)}px`);
     set(l5, "translate", `0 ${(-g * 2 * lh).toFixed(1)}px`);
     set(cam, "opacity", String(seg(p, C.s4.field)));
-    const handOff = p >= C.s4.handOff;   // 이 뒤로는 평면 속 가운데 단어가 이어받음
+    const handOff = p >= C.s4.handOff;   // 이 뒤로는 공간 속 가운데 단어가 이어받음
     [pivot, l4, l5].forEach(el => set(el, "visibility", handOff ? "hidden" : "visible"));
     set(centreWord, "visibility", handOff ? "visible" : "hidden");
 
-    // 5단계: 평면 전체가 Z축으로 돌고 X축으로 기울며 조금 다가감
-    const t5 = seg(p, C.s5.range);
-    const rz = C.s5.rotZ * t5, rx = C.s5.rotX * io(t5), z = C.s5.zoomZ * io(t5);
-    // 6단계: 평면이 Y축으로 돌아 옆면만 보임 → 글자가 얇은 사선이 됨. 격자·감각 단어는 다른 각도로
-    const t6 = io(seg(p, C.s6.range));
-    // 7단계: 선이 짧아지며 사라지고, 격자만 남아 아주 느리게 움직임
-    const t7 = seg(p, C.s7.range), fadeW = seg(p, C.s7.wordsOut);
-    const roll = C.s6.roll * t6, zb = z - C.s6.pushBack * t6;
-    set(words, "transform", `translateZ(${zb}px) rotateZ(${roll}deg) rotateY(${C.s6.rotY * t6}deg) rotateX(${rx}deg) rotateZ(${rz}deg) scaleX(${1 - C.s7.shorten * io(fadeW)})`);
-    set(words, "opacity", String(1 - fadeW));
-    set(sense, "transform", `translateZ(${zb}px) rotateZ(${roll * .5}deg) rotateY(${C.s6.senseRotY * t6}deg) rotateX(${rx}deg) rotateZ(${rz + C.s6.senseRotZ * t6}deg)`);
-    set(sense, "opacity", String(1 - seg(p, C.s7.senseOut)));
-    const back = 1 - io(seg(p, C.s7.gridBack));
-    set(grid, "transform", `translateZ(${z + C.s7.gridZ * t7}px) rotateZ(${roll * .3 * back}deg) rotateY(${C.s6.gridRotY * t6 * back}deg) rotateX(${rx * back}deg) rotateZ(${rz - 12 * t6 * back}deg) translate3d(${(t7 * C.s7.drift[0]).toFixed(1)}px, ${(t7 * C.s7.drift[1]).toFixed(1)}px, 0)`);
-    set(grid, "opacity", String(1 - seg(p, C.s9.gridOut)));
+    // 5~7단계: 카메라가 녹화처럼 움직임 (시계 방향으로 돌며 기울고 → 단어가 누움 → 상자 사이로 다가감)
+    const c = camAt(p);
+    set(world, "transform", `translateZ(${c.z.toFixed(1)}px) rotateX(${c.rx.toFixed(2)}deg) rotateZ(${c.rz.toFixed(2)}deg)`);
+    set(world, "--wr", (io(seg(p, C.lieDown)) * 90).toFixed(1) + "deg");
+    set(world, "--wo", (1 - seg(p, C.wordsOut)).toFixed(3));
+    const ct = io(seg(p, C.centre)), cx = mix(pv.cx, W / 2, ct), cy = mix(pv.cy, H / 2, ct);
+    set(cam, "left", cx.toFixed(1) + "px"); set(cam, "top", cy.toFixed(1) + "px");
+    set(stage, "perspectiveOrigin", `${cx.toFixed(1)}px ${cy.toFixed(1)}px`);
+    if (floor) set(floor, "opacity", seg(p, C.floorIn).toFixed(3));
 
-    // 8단계: 세로 패널이 3D로 뒤집히며 감각 단어가 나타났다 사라짐, 가운데 패널 틈으로 이미지가 비침
-    cards.forEach((c, i) => {
-      if (c.classList.contains("mid")) { set(c, "opacity", String(seg(p, C.s8.mid) * (1 - seg(p, C.s9.gridOut)))); return; }
-      const s0 = C.s8.start + ((i * 3) % cards.length) * C.s8.stagger, t = seg(p, [s0, s0 + C.s8.each]);
-      set(c, "transform", `rotateY(${mix(-95, c.dataset.flip ? 265 : 95, t).toFixed(1)}deg)`);
-      set(c, "opacity", String(t > 0 && t < 1 ? Math.sin(Math.PI * t) : 0));
-    });
-
-    // 9단계: 가운데 틈이 화면 전체로 열리고, 이미지가 천천히 확대됨
-    const slit = seg(p, C.s8.slit) * C.s8.slitW, open = io(seg(p, C.s9.open));
-    const sideIn = mix(W / 2 - slit, 0, open), vIn = mix(H * C.s8.inset, 0, open);
-    set(reveal, "clipPath", p < C.s8.slit[0] ? "inset(50% 50% 50% 50%)" : `inset(${vIn.toFixed(1)}px ${sideIn.toFixed(1)}px ${vIn.toFixed(1)}px ${sideIn.toFixed(1)}px)`);
-    set(img, "transform", `scale(${1 + (C.s9.scale - 1) * seg(p, C.s9.zoom)})`);
+    // 8~9단계: 가운데 상자 바닥의 이미지가 화면을 채우면 화면 전체 이미지로 이어받아 천천히 확대됨
+    set(reveal, "clipPath", p >= C.reveal.at ? "none" : "inset(50% 50% 50% 50%)");
+    set(img, "transform", `scale(${1 + (C.reveal.scale - 1) * seg(p, C.reveal.zoom)})`);
   }
 
-  // 동작 줄이기: 3~9단계는 회전·이동 없이 페이드로만 바뀜
+  // 동작 줄이기: 3단계부터는 회전·이동 없이 페이드로만 바뀜
   function renderCalm(p) {
     opening(p);
     const K = C.calm;
+    set(cam, "left", pv.cx + "px"); set(cam, "top", pv.cy + "px");
+    set(stage, "perspectiveOrigin", `${pv.cx}px ${pv.cy}px`);
+    if (floor) set(floor, "opacity", "0");
     [l4, l5].forEach(el => { set(el.firstElementChild, "transform", "none"); set(el, "opacity", String(seg(p, K.second))); });
     const f = seg(p, K.field);
     set(cam, "opacity", String(f));
     [pivot, l4, l5].forEach(el => set(el, "visibility", f >= 1 ? "hidden" : "visible"));
     set(centreWord, "visibility", f >= 1 ? "visible" : "hidden");
-    set(words, "opacity", String(1 - seg(p, K.wordsOut)));
-    set(sense, "opacity", String(1 - seg(p, K.wordsOut)));
-    const cd = seg(p, K.cards);
-    cards.forEach(c => { set(c, "transform", "none"); set(c, "opacity", String(Math.sin(Math.PI * cd))); });
+    set(world, "--wo", (1 - seg(p, K.wordsOut)).toFixed(3));
     set(reveal, "clipPath", "none");
     set(reveal, "opacity", String(seg(p, K.image)));
   }
@@ -208,7 +206,7 @@ const CONFIG = {
   const state = { p: 0 };
   draw(0);
   gsap.registerPlugin(ScrollTrigger);
-  // 1~4단계만 확인할 때는 4단계 끝(단어 평면이 다 깔린 상태)에서 멈추고 스크롤 길이도 그만큼만
+  // 1~4단계만 확인할 때는 4단계 끝(단어 공간이 다 깔린 상태)에서 멈추고 스크롤 길이도 그만큼만
   const last = C.upTo >= 9 ? 1 : C.s4.field[1];
   journey.style.height = `calc(100vh + ${C.scroll.length * last}vh)`;
   gsap.to(state, {

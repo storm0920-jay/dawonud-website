@@ -338,21 +338,32 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .j-l4, .j-l5 { z-index: 4; overflow: hidden; padding-bottom: .06em; }
 .j-l4 span, .j-l5 span { display: block; transform: translateY(105%); }
 .j-cam { position: absolute; width: 0; height: 0; transform-style: preserve-3d; opacity: 0; z-index: 1; }
-.j-cam > div { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
-.j-grid svg { position: absolute; fill: none; stroke-width: 1; }
-.j-row { position: absolute; left: 0; top: 0; margin: 0; display: flex; translate: -50% -50%; white-space: nowrap; color: #fff; }
-.j-row .c { visibility: hidden; }
-.j-sense span { position: absolute; left: 0; top: 0; white-space: nowrap; translate: -50% -50%; }
-.j-cards { position: absolute; inset: 0; perspective: 1000px; z-index: 2; pointer-events: none; }
-.j-card { position: absolute; top: 12vh; bottom: 12vh; left: calc(50% + var(--x, 0) * 13vw - 5.5vw); width: 11vw; border: 1px solid rgba(255,255,255,.07); opacity: 0;
-  display: grid; place-items: center; backface-visibility: visible; }
-.j-card b { font: 400 6vw/1 var(--en); letter-spacing: -0.02em; writing-mode: vertical-rl; color: rgba(255,255,255,.3); }
-.j-card:nth-child(2n) b { color: rgba(255,255,255,.2); } .j-card:nth-child(3n) b { color: rgba(255,255,255,.4); }
-.j-card.mid { left: calc(50% - 5.5vw); }
+.j-world { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
+.j-world > * { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+/* 상자 윗면의 단어: 지시서 밝기 4단계(--o), 누우면서(--wr) 사라짐(--wo) */
+.j-world .wd { white-space: nowrap; translate: -50% -50%; color: #fff; opacity: calc(var(--o, 1) * var(--wo, 1)); backface-visibility: visible; }
+.j-world .wd.sn { font-style: italic; font-size: .55em; color: rgba(255,255,255,.15); --o: 1; }
+.j-world .wd.c { visibility: hidden; }
+/* 투명한 상자: 가는 모서리 선 + 옆면에 감각 단어 */
+.cube { width: 0; height: 0; }
+.cube i { position: absolute; left: calc(var(--s) / -2); top: calc(var(--s) / -2); width: var(--s); height: var(--s); border: 1px solid rgba(255,255,255,.14); background: rgba(17,17,17,.5); backface-visibility: visible; display: grid; place-items: center; }
+.cube i em { font: italic 400 .75em/1 var(--en); color: rgba(255,255,255,.22); white-space: nowrap; }
+.cube .w em, .cube .e em { rotate: 90deg; }
+.cube .t { background: transparent; transform: translateZ(var(--h)); }
+.cube .n, .cube .s { height: var(--h); top: calc(var(--h) / -2); }
+.cube .n { transform: translate3d(0, calc(var(--s) / -2), calc(var(--h) / 2)) rotateX(90deg); }
+.cube .s { transform: translate3d(0, calc(var(--s) / 2), calc(var(--h) / 2)) rotateX(90deg); }
+.cube .w, .cube .e { width: var(--h); left: calc(var(--h) / -2); }
+.cube .w { transform: translate3d(calc(var(--s) / -2), 0, calc(var(--h) / 2)) rotateY(90deg); }
+.cube .e { transform: translate3d(calc(var(--s) / 2), 0, calc(var(--h) / 2)) rotateY(90deg); }
+.j-world .floor { max-width: none; object-fit: cover; backface-visibility: hidden; }
+/* 왼쪽 아래 색 반전(Invert color)을 켜면 장면도 밝게: 상자와 선이 잘 보임. 이미지는 원래 색 유지 */
+html.inverted .j-stage { filter: invert(1); }
+html.inverted .j-reveal, html.inverted .j-world .floor { filter: invert(1); }
 .j-reveal { position: absolute; inset: 0; z-index: 6; clip-path: inset(50% 50% 50% 50%); overflow: hidden; background: #E4E2DC; }
 .j-reveal img { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: 50% 50%; }
 .scroll-dot { position: fixed; left: 50%; bottom: 22px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: #fff; mix-blend-mode: difference; z-index: 70; pointer-events: none; }
-@media (max-width: 768px) { .j-stage { font-size: 8vw; } .j-card { width: 16vw; left: calc(50% + var(--x, 0) * 18vw - 8vw); } .j-card.mid { left: calc(50% - 8vw); } .j-card b { font-size: 9vw; } }
+@media (max-width: 768px) { .j-stage { font-size: 8vw; } }
 /* 효과 대본을 못 불러왔을 때: 두 번째 문장만 고정으로 보여 줌 */
 .journey.static { height: auto; }
 .journey.static .j-stage { position: relative; height: 70vh; background: #111; display: grid; place-items: center; }
