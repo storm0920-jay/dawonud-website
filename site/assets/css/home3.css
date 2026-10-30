@@ -238,7 +238,7 @@ html.inverted {
 }
 body, .light { transition: background-color .6s ease, color .6s ease; }
 .mast { --col: calc(100% / 8); position: relative; height: 100svh; min-height: 620px; overflow: hidden; background: var(--black); color: var(--white); }
-.mast-word { position: absolute; left: 0; right: 0; top: 0; margin: 0; display: flex; justify-content: space-between; font: 800 19.4vw/.74 var(--en); letter-spacing: -0.02em; transform: translateY(-1.1vw); overflow: hidden; padding-bottom: .02em; }
+.mast-word { position: absolute; left: calc(100% / 8); right: 0; top: 0; margin: 0; display: flex; justify-content: space-between; font: 900 19.4vw/.74 var(--en); letter-spacing: -0.02em; transform: translateY(-0.5vw); overflow: hidden; padding-bottom: .02em; }
 .mast-word span { display: block; animation: rise 1.2s cubic-bezier(.2,.8,.2,1) both; }
 .mast-word span:nth-child(2) { animation-delay: .06s; } .mast-word span:nth-child(3) { animation-delay: .12s; }
 .mast-word span:nth-child(4) { animation-delay: .18s; } .mast-word span:nth-child(5) { animation-delay: .24s; }
@@ -290,6 +290,7 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 
 @media (max-width: 900px) {
   .mast { height: auto; min-height: 100svh; }
+  .mast-word { left: 0; }
   .mast-nav { height: auto; border: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0 20px; top: calc(14.4vw + 16px); }
   .mast-nav::before { display: none; }
   .mast-nav a { position: static; height: auto; padding: 12px 0; border-bottom: 1px solid var(--hair); font-size: 18px; }
