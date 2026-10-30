@@ -299,48 +299,46 @@
     const WORDS = ["Landscape", "Shapes", "Cities", "Defines", "Color", "Place", "Public", "People", "Street", "Everyday"];
     const SOFT = ["See", "Walk", "Feel", "Touch", "Rest", "Hear"];
     let r = 7; const rnd = () => (r = (r * 9301 + 49297) % 233280) / 233280;   // 매번 같은 배치
-    const G = 320;
-    let html = "";
-    // 단어 판 뒤로 깊게 늘어선 투명한 상자들 (옆면에 작은 단어)
+    const G = 340, F = 54;
+    let html = "", k = 0;
+    // 높이가 다른 상자들이 격자로 서 있고, 상자 윗면마다 단어가 몇 줄씩 놓임
     for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) {
       const core = i === 0 && j === 0;
-      const h = core ? 1400 : 500 + Math.round(rnd() * 4) * 180;
-      const g = () => rnd() < .55 ? `<em>${SOFT[Math.floor(rnd() * SOFT.length)]}</em>` : "";
-      html += `<b class="cube${core ? " core" : ""}" style="--h:${h}px;transform:translate3d(${i * G}px,${j * G}px,${-h}px)">
+      const top = core ? 0 : Math.round(rnd() * 5) * 50 - 100;     // 윗면 높이: 단어가 앞뒤로 겹쳐 보이는 이유
+      const depth = core ? 1500 : 700 + Math.round(rnd() * 4) * 150;
+      const g = () => rnd() < .5 ? `<em>${SOFT[Math.floor(rnd() * SOFT.length)]}</em>` : "";
+      html += `<b class="cube${core ? " core" : ""}" style="--h:${depth}px;transform:translate3d(${i * G}px,${j * G}px,${top - depth}px)">
         <i class="t"></i><i class="n">${g()}</i><i class="s">${g()}</i><i class="w">${g()}</i><i class="e">${g()}</i></b>`;
-    }
-    // 앞면: 빽빽하게 줄지은 단어들
-    let k = 0;
-    for (let row = -13; row <= 13; row++) {
-      let line = "";
-      const n = 13, mid = Math.floor(n / 2);
-      for (let c = 0; c < n; c++) {
-        if (row === 0 && c === mid) { line += `<span class="hw">Everyday</span>`; continue; }
-        const v = rnd();
-        line += v < .28 ? `<span class="s">${SOFT[k % SOFT.length]}</span>` : `<span${v > .8 ? ' class="b"' : ""}>${WORDS[k % WORDS.length]}</span>`;
-        k++;
+      const lines = core ? [0] : [-2.1, -1.05, 0, 1.05, 2.1];
+      for (const dy of lines) {
+        let word, cls = "";
+        if (core) { word = "Everyday"; cls = "hw"; }
+        else {
+          const v = rnd();
+          if (v < .3) { word = SOFT[k % SOFT.length]; cls = "s"; }
+          else { word = WORDS[k % WORDS.length]; if (v > .82) cls = "b"; }
+          k++;
+        }
+        const x = i * G + (core ? 0 : Math.round((rnd() - .5) * 180)), y = j * G + dy * F;
+        html += `<span class="wd ${cls}" style="transform:translate3d(${x}px,${y}px,${top + 2}px) rotateX(var(--wr,0deg))">${word}</span>`;
       }
-      const shift = row === 0 ? 0 : Math.round((rnd() - .5) * 300);
-      html += `<p class="row" style="transform:translate3d(${shift}px,${row * 1.6}em,2px)">${line}</p>`;
     }
     world.innerHTML = html;
-    rows = [...world.querySelectorAll(".row")];
-    // 가운데 줄은 'Everyday'가 화면 정중앙에 오도록 맞춤
-    const hero = world.querySelector(".hw"), r0 = hero.parentElement;
-    const centre = () => { r0.style.transform = `translate3d(${r0.offsetWidth / 2 - hero.offsetLeft - hero.offsetWidth / 2}px,0,2px)`; };
-    centre(); document.fonts && document.fonts.ready.then(centre);
+    rows = [...world.querySelectorAll(".wd")];
   })();
 
-  // 카메라 장면 (p: 0~1 스크롤 위치) — 정면 → 비스듬히 → 세로 → 단어가 옆으로 누움 → 상자 사이로 → 가운데 상자 안으로
+  // 카메라 장면 — 녹화 29초~45초를 1초 단위로 잰 값. 시계 방향으로 돌며 기울고, 단어가 누운 뒤 상자 사이로 들어감
   const KEYS = [
     { p: .34, rx: 0, rz: 0, z: 0 },
-    { p: .44, rx: 10, rz: -26, z: 0 },
-    { p: .52, rx: 28, rz: -56, z: 30 },
-    { p: .58, rx: 44, rz: -80, z: 60 },
-    { p: .65, rx: 86, rz: -90, z: -40 },
-    { p: .73, rx: 34, rz: -90, z: 200 },
-    { p: .80, rx: 0, rz: -90, z: 260 },
-    { p: .96, rx: 0, rz: -90, z: 1150 },
+    { p: .42, rx: 10, rz: 25, z: 0 },
+    { p: .50, rx: 20, rz: 50, z: 20 },
+    { p: .54, rx: 28, rz: 60, z: 30 },
+    { p: .60, rx: 34, rz: 86, z: 40 },
+    { p: .66, rx: 28, rz: 130, z: 60 },
+    { p: .70, rx: 18, rz: 155, z: 90 },
+    { p: .77, rx: 6, rz: 180, z: 160 },
+    { p: .85, rx: 0, rz: 180, z: 320 },
+    { p: .96, rx: 0, rz: 180, z: 1250 },
   ];
   function camAt(p) {
     if (p <= KEYS[0].p) return KEYS[0];
@@ -378,10 +376,12 @@
     cam.style.opacity = seg(p, .29, .35);
     world.style.transform = `translateZ(${c.z}px) rotateX(${c.rx + sy * 6}deg) rotateZ(${c.rz + sx * 8}deg)`;
     // 5) 가운데 상자 안으로 들어가며 다음 화면(밝은 바탕)으로
-    const wo = 1 - seg(p, .65, .71);
-    rows.forEach(el => { el.style.opacity = wo; });
-    world.style.setProperty("--core", seg(p, .86, .93));
-    fade.style.opacity = seg(p, .9, .97);
+    // 단어가 상자 윗면에 눕듯 얇은 선이 되었다가 사라짐
+    world.style.setProperty("--wr", ease(seg(p, .61, .67)) * 90 + "deg");
+    const wo = 1 - seg(p, .7, .76);
+    if (rows.wo !== wo) { rows.forEach(el => { el.style.opacity = wo; }); rows.wo = wo; }
+    world.style.setProperty("--core", seg(p, .9, .95));
+    fade.style.opacity = seg(p, .92, .97);
   }
 
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;

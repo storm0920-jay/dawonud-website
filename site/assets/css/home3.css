@@ -346,12 +346,11 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .j-cam { position: absolute; inset: 0; display: grid; place-items: center; transform-style: preserve-3d; opacity: 0; z-index: 1; }
 .j-world { position: relative; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
 .j-world > * { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
-.j-world .row { margin: 0; display: flex; gap: 1.05em; translate: -50% -50%; font: 400 clamp(44px, 4.3vw, 80px)/1 var(--en); letter-spacing: -0.035em; white-space: nowrap; transition: none; }
-.j-world .row span { color: #5E5E5C; }
-.j-world .row .b { color: #F4F2ED; }
-.j-world .row .s { color: #3E3E3C; font-style: italic; font-size: .72em; align-self: center; }
-.j-world .row .hw { color: #fff; }
-.cube { width: 0; height: 0; --s: 300px; }
+.j-world .wd { font: 400 54px/1 var(--en); letter-spacing: -0.035em; white-space: nowrap; translate: -50% -50%; color: #5A5A58; backface-visibility: visible; }
+.j-world .wd.b { color: #F4F2ED; }
+.j-world .wd.s { color: #3C3C3A; font-style: italic; font-size: 40px; }
+.j-world .wd.hw { color: #fff; }
+.cube { width: 0; height: 0; --s: 322px; }
 .cube i { position: absolute; left: calc(var(--s) / -2); top: calc(var(--s) / -2); width: var(--s); height: var(--s); border: 1px solid rgba(244,242,237,.17); background: rgba(16,16,16,.5); backface-visibility: visible; display: grid; place-items: center; }
 .cube i em { font: italic 400 46px/1 var(--en); letter-spacing: -0.02em; color: #4A4A48; white-space: nowrap; }
 .cube .w em, .cube .e em { rotate: 90deg; }
