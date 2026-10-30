@@ -210,12 +210,16 @@ const CONFIG = {
   gsap.registerPlugin(ScrollTrigger);
   // 1~4단계만 확인할 때는 4단계 끝(단어 평면이 다 깔린 상태)에서 멈추고 스크롤 길이도 그만큼만
   const last = C.upTo >= 9 ? 1 : C.s4.field[1];
+  journey.style.height = `calc(100vh + ${C.scroll.length * last}vh)`;
   gsap.to(state, {
     p: last, ease: "none",
-    scrollTrigger: { trigger: stage, pin: true, start: "top top", end: () => "+=" + innerHeight * C.scroll.length / 100 * last, scrub: calm ? true : C.scroll.scrub, invalidateOnRefresh: true },
+    // 고정은 CSS sticky가 맡고(미리보기 창 같은 iframe 안에서도 안정적), ScrollTrigger는 진행도만 읽음
+    scrollTrigger: { trigger: journey, start: "top top", end: "bottom bottom", scrub: calm ? true : C.scroll.scrub, invalidateOnRefresh: true },
     onUpdate: () => draw(state.p),
   });
-  if (window.Lenis && !calm) {
+  // 부드러운 스크롤(Lenis)은 단독 페이지에서만. 미리보기처럼 다른 화면 안에 들어가 있으면 스크롤을 막을 수 있어서 끔
+  let framed = true; try { framed = window.self !== window.top; } catch (e) {}
+  if (window.Lenis && !calm && !framed) {
     const lenis = new Lenis();
     window.lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);

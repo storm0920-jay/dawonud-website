@@ -325,8 +325,8 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 @media (max-width: 900px) { .fixnav a, .fixnav .nav-ind { display: none; } .fixnav { border: 0; } .fixnav .plus { left: auto; right: 20px; } }
 
 /* ===== 스크롤 장면 (작업지시서 1~9단계) ===== */
-.journey { position: relative; background: #111; }   /* 고정(pin)과 스크롤 길이는 journey.js 의 ScrollTrigger 가 맡음 */
-.j-stage { position: relative; height: 100vh; overflow: hidden; background: #EFEFEF; color: #111; perspective: 1000px; isolation: isolate;
+.journey { position: relative; background: #111; }   /* 스크롤 길이는 journey.js CONFIG.scroll.length 로 정함 */
+.j-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #EFEFEF; color: #111; perspective: 1000px; isolation: isolate;
   font: 400 4.2vw/.98 var(--en); }
 .j-stage.dark { background: #111; }
 .j-line { position: absolute; margin: 0; white-space: nowrap; }
