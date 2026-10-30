@@ -319,15 +319,15 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .fixnav .c6 { left: calc(var(--col) * 5); } .fixnav .c7 { left: calc(var(--col) * 6); } .fixnav .c8 { left: calc(var(--col) * 7); }
 .fixnav .plus { position: absolute; left: 20px; top: 11px; width: 18px; height: 18px; }
 .fixnav .plus i::before, .fixnav .plus i::after { width: 16px; height: 3px; }
-.fixnav .nav-ind { position: absolute; left: 20px; bottom: -1px; height: 1px; background: currentColor; width: 0; transition: width .25s; }
+.fixnav .nav-ind { position: absolute; left: 0; bottom: 8px; height: 1px; background: currentColor; width: 0; transition: left .25s, width .25s; }
 .mast .nav-ind { transition: width .25s; }
 .plus.float { display: none; }
 @media (max-width: 900px) { .fixnav a, .fixnav .nav-ind { display: none; } .fixnav { border: 0; } .fixnav .plus { left: auto; right: 20px; } }
 
 /* ===== 스크롤 장면 (작업지시서 1~9단계) ===== */
-.journey { position: relative; height: 820vh; background: #111; }
-.j-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #EFEFEF; color: #111; perspective: 1000px; isolation: isolate;
-  font: 400 4.2vw/.98 var(--en); letter-spacing: -0.02em; }
+.journey { position: relative; background: #111; }   /* 고정(pin)과 스크롤 길이는 journey.js 의 ScrollTrigger 가 맡음 */
+.j-stage { position: relative; height: 100vh; overflow: hidden; background: #EFEFEF; color: #111; perspective: 1000px; isolation: isolate;
+  font: 400 4.2vw/.98 var(--en); }
 .j-stage.dark { background: #111; }
 .j-line { position: absolute; margin: 0; white-space: nowrap; }
 .j-l1, .j-l2 { z-index: 2; text-align: right; }
@@ -335,14 +335,14 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .j-shut { position: absolute; left: 0; right: 0; height: 0; background: #111; z-index: 3; }
 .j-shut-t { top: 0; } .j-shut-b { bottom: 0; }
 .j-pivot { z-index: 5; color: #fff; mix-blend-mode: difference; text-align: right; }
-.j-l4, .j-l5 { z-index: 4; overflow: hidden; color: rgba(255,255,255,.75); padding-bottom: .06em; }
+.j-l4, .j-l5 { z-index: 4; overflow: hidden; padding-bottom: .06em; }
 .j-l4 span, .j-l5 span { display: block; transform: translateY(105%); }
 .j-cam { position: absolute; width: 0; height: 0; transform-style: preserve-3d; opacity: 0; z-index: 1; }
 .j-cam > div { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
-.j-grid svg { position: absolute; fill: none; stroke: rgba(255,255,255,.07); stroke-width: 1; }
-.j-row { position: absolute; left: 0; top: 0; margin: 0; display: flex; gap: 1.2em; translate: -50% -50%; white-space: nowrap; color: #fff; }
+.j-grid svg { position: absolute; fill: none; stroke-width: 1; }
+.j-row { position: absolute; left: 0; top: 0; margin: 0; display: flex; translate: -50% -50%; white-space: nowrap; color: #fff; }
 .j-row .c { visibility: hidden; }
-.j-sense span { position: absolute; left: 0; top: 0; font-size: .55em; color: rgba(255,255,255,.15); white-space: nowrap; translate: -50% -50%; }
+.j-sense span { position: absolute; left: 0; top: 0; white-space: nowrap; translate: -50% -50%; }
 .j-cards { position: absolute; inset: 0; perspective: 1000px; z-index: 2; pointer-events: none; }
 .j-card { position: absolute; top: 12vh; bottom: 12vh; left: calc(50% + var(--x, 0) * 13vw - 5.5vw); width: 11vw; border: 1px solid rgba(255,255,255,.07); opacity: 0;
   display: grid; place-items: center; backface-visibility: visible; }
@@ -352,7 +352,9 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .j-reveal { position: absolute; inset: 0; z-index: 6; clip-path: inset(50% 50% 50% 50%); overflow: hidden; background: #E4E2DC; }
 .j-reveal img { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: 50% 50%; }
 .scroll-dot { position: fixed; left: 50%; bottom: 22px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: #fff; mix-blend-mode: difference; z-index: 70; pointer-events: none; }
-.journey.calm { height: auto; }
-.journey.calm .j-stage { position: relative; height: 70vh; background: #111; display: grid; place-items: center; }
-.journey.calm .j-stage > :not(.j-pivot) { display: none; }
-.journey.calm .j-pivot { position: static; mix-blend-mode: normal; color: #fff; }
+@media (max-width: 768px) { .j-stage { font-size: 8vw; } .j-card { width: 16vw; left: calc(50% + var(--x, 0) * 18vw - 8vw); } .j-card.mid { left: calc(50% - 8vw); } .j-card b { font-size: 9vw; } }
+/* 효과 대본을 못 불러왔을 때: 두 번째 문장만 고정으로 보여 줌 */
+.journey.static { height: auto; }
+.journey.static .j-stage { position: relative; height: 70vh; background: #111; display: grid; place-items: center; }
+.journey.static .j-stage > :not(.j-pivot) { display: none; }
+.journey.static .j-pivot { position: static; mix-blend-mode: normal; color: #fff; }

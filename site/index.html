@@ -63,7 +63,7 @@
   </section>
 
   <!-- 스크롤 장면: 문구 → 검정 막 → 단어 공간 회전 → 위에서 본 상자 → 가운데 상자로 들어감 -->
-  <section class="journey" id="journey" aria-label="Landscape shapes cities. Cities shape everyday life.">
+  <section class="journey" id="journey" aria-label="Design shapes place. Place defines life.">
     <div class="j-stage">
       <div class="j-cam" aria-hidden="true">
         <div class="j-grid"></div>
@@ -300,7 +300,14 @@
       x = mix(ticks[i], endX, clamp((y - tops[i]) / (next - tops[i])));
     }
     const w = Math.max(0, (hoverX ?? x) - 20);
-    navs.forEach(n => { n.querySelector(".nav-ind").style.width = w + "px"; });
+    navs[0].querySelector(".nav-ind").style.width = w + "px";
+    // 고정 헤더: 지금 보는 메뉴 아래에만 얇은 1px 선 (작업지시서 2장)
+    let cur = -1;
+    tops.forEach((t, k) => { if (y >= t) cur = k; });
+    const fl = [...fixnav.querySelectorAll("a")], hv = fl.find(a => a.matches(":hover")), on = hv || fl[cur];
+    const ind = fixnav.querySelector(".nav-ind");
+    ind.style.left = on ? on.offsetLeft + "px" : "0px";
+    ind.style.width = on ? on.offsetWidth + "px" : "0px";
     fixnav.classList.toggle("show", navs[0].getBoundingClientRect().bottom < 0);
     fixnav.setAttribute("aria-hidden", !fixnav.classList.contains("show"));
     fixnav.querySelectorAll("a, button").forEach(el => el.tabIndex = fixnav.classList.contains("show") ? 0 : -1);
