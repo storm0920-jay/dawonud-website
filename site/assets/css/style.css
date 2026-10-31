@@ -11,7 +11,7 @@
 :root {
   --ink: #161513;
   --ink-2: #4A4843;
-  --gray: #85827B;
+  --gray: #6B6862;            /* 밝은 바탕 위 보조 글자: 대비 4.5:1 이상 */
   --line: #D9D5CC;
   --mist: #ECE9E2;
   --paper: #F6F4EF;          /* 오프화이트: 흰색보다 부드럽게 */
@@ -50,7 +50,9 @@ body {
   margin: 0; font-family: var(--sans); font-size: 17px; line-height: 1.7; letter-spacing: -0.01em;
   color: var(--ink); background: var(--bg); word-break: keep-all; overflow-wrap: break-word;
   transition: background-color .8s ease;
+  min-height: 100vh; display: flex; flex-direction: column;
 }
+body > main { flex: 1 0 auto; }
 img { max-width: 100%; display: block; }
 a { color: inherit; }
 h1, h2, h3, h4 { margin: 0 0 .5em; line-height: 1.12; letter-spacing: -0.045em; font-weight: 800; text-wrap: balance; }
@@ -280,6 +282,7 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 
 /* 두 칸 */
 .split { display: grid; grid-template-columns: 320px 1fr; gap: 56px; }
+.split > * { min-width: 0; }
 @media (max-width: 900px) { .split { grid-template-columns: 1fr; gap: 24px; } }
 .split h2 { font-size: clamp(28px, 3vw, 38px); font-weight: 800; }
 
@@ -317,7 +320,8 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 .process li::before { content: "0" counter(step); display: block; font: 500 12px/1 var(--mono); color: var(--orange-dark); margin-bottom: 10px; }
 .process li:first-child { border-top-color: var(--orange); }
 .process li small { display: block; font-weight: 400; color: var(--ink-2); font-size: 14px; letter-spacing: -0.01em; margin-top: 6px; }
-@media (max-width: 800px) { .process { grid-template-columns: 1fr 1fr; gap: 24px 16px; } }
+.process.process-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 800px) { .process, .process.process-3 { grid-template-columns: 1fr 1fr; gap: 24px 16px; } }
 
 /* 사업분야 상세 */
 .field-detail { padding-top: 112px; scroll-margin-top: var(--header-h); }
@@ -337,11 +341,11 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 .form input:focus, .form select:focus, .form textarea:focus { outline: 3px solid var(--orange); outline-offset: 0; }
 .form textarea { min-height: 200px; resize: vertical; }
 .form .agree { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; background: var(--mist); padding: 18px; }
-.form .agree input { width: auto; margin-top: 6px; }
+.form .agree input { width: 20px; height: 20px; flex: none; margin-top: 3px; accent-color: var(--ink); }
 .form .agree label { font-weight: 400; margin: 0; display: inline; }
 @media (max-width: 600px) { .form { grid-template-columns: 1fr; } }
 
-.contact-cards { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--line); margin: 0; }
+.contact-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); border-top: 1px solid var(--ink); border-left: 1px solid var(--line); margin: 0; }
 .contact-cards > div { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 24px; }
 .contact-cards dt { font: 500 12px/1 var(--mono); letter-spacing: .1em; color: var(--gray); margin-bottom: 12px; }
 .contact-cards dd { margin: 0; font-size: clamp(18px, 2vw, 24px); font-weight: 800; letter-spacing: -0.04em; }
@@ -392,3 +396,8 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 .field-detail-head h2 small { font-size: 17px; }
 .stat .label small { display: block; font-weight: 500; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
 .site-nav a { font-family: var(--disp); font-weight: 600; letter-spacing: 0; }
+
+/* 모바일 터치 영역: 보이는 모양은 그대로, 누르는 범위만 넓힘 */
+@media (max-width: 800px) {
+  .site-footer a, .note a, .form .agree a { display: inline-block; padding: 10px 0; margin: -10px 0; }
+}

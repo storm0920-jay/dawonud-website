@@ -130,7 +130,7 @@ h1, h2, h3, p { margin: 0; }
 .work .art { aspect-ratio: 4 / 3; max-width: 100%; background: var(--pc); color: var(--fc); display: grid; place-items: center; position: relative; overflow: hidden; }
 .work .art svg { width: 30%; height: auto; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
 .work:hover .art svg { transform: scale(1.12); }
-.work .art .no { position: absolute; left: 14px; top: 12px; font: 500 12px/1 var(--mono); color: var(--black); opacity: .55; }
+.work .art .no { position: absolute; left: 14px; top: 12px; font: 500 12px/1 var(--mono); color: var(--black); opacity: .72; }
 .work .meta { display: flex; justify-content: space-between; gap: 12px; font: 500 12px/1.4 var(--mono); color: var(--mute); text-transform: uppercase; letter-spacing: .04em; }
 .work h3 { font: 700 18px/1.4 var(--ko); letter-spacing: -0.03em; }
 .work small { display: block; font-size: 14px; color: var(--mute); font-weight: 400; margin-top: 2px; }
@@ -350,3 +350,14 @@ html.inverted .j-reveal { filter: invert(1); }
 .journey.static .j-stage { position: relative; height: 70vh; background: #111; display: grid; place-items: center; }
 .journey.static .j-stage > :not(.j-pivot) { display: none; }
 .journey.static .j-pivot { position: static; mix-blend-mode: normal; color: #fff; }
+
+/* 모바일 터치 영역: 보이는 모양은 그대로, 누르는 범위만 넓힘 */
+.plus::after { content: ""; position: absolute; inset: -12px; }
+.more { position: relative; }
+.invert::before, .more::before { content: ""; position: absolute; inset: -12px -4px; }
+@media (max-width: 900px) { .foot a { display: inline-block; padding: 12px 0; margin: -12px 0; } }
+/* 미리보기 띠(오픈 때 제거)가 첫 화면 버튼과 페이지 끝을 가리지 않게 */
+body:has(.preview-bar) { padding-bottom: 34px; }
+body:has(.preview-bar) .mast { height: calc(100svh - 34px); }
+@media (max-width: 900px) { body:has(.preview-bar) .mast { height: auto; min-height: calc(100svh - 34px); } }
+@media (max-width: 600px) { body:has(.preview-bar) { padding-bottom: 52px; } body:has(.preview-bar) .mast { min-height: calc(100svh - 52px); } }
