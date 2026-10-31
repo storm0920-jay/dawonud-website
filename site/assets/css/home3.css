@@ -62,8 +62,9 @@ h1, h2, h3, p { margin: 0; }
 @media (max-width: 900px) { .top nav { display: none; } .top { grid-template-columns: 1fr auto; } }
 
 /* 전체 화면 메뉴 */
-.overlay { position: fixed; inset: 0; z-index: 60; background: var(--white); color: var(--black); display: grid; grid-template-rows: 72px 1fr auto; transform: translateY(-100%); transition: transform .7s cubic-bezier(.7,0,.2,1); }
-.overlay.open { transform: none; }
+.overlay { position: fixed; inset: 0; z-index: 60; background: var(--white); color: var(--black); display: grid; grid-template-rows: 72px 1fr auto; transform: translateY(-100%); transition: transform .3s cubic-bezier(.23,1,.32,1); }
+/* 열 때는 서랍처럼 0.45초, 닫을 때는 0.3초로 더 빠르게 */
+.overlay.open { transform: none; transition: transform .45s cubic-bezier(.32,.72,0,1); }
 .overlay .bar { display: flex; justify-content: space-between; align-items: center; }
 .overlay .close { background: none; border: 0; font: 500 14px/1 var(--en); cursor: pointer; color: inherit; padding: 10px 0; }
 .overlay ol { list-style: none; margin: 0; padding: 0; align-self: center; counter-reset: m; }
@@ -71,8 +72,8 @@ h1, h2, h3, p { margin: 0; }
 .overlay li:last-child { border-bottom: 1px solid var(--rule-l); }
 .overlay li a { display: grid; grid-template-columns: 64px 1fr auto; align-items: baseline; gap: 16px; padding: 10px 0; }
 .overlay li a::before { content: "0" counter(m); font: 500 12px/1 var(--mono); color: var(--mute-dark); }
-.overlay li b { font: 600 clamp(36px, 6.4vw, 92px)/1 var(--en); letter-spacing: -0.045em; transition: transform .4s, color .2s; }
-.overlay li a:hover b { transform: translateX(16px); }
+.overlay li b { font: 600 clamp(36px, 6.4vw, 92px)/1 var(--en); letter-spacing: -0.045em; transition: transform .2s cubic-bezier(.23,1,.32,1), color .2s ease; }
+@media (hover: hover) and (pointer: fine) { .overlay li a:hover b { transform: translateX(16px); } }
 .overlay li span { font-size: 14px; color: var(--mute-dark); }
 .overlay .foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 28px; padding-top: 20px; font-size: 14px; color: var(--mute-dark); }
 
@@ -146,8 +147,14 @@ h1, h2, h3, p { margin: 0; }
 
 /* Business: 큰 목록, 올리면 픽토그램 */
 .services { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-l); }
-.service { display: grid; grid-template-columns: 64px 1.2fr 1fr 96px; gap: 24px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--rule-l); transition: background .4s, padding .4s; }
-.service:hover { background: var(--pc); padding-left: 16px; padding-right: 16px; }
+.service { display: grid; grid-template-columns: 64px 1.2fr 1fr 96px; gap: 24px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--rule-l); transition: background-color .2s ease; }
+/* 올리면 바탕색 + 내용이 안쪽으로 16px: 여백(padding) 대신 transform으로 움직여 가볍게 */
+.service > * { transition: transform .22s cubic-bezier(.23,1,.32,1); }
+@media (hover: hover) and (pointer: fine) {
+  .service:hover { background: var(--pc); }
+  .service:hover > * { transform: translateX(16px); }
+  .service:hover > .ico { transform: translateX(-16px); }
+}
 .service .n { font: 500 12px/1 var(--mono); color: var(--mute-dark); }
 .service h3 { font: 600 clamp(32px, 4.6vw, 72px)/1 var(--en); letter-spacing: -0.045em; }
 .service h3 small { display: block; font: 600 14px/1.4 var(--ko); color: var(--mute-dark); letter-spacing: 0; margin-top: 8px; }
