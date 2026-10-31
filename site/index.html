@@ -4,98 +4,343 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow"><!-- 오픈할 때 이 줄을 지웁니다 -->
-<title>다원 도시디자인 | 경관 · 공공디자인 · 색채디자인 · 유니버설디자인</title>
+<title>다원 도시디자인 | Dawon Urban Design</title>
 <meta name="description" content="다원 도시디자인은 경관, 공공디자인, 색채디자인, 유니버설디자인을 하는 도시디자인 전문 회사입니다.">
-<meta property="og:title" content="다원 도시디자인 | 경관 · 공공디자인 · 색채디자인 · 유니버설디자인">
+<meta property="og:title" content="다원 도시디자인 | Dawon Urban Design">
 <meta property="og:description" content="다원 도시디자인은 경관, 공공디자인, 색채디자인, 유니버설디자인을 하는 도시디자인 전문 회사입니다.">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#0E0E0E">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/css/home3.css">
 </head>
 <body data-page="index.html">
-<header data-site-header></header>
 
-<main>
-  <section class="hero">
-    <div class="wrap hero-top">
-      <span class="eyebrow">다원 도시디자인 · Dawon Urban Design</span>
-      <h1>도시의 풍경과<br><span class="o">색</span>을 디자인합니다</h1>
-      <div class="hero-foot">
-        <p>경관, 공공디자인, 색채디자인, 유니버설디자인. 사람이 머무는 도시의 얼굴을 함께 만듭니다.</p>
-        <div class="hero-actions">
-          <a class="btn" href="projects.html">사업실적 보기</a>
-          <a class="btn btn-line" href="contact.html">문의하기</a>
-        </div>
-      </div>
-    </div>
-    <nav class="field-strip" aria-label="사업분야">
-      <a class="field-panel fc-landscape" href="business.html#landscape">
-        <span class="en">LANDSCAPE</span>
-        <div><h3>경관</h3><p>도시와 지역의 경관을 계획하고, 경관심의와 야간경관까지 다룹니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-public" href="business.html#public">
-        <span class="en">PUBLIC DESIGN</span>
-        <div><h3>공공디자인</h3><p>거리, 광장, 공공시설물을 시민이 쓰기 좋고 보기 좋게 만듭니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-color" href="business.html#color">
-        <span class="en">COLOR DESIGN</span>
-        <div><h3>색채디자인</h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-universal" href="business.html#universal">
-        <span class="en">UNIVERSAL DESIGN</span>
-        <div><h3>유니버설디자인</h3><p>나이, 장애와 상관없이 누구나 편하게 쓰는 공간을 설계합니다.</p><span class="go">자세히 보기</span></div>
-      </a>
+<i class="scroll-dot" aria-hidden="true"></i>
+<nav class="fixnav" aria-label="고정 메뉴" aria-hidden="true">
+  <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay" tabindex="-1"><i></i></button>
+  <span class="nav-ind"></span>
+  <a href="#philosophy" class="c2" tabindex="-1">Philosophy</a><a href="#projects" class="c4" tabindex="-1">Works</a><a href="#business" class="c5" tabindex="-1">Services</a><a href="#process" class="c6" tabindex="-1">Process</a><a href="#company" class="c7" tabindex="-1">Company</a><a href="#contact" class="c8" tabindex="-1">Contact</a>
+</nav>
+
+<div class="overlay pad" id="overlay" role="dialog" aria-modal="true" aria-label="전체 메뉴" inert>
+  <div class="bar"><span class="label">Dawon Urban Design</span><button class="close" type="button">Close ✕</button></div>
+  <ol>
+    <li><a href="about.html"><b>About</b><span>회사소개</span></a></li>
+    <li><a href="business.html"><b>Business</b><span>사업분야</span></a></li>
+    <li><a href="projects.html"><b>Projects</b><span>사업실적</span></a></li>
+    <li><a href="news.html"><b>News</b><span>소식</span></a></li>
+    <li><a href="careers.html"><b>Careers</b><span>채용</span></a></li>
+    <li><a href="contact.html"><b>Contact</b><span>문의하기</span></a></li>
+  </ol>
+  <div class="foot" style="border:0"><span data-site="address"></span><a data-site-email></a></div>
+</div>
+
+<main id="top">
+  <!-- 첫 화면 -->
+  <section class="mast" id="mast">
+    <h1 class="mast-word" aria-label="DAWON"><span>D</span><span>A</span><span>W</span><span>O</span><span>N</span></h1>
+    <nav class="mast-nav" aria-label="주 메뉴">
+      <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay"><i></i></button>
+      <span class="nav-ind" aria-hidden="true"></span>
+      <a href="#philosophy" class="c2">Philosophy</a>
+      <a href="#projects" class="c4">Works</a>
+      <a href="#business" class="c5">Services</a>
+      <a href="#process" class="c6">Process</a>
+      <a href="#company" class="c7">Company</a>
+      <a href="#contact" class="c8">Contact</a>
     </nav>
+    <span class="vline v2" aria-hidden="true"></span><span class="vline v5" aria-hidden="true"></span>
+    <p class="mast-note">Clear plans.<br>Quiet streets.</p>
+    <div class="mast-lead">
+      <p class="mast-head"><span>Urban design studio</span><span>built on place, color</span><span>and people.</span></p>
+      <p class="mast-ko">도시의 풍경과 색을 디자인합니다.</p>
+    </div>
+    <button class="invert" type="button" aria-pressed="false">Invert color</button>
+    <svg class="ray" aria-hidden="true"><line x1="0" y1="0" x2="0" y2="0"/><circle r="3.5"/></svg>
   </section>
 
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Projects</span>
-          <h2 class="section-title">최근 수행 실적</h2>
-        </div>
-        <a class="more-link" href="projects.html">전체 실적 보기</a>
-      </div>
-      <ul class="proj-list" id="featured"></ul>
+  <!-- 스크롤 장면: 작업지시서 1~9단계 (assets/js/journey.js) -->
+  <section class="journey" id="journey" aria-label="Design shapes place. Place defines life.">
+    <div class="j-stage">
+      <canvas class="j-gl" aria-hidden="true"></canvas>
+      <div class="j-reveal" aria-hidden="true"><img src="assets/img/plan-top.svg" alt=""></div>
+      <p class="j-line j-l1"></p>
+      <p class="j-line j-l2"></p>
+      <i class="j-bar"></i>
+      <i class="j-shut j-shut-t"></i><i class="j-shut j-shut-b"></i>
+      <p class="j-line j-pivot"></p>
+      <p class="j-line j-l4"><span></span></p>
+      <p class="j-line j-l5"><span></span></p>
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">News</span>
-          <h2 class="section-title">최근 소식</h2>
-        </div>
-        <a class="more-link" href="news.html">소식 전체 보기</a>
+  <!-- 세 가지 태도 -->
+  <section class="light sec pad" id="philosophy">
+    <div class="sec-head">
+      <span class="label">Philosophy <span class="ko">일하는 태도</span></span>
+      <h2 class="mid">Three things we keep in every street, square and facade.</h2>
+    </div>
+    <div class="pillars" data-reveal>
+      <div class="pillar"><span class="label">01</span><h3>Place</h3><p>먼저 현장을 걷습니다. 그 지역이 가진 지형, 길, 오래된 건물에서 디자인의 방향을 찾습니다.</p></div>
+      <div class="pillar"><span class="label">02</span><h3>Color</h3><p>지역의 색을 조사해 기준을 세웁니다. 눈에 띄는 색보다 오래 보아도 편안한 색을 고릅니다.</p></div>
+      <div class="pillar"><span class="label">03</span><h3>People</h3><p>어린이부터 어르신까지 누구나 불편 없이 쓰는 공간을 만듭니다. 시민이 매일 쓰는 곳이기 때문입니다.</p></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="sec pad" id="about">
+    <div class="sec-head">
+      <span class="label">About <span class="ko">회사소개</span></span>
+      <h2 class="mid">Dawon Urban Design plans the face of the city with local governments and public agencies.</h2>
+    </div>
+    <div class="vision">
+      <p class="we" aria-hidden="true"><span data-magnet=".12" style="color:inherit">WE<span>.</span></span></p>
+      <div>
+        <ol class="vlist" data-reveal>
+          <li><span class="n">00</span><div><h3>Who we are</h3><p>경관, 공공디자인, 색채디자인, 유니버설디자인을 하는 도시디자인 전문 회사입니다.</p></div></li>
+          <li><span class="n">01</span><div><h3>What we do</h3><p>경관계획과 경관심의, 정비사업 공공디자인, 도로경관, 공공미술까지 도시의 풍경을 계획합니다.</p></div></li>
+          <li><span class="n">02</span><div><h3>How we work</h3><p>조사에서 사후 관리까지 한 팀이 끝까지 맡습니다.</p></div></li>
+          <li><span class="n">03</span><div><h3>Advisory</h3><p>김현호 소장은 한국도로공사, 경기도, 대전시, 부천시, 고양시 위원회에서 자문위원으로 활동하고 있습니다.</p></div></li>
+        </ol>
+        <a class="more" href="about.html">More about us</a>
       </div>
-      <ul class="news-list">
-        <li><div class="row"><span class="cat">공지</span><span>다원 도시디자인 홈페이지를 새로 열었습니다.</span><span class="date">2026.11.02</span></div></li>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section class="light sec pad">
+    <div class="sec-head">
+      <span class="label">Approach <span class="ko">디자인 원칙</span></span>
+      <div>
+        <h2 class="mid approach-head">Research sets the direction. Design makes it last.</h2>
+      </div>
+    </div>
+    <div class="principles" data-reveal>
+      <div class="principle"><div class="top-row"><span class="label">01</span><span class="label">Direction</span></div><h3>Place before Image</h3><p>보기 좋은 그림보다 현장 조사를 먼저 합니다. 지역의 조건을 읽어야 오래 가는 디자인이 나옵니다.</p></div>
+      <div class="principle"><div class="top-row"><span class="label">02</span><span class="label">System</span></div><h3>Color as a System</h3><p>건물 하나의 색이 아니라 거리 전체의 색 기준을 세웁니다. 기준이 있으면 시간이 지나도 풍경이 흐트러지지 않습니다.</p></div>
+      <div class="principle"><div class="top-row"><span class="label">03</span><span class="label">Access</span></div><h3>Design for Everyone</h3><p>나이, 장애, 언어와 상관없이 쓸 수 있도록 처음부터 유니버설디자인 기준으로 계획합니다.</p></div>
+      <div class="principle"><div class="top-row"><span class="label">04</span><span class="label">Resolution</span></div><h3>Detail for Maintenance</h3><p>만든 뒤 관리까지 생각합니다. 고치기 쉽고 오래 쓰는 재료와 상세를 고릅니다.</p></div>
+    </div>
+  </section>
+
+  <!-- Works (사업실적) -->
+  <section class="sec pad" id="projects">
+    <div class="sec-head">
+      <span class="label">Projects <span class="ko">사업실적</span></span>
+      <h2 class="mid"><span id="pj-total">91</span> projects across landscape and public design.</h2>
+    </div>
+    <ul class="works" id="works"></ul>
+    <div class="works-foot">
+      <button class="btn-o" type="button" id="more-works" data-magnet=".3">Load more</button>
+      <a class="btn-o" href="projects.html" data-magnet=".3">All Projects</a>
+    </div>
+  </section>
+
+  <!-- Services (사업분야) -->
+  <section class="light sec pad" id="business">
+    <div class="sec-head">
+      <span class="label">Business <span class="ko">사업분야</span></span>
+      <h2 class="mid">Four fields, planned as one cityscape.</h2>
+    </div>
+    <ul class="services">
+      <li><a class="service fc-landscape" href="business.html#landscape" data-cursor="Explore"><span class="n">01</span><h3>Landscape<small>경관</small></h3><p>경관계획, 경관심의와 경관성 검토, 도로경관과 야간경관을 다룹니다.</p><span class="ico" data-icon="landscape"></span></a></li>
+      <li><a class="service fc-public" href="business.html#public" data-cursor="Explore"><span class="n">02</span><h3>Public Design<small>공공디자인</small></h3><p>정비사업 공공디자인, 가로환경, 공공시설물과 공공미술을 디자인합니다.</p><span class="ico" data-icon="public"></span></a></li>
+      <li><a class="service fc-color" href="business.html#color" data-cursor="Explore"><span class="n">03</span><h3>Color Design<small>색채디자인</small></h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="ico" data-icon="color"></span></a></li>
+      <li><a class="service fc-universal" href="business.html#universal" data-cursor="Explore"><span class="n">04</span><h3>Universal Design<small>유니버설디자인</small></h3><p>누구나 편하게 이동하고 쓰는 공간과 안내 체계를 설계합니다.</p><span class="ico" data-icon="universal"></span></a></li>
+    </ul>
+  </section>
+
+  <!-- Process -->
+  <section class="sec pad" id="process">
+    <div class="sec-head">
+      <span class="label">Process <span class="ko">일하는 과정</span></span>
+      <h2 class="mid">From the first site visit to the last inspection.</h2>
+    </div>
+    <div class="steps">
+      <details open><summary><span class="n">01</span><b>Research<small>조사</small></b></summary>
+        <div class="step-body"><p>현장을 걷고 자료를 모읍니다. 주민과 담당자의 이야기를 듣고 사업의 조건을 확인합니다.</p><ul><li>현장 조사와 사진 기록</li><li>관련 계획과 법규 검토</li><li>지역 색채 조사</li><li>주민·관계자 의견 청취</li></ul></div></details>
+      <details><summary><span class="n">02</span><b>Analysis<small>분석</small></b></summary>
+        <div class="step-body"><p>조사한 내용을 정리해 이 지역이 가진 장점과 풀어야 할 과제를 찾습니다.</p><ul><li>경관 자원과 조망 분석</li><li>보행·이동 환경 분석</li><li>색채 분포 분석</li><li>과제 정리</li></ul></div></details>
+      <details><summary><span class="n">03</span><b>Planning<small>계획</small></b></summary>
+        <div class="step-body"><p>방향과 기준을 세웁니다. 경관, 색채, 유니버설디자인 기준을 하나의 계획으로 묶습니다.</p><ul><li>기본 방향과 목표</li><li>구역별 계획</li><li>색채·경관 가이드라인</li><li>심의 대응 자료</li></ul></div></details>
+      <details><summary><span class="n">04</span><b>Design<small>디자인</small></b></summary>
+        <div class="step-body"><p>공간, 시설물, 색채를 구체적으로 설계합니다. 실제로 만들 수 있고 관리하기 쉬운 상세까지 정합니다.</p><ul><li>공간·가로 디자인</li><li>공공시설물 디자인</li><li>색채 적용 계획</li><li>도면과 시각화 자료</li></ul></div></details>
+      <details><summary><span class="n">05</span><b>Management<small>관리</small></b></summary>
+        <div class="step-body"><p>시공 중 자문으로 계획이 그대로 지어지게 돕고, 완공 뒤 관리 방법까지 안내합니다.</p><ul><li>시공 자문</li><li>현장 색채 확인</li><li>준공 검토</li><li>사후 관리 안내</li></ul></div></details>
+    </div>
+  </section>
+
+  <!-- Advisory -->
+  <section class="light sec pad">
+    <div class="boards">
+      <span class="label">Advisory Boards <span class="ko">자문 활동</span></span>
+      <ul data-reveal>
+        <li>한국도로공사<span>Technical Advisor</span></li>
+        <li>경기도 경관위원회<span>Committee</span></li>
+        <li>대전시 경관위원회<span>Committee</span></li>
+        <li>부천시 건축위원회<span>Committee</span></li>
+        <li>고양시 공공디자인진흥위원회<span>Committee</span></li>
       </ul>
+    </div>
+  </section>
+
+  <!-- Company -->
+  <section class="light sec pad" style="padding-top:0" id="company">
+    <div class="sec-head">
+      <span class="label">Company <span class="ko">사람들</span></span>
+      <h2 class="mid">A small team that stays with each project to the end.</h2>
+    </div>
+    <div class="team">
+      <div class="person"><div class="photo">사진 자리</div><h3>김현호</h3><p>Director · 소장</p></div>
+      <div class="person"><div class="photo">사진 자리</div><h3>이름 <span class="ph-tag">예시</span></h3><p>Senior Designer</p></div>
+      <div class="person"><div class="photo">사진 자리</div><h3>이름 <span class="ph-tag">예시</span></h3><p>Designer</p></div>
+    </div>
+  </section>
+
+  <!-- News / Careers -->
+  <section class="light sec pad" style="padding-top:0" id="news">
+    <div class="duo">
+      <a href="news.html"><span class="label">News <span class="ko">소식</span></span><h3>Latest News</h3><p>다원 도시디자인 홈페이지를 새로 열었습니다. <span class="ko">2026.11.02</span></p></a>
+      <a href="careers.html" id="careers"><span class="label">Careers <span class="ko">채용</span></span><h3>Join Us</h3><p>도시의 풍경과 색을 함께 고민할 사람을 기다립니다. 상시 지원을 받습니다.</p></a>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="sec pad" id="contact" style="padding-bottom:64px">
+    <span class="label">Contact <span class="ko">문의하기</span></span>
+    <p class="talk" style="margin-top:28px"><a href="contact.html" data-magnet=".1" data-cursor="Contact">Let's Talk<span>.</span></a></p>
+    <div class="enquire">
+      <div><span class="label">Projects &amp; General</span><a data-site-email></a></div>
+      <div><span class="label">Careers</span><a data-site-email></a></div>
+      <div><span class="label">Office</span><address data-site="address"></address></div>
     </div>
   </section>
 </main>
 
-<section class="cta-band">
-  <div class="wrap">
-    <div>
-      <h2>프로젝트를 함께 고민하고 싶으신가요?</h2>
-      <p>메일 <a class="mail" data-site-email></a> 로 연락 주시거나 문의 양식을 남겨 주세요.</p>
-    </div>
-    <a class="btn" href="contact.html">문의하기</a>
-  </div>
-</section>
+<footer class="foot pad">
+  <span>© <span id="year">2026</span> Dawon Urban Design. All Rights Reserved.</span>
+  <span><a href="privacy.html">Privacy Policy</a></span>
+  <a href="#top">Back to top ↑</a>
+</footer>
 
-<footer data-site-footer></footer>
 <script src="assets/js/site.js"></script>
 <script src="data/projects.js"></script>
 <script src="assets/js/projects-ui.js"></script>
+<script src="assets/js/cursor.js" defer></script>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script type="module" src="assets/js/journey.js"></script>
 <script>
-  document.getElementById("featured").innerHTML = PROJECTS.slice(-6).map(projectRow).join("");
+  // 사업실적: 최근 것부터 12개씩
+  const recent = PROJECTS.slice().reverse();
+  let shown = 0;
+  const works = document.getElementById("works");
+  function addWorks() {
+    works.insertAdjacentHTML("beforeend", recent.slice(shown, shown + 12).map(p => {
+      const slug = FIELD_SLUG[p.field];
+      return `<li class="work fc-${slug}" data-reveal>
+        <a href="projects.html?field=${encodeURIComponent(p.field)}" class="art" data-cursor="View"><span class="no">${String(p.no).padStart(3, "0")}</span><svg viewBox="0 0 48 48" aria-hidden="true">${ICONS[slug]}</svg></a>
+        <div class="meta"><span>${SITE.fieldsEn[p.field]}</span><span>${projectYears(p)}</span></div>
+        <h3>${p.name}<small>${p.type}</small></h3>
+      </li>`;
+    }).join(""));
+    shown += 12;
+    if (shown >= recent.length) document.getElementById("more-works").hidden = true;
+    works.querySelectorAll("[data-reveal]:not(.in)").forEach(el => el.classList.add("in"));
+  }
+  addWorks();
+  document.getElementById("more-works").addEventListener("click", addWorks);
+  document.getElementById("pj-total").textContent = PROJECTS.length;
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const mast = document.getElementById("mast");
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const seg = (p, a, b) => clamp((p - a) / (b - a));
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const mix = (a, b, t) => a + (b - a) * t;
+
+  // ---------- 메뉴 줄: 첫 화면을 지나면 위에 고정, 굵은 선은 지금 보는 위치 ----------
+  const fixnav = document.querySelector(".fixnav");
+  const navs = [mast.querySelector(".mast-nav"), fixnav];
+  const order = ["philosophy", "projects", "business", "process", "company", "contact"];
+  let hoverX = null;
+  navs.forEach(nav => nav.querySelectorAll("a").forEach(a => {
+    a.addEventListener("mouseenter", () => { hoverX = a.offsetLeft + 16; });
+    a.addEventListener("mouseleave", () => { hoverX = null; });
+  }));
+  function navProgress() {
+    const links = [...navs[0].querySelectorAll("a")];
+    const ticks = links.map(a => a.offsetLeft + 16);
+    const tops = order.map(id => { const el = document.getElementById(id); return el ? el.getBoundingClientRect().top + scrollY : Infinity; });
+    const y = scrollY + innerHeight * .4;
+    let x;
+    if (y < tops[0]) x = mix(20, ticks[0], clamp((y - innerHeight) / (tops[0] - innerHeight)));
+    else {
+      let i = tops.length - 1;
+      while (i > 0 && y < tops[i]) i--;
+      const next = i + 1 < tops.length ? tops[i + 1] : document.documentElement.scrollHeight;
+      const endX = i + 1 < ticks.length ? ticks[i + 1] : navs[0].clientWidth;
+      x = mix(ticks[i], endX, clamp((y - tops[i]) / (next - tops[i])));
+    }
+    const w = Math.max(0, (hoverX ?? x) - 20);
+    navs[0].querySelector(".nav-ind").style.width = w + "px";
+    // 고정 헤더: 지금 보는 메뉴 아래에만 얇은 1px 선 (작업지시서 2장)
+    let cur = -1;
+    tops.forEach((t, k) => { if (y >= t) cur = k; });
+    const fl = [...fixnav.querySelectorAll("a")], hv = fl.find(a => a.matches(":hover")), on = hv || fl[cur];
+    const ind = fixnav.querySelector(".nav-ind");
+    ind.style.left = on ? on.offsetLeft + "px" : "0px";
+    ind.style.width = on ? on.offsetWidth + "px" : "0px";
+    fixnav.classList.toggle("show", mast.getBoundingClientRect().bottom < 44);   // 첫 화면 글자와 겹치지 않게, 첫 화면이 다 지나간 뒤에 나타남
+    fixnav.setAttribute("aria-hidden", !fixnav.classList.contains("show"));
+    fixnav.querySelectorAll("a, button").forEach(el => el.tabIndex = fixnav.classList.contains("show") ? 0 : -1);
+  }
+
+  function loop() { navProgress(); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+
+  // 흑백 반전
+  const inv = document.querySelector(".invert");
+  try { if (localStorage.getItem("dawon-invert") === "1") document.documentElement.classList.add("inverted"); } catch (e) {}
+  inv.setAttribute("aria-pressed", document.documentElement.classList.contains("inverted"));
+  inv.addEventListener("click", () => {
+    const on = document.documentElement.classList.toggle("inverted");
+    inv.setAttribute("aria-pressed", on);
+    try { localStorage.setItem("dawon-invert", on ? "1" : "0"); } catch (e) {}
+  });
+
+  // 왼쪽 위 모서리에서 마우스를 지나 화면 끝까지 이어지는 가는 사선
+  const ray = mast.querySelector(".ray"), line = ray.querySelector("line"), dot = ray.querySelector("circle");
+  let rx = innerWidth * .27, ry = innerHeight * .3, tx = rx, ty = ry;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (fine) mast.addEventListener("mousemove", e => { const r = mast.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; });
+  function drawRay(t) {
+    const W = mast.clientWidth, H = mast.clientHeight;
+    if (!fine) { tx = W * (.27 + Math.sin(t / 2400) * .06); ty = H * (.3 + Math.cos(t / 3100) * .05); }
+    rx += (tx - rx) * .12; ry += (ty - ry) * .12;
+    const k = Math.min(W / Math.max(rx, 1), H / Math.max(ry, 1));
+    line.setAttribute("x2", rx * k); line.setAttribute("y2", ry * k);
+    dot.setAttribute("cx", rx); dot.setAttribute("cy", ry);
+    requestAnimationFrame(drawRay);
+  }
+  requestAnimationFrame(drawRay);
+
+  // 전체 화면 메뉴
+  const ov = document.getElementById("overlay"), pluses = document.querySelectorAll(".plus");
+  let mb = pluses[0];
+  function menu(open) {
+    ov.classList.toggle("open", open);
+    ov.inert = !open;
+    mb.setAttribute("aria-expanded", open);
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open) ov.querySelector(".close").focus(); else mb.focus();
+  }
+  pluses.forEach(b => b.addEventListener("click", () => { mb = b; menu(true); }));
+  ov.querySelector(".close").addEventListener("click", () => menu(false));
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && ov.classList.contains("open")) menu(false); });
 </script>
 </body>
 </html>
