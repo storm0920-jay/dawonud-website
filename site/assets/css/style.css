@@ -36,6 +36,8 @@
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --wrap: 1280px;
   --header-h: 72px;
+  /* 움직임 곡선: 처음에 빠르게 반응하고 부드럽게 멈춤 */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* 스크롤 위치에 따라 바뀌는 배경 (site.js 가 body[data-tone] 을 바꿉니다) */
@@ -77,10 +79,10 @@ p { margin: 0 0 1em; }
 .brand img { height: 42px; width: auto; }
 .site-nav { display: flex; gap: 32px; }
 .site-nav a { text-decoration: none; font-weight: 600; font-size: 16px; letter-spacing: -0.02em; position: relative; padding: 8px 0; }
-.site-nav a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 3px; background: var(--orange); transition: right .25s; }
-.site-nav a:hover::after, .site-nav a[aria-current="page"]::after { right: 0; }
+.site-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform .22s var(--ease-out); }
+.site-nav a[aria-current="page"]::after { transform: none; }
 .nav-toggle { display: none; background: none; border: 0; width: 44px; height: 44px; padding: 10px; cursor: pointer; }
-.nav-toggle span:not(.sr-only) { display: block; height: 2px; background: var(--ink); margin: 6px 0; transition: transform .2s, opacity .2s; }
+.nav-toggle span:not(.sr-only) { display: block; height: 2px; background: var(--ink); margin: 6px 0; transition: transform .2s var(--ease-out), opacity .2s var(--ease-out); }
 @media (max-width: 900px) {
   :root { --header-h: 60px; }
   .brand img { height: 36px; }
@@ -118,14 +120,10 @@ p { margin: 0 0 1em; }
 .section-title { font-size: clamp(32px, 4.6vw, 60px); font-weight: 800; margin: 0; }
 .lead { font-size: clamp(18px, 1.7vw, 22px); line-height: 1.6; color: var(--ink-2); max-width: 760px; }
 .more-link { font-weight: 700; text-decoration: none; white-space: nowrap; display: inline-flex; gap: 8px; align-items: center; border-bottom: 2px solid var(--ink); padding-bottom: 2px; }
-.more-link::after { content: "→"; transition: transform .2s; }
-.more-link:hover { color: var(--orange); border-color: var(--orange); }
-.more-link:hover::after { transform: translateX(4px); }
-.btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 28px; background: var(--ink); color: #fff; font: 700 16px/1 var(--sans); text-decoration: none; border: 2px solid var(--ink); cursor: pointer; transition: background .2s, border-color .2s, color .2s; }
+.more-link::after { content: "→"; transition: transform .2s var(--ease-out); }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 28px; background: var(--ink); color: #fff; font: 700 16px/1 var(--sans); text-decoration: none; border: 2px solid var(--ink); cursor: pointer; transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .16s var(--ease-out); }
 .btn::after { content: "→"; }
-.btn:hover { background: var(--orange); border-color: var(--orange); }
 .btn-line { background: transparent; color: var(--ink); }
-.btn-line:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
 @media (max-width: 700px) { .section { padding-top: 80px; } }
 
 /* 서브 페이지 머리: 큰 제목 */
@@ -133,8 +131,7 @@ p { margin: 0 0 1em; }
 .page-hero h1 { font-size: clamp(48px, 9vw, 128px); font-weight: 900; line-height: 1; letter-spacing: -0.06em; margin: 0 0 28px; }
 .page-hero .lead { margin: 0; }
 .subnav { display: flex; gap: 28px; flex-wrap: wrap; padding: 40px 0 0; }
-.subnav a { text-decoration: none; font-weight: 600; font-size: 15px; padding-bottom: 4px; border-bottom: 2px solid transparent; }
-.subnav a:hover { border-color: var(--orange); color: var(--orange); }
+.subnav a { text-decoration: none; font-weight: 600; font-size: 15px; padding-bottom: 4px; border-bottom: 2px solid transparent; transition: color .2s ease, border-color .2s ease; }
 @media (max-width: 700px) { .page-hero { padding: 56px 0 40px; } }
 
 /* 배경이 바뀌는 섹션: 스크립트가 없을 때는 각자 배경색을 가집니다 */
@@ -194,9 +191,7 @@ html.js-tone main [data-tone]:not([data-tone="dark"]) { background: transparent;
 .field-row p { margin: 0; color: var(--ink-2); max-width: 40ch; }
 .field-row .cnt { justify-self: end; text-align: right; font: 800 40px/1 var(--disp); font-variant-numeric: tabular-nums; }
 .field-row .cnt small { display: block; font: 600 13px/1.4 var(--sans); letter-spacing: 0; color: var(--ink-2); margin-top: 6px; }
-.field-row::after { content: "→"; position: absolute; right: 0; bottom: 14px; font-size: 18px; transition: transform .2s; }
-.field-row:hover::after { transform: translateX(6px); color: var(--orange); }
-.field-row:hover h3 > span:first-child { color: var(--orange); }
+.field-row::after { content: "→"; position: absolute; right: 0; bottom: 14px; font-size: 18px; transition: transform .2s var(--ease-out), color .2s ease; }
 @media (max-width: 900px) {
   .field-row { grid-template-columns: 56px 1fr auto; gap: 8px 16px; padding: 28px 0 36px; }
   .field-row .ico { width: 52px; height: 52px; grid-row: 1 / span 2; align-self: start; }
@@ -213,7 +208,6 @@ html.js-tone main [data-tone]:not([data-tone="dark"]) { background: transparent;
 .cta-band.dark h2 .o { color: var(--orange); }
 .cta-band.dark a.mail { color: var(--on-dark); }
 .cta-band.dark .btn { background: var(--orange); border-color: var(--orange); }
-.cta-band.dark .btn:hover { background: var(--on-dark); border-color: var(--on-dark); color: var(--ink); }
 .cta-band .wrap { position: relative; }
 
 /* 천천히 떠오르는 등장 효과 (스크립트가 있을 때만) */
@@ -227,8 +221,7 @@ html.js-reveal [data-reveal].in { transform: none; opacity: 1; }
 
 /* 사업실적 목록: 도면 목록처럼 */
 .proj-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
-.proj-row { display: grid; grid-template-columns: 150px 1fr 150px; gap: 24px; align-items: baseline; padding: 18px 8px; border-bottom: 1px solid var(--line); transition: background .15s; }
-.proj-row:hover { background: var(--mist); }
+.proj-row { display: grid; grid-template-columns: 150px 1fr 150px; gap: 24px; align-items: baseline; padding: 18px 8px; border-bottom: 1px solid var(--line); transition: background-color .15s ease; }
 .proj-year { font: 500 14px/1.4 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .proj-name { font-weight: 700; font-size: 18px; letter-spacing: -0.03em; }
 .proj-name small { display: block; font-weight: 400; color: var(--gray); font-size: 14px; letter-spacing: -0.01em; margin-top: 2px; }
@@ -247,8 +240,7 @@ html.js-reveal [data-reveal].in { transform: none; opacity: 1; }
 
 /* 필터 */
 .filters { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-bottom: 28px; align-items: center; }
-.filters button { font: 700 17px/1 var(--sans); letter-spacing: -0.03em; padding: 6px 0 8px; border: 0; border-bottom: 3px solid transparent; background: none; cursor: pointer; color: var(--gray); }
-.filters button:hover { color: var(--ink); }
+.filters button { font: 700 17px/1 var(--sans); letter-spacing: -0.03em; padding: 6px 0 8px; border: 0; border-bottom: 3px solid transparent; background: none; cursor: pointer; color: var(--gray); transition: color .15s ease, border-color .15s ease, transform .16s var(--ease-out); }
 .filters button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--orange); }
 .filters select { font: 600 15px/1 var(--sans); padding: 10px 12px; border: 1px solid var(--ink); background: var(--paper); margin-left: auto; border-radius: 0; color: var(--ink); }
 @media (max-width: 600px) { .filters select { margin-left: 0; } }
@@ -276,7 +268,6 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 .cta-band p { margin: 0; font-size: 18px; }
 .cta-band a.mail { color: #fff; font-weight: 700; }
 .cta-band .btn { background: var(--ink); border-color: var(--ink); }
-.cta-band .btn:hover { background: #fff; border-color: #fff; color: var(--ink); }
 .cta-band + .site-footer { margin-top: 0; }
 .site-footer { margin-top: 128px; }
 
@@ -364,11 +355,15 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 .manage-msg { min-height: 1.6em; margin: 16px 0 0; font-size: 15px; }
 .manage-msg.err { color: #B3261E; }
 
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+/* 움직임 줄이기: 위치·크기 움직임은 빼고, 이해를 돕는 색·투명도 변화만 남김 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-property: background-color, color, border-color, opacity !important; scroll-behavior: auto !important; }
+  .btn:active, .filters button:active, .view-toggle button:active, .nav-toggle:active { transform: none; }
+}
 
 /* 사업실적 카드형 보기 (목록형과 전환) */
 .view-toggle { display: inline-flex; border: 1px solid var(--ink); margin-left: auto; }
-.view-toggle button { font: 600 14px/1 var(--sans); padding: 10px 14px; border: 0; background: transparent; color: var(--ink); cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.view-toggle button { font: 600 14px/1 var(--sans); padding: 10px 14px; border: 0; background: transparent; color: var(--ink); cursor: pointer; display: inline-flex; gap: 6px; align-items: center; transition: background-color .15s ease, color .15s ease, transform .16s var(--ease-out); }
 .view-toggle button + button { border-left: 1px solid var(--ink); }
 .view-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .filters select { margin-left: 0; }
@@ -401,3 +396,24 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 @media (max-width: 800px) {
   .site-footer a, .note a, .form .agree a { display: inline-block; padding: 10px 0; margin: -10px 0; }
 }
+
+/* 마우스가 있는 화면에서만 올림(hover) 효과: 휴대폰에서 누른 뒤 색이 남는 현상 방지 */
+@media (hover: hover) and (pointer: fine) {
+  .site-nav a:hover::after { transform: none; }
+  .more-link:hover { color: var(--orange); border-color: var(--orange); }
+  .more-link:hover::after { transform: translateX(4px); }
+  .btn:hover { background: var(--orange); border-color: var(--orange); }
+  .btn-line:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .cta-band .btn:hover { background: #fff; border-color: #fff; color: var(--ink); }
+  .cta-band.dark .btn:hover { background: var(--on-dark); border-color: var(--on-dark); color: var(--ink); }
+  .subnav a:hover { border-color: var(--orange); color: var(--orange); }
+  .field-row:hover::after { transform: translateX(6px); color: var(--orange); }
+  .field-row:hover h3 > span:first-child { color: var(--orange); }
+  .proj-row:hover { background: var(--mist); }
+  .filters button:hover { color: var(--ink); }
+}
+
+/* 누름 반응: 버튼을 누르는 순간 살짝 작아져 눌렸음을 알려줌 */
+.btn, .filters button, .view-toggle button, .nav-toggle { -webkit-tap-highlight-color: transparent; }
+.nav-toggle { transition: transform .16s var(--ease-out); }
+.btn:active, .filters button:active, .view-toggle button:active, .nav-toggle:active { transform: scale(.97); }
