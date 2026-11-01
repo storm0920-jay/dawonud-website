@@ -108,7 +108,10 @@ const CONFIG = {
     varying float vOp;
     float rev;
     float lstag(float y) { return y <= 0. ? 0. : y <= 1. ? .25 * y : y <= 2. ? .25 + .5 * (y - 1.) : .75 + (y - 2.); }
-    float midOp(float y) { return y < -1. ? max(0., 1. - (-1. - y) * 2.) : y <= 4. ? 1. : max(0., 1. - (y - 4.) * 2.); }   // 아랫줄(-1)도 윗줄처럼 또렷하게, 그 아래에서 사라짐
+    float midOp(float y) {
+      // 정면(흐르기 전)에는 아랫줄(-1)도 윗줄처럼 또렷하게. 층이 아래로 흐르기 시작하면 0에서 -1.5까지 천천히 옅어져 뚝 떨어지듯 사라지지 않게
+      float low = clamp((y + 1.5) / 1.5, 0., 1.), k = clamp(uCycle, 0., 1.);
+      return y < 0. ? (y < -1. ? min(low, max(0., 1. - (-1. - y) * 2.)) : 1.) * (1. - k) + low * k : y <= 4. ? 1. : max(0., 1. - (y - 4.) * 2.); }
     vec3 boxAt() {
       float y = aBox.y; vOp = aBox.w;
       if (aInfo.y > .5) { y = mod(aBox.y - uCycle + 1.5, 6.) - 1.5; vOp = midOp(y) * uMid; }
