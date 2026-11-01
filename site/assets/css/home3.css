@@ -105,13 +105,13 @@ h1, h2, h3, p { margin: 0; }
 /* 녹화 속 배경 + 가이드선: 세로선은 위 메뉴 Services 눈금(화면 폭 50%), 가로선은 화면 높이 50% */
 .we-stage { isolation: isolate; }
 .we-stage::before, .we-stage::after { content: ""; position: absolute; z-index: -1; pointer-events: none; background: var(--white); opacity: .12; }
-.we-stage::before { left: 50vw; top: 0; bottom: 0; width: 1px; }
+.we-stage::before { left: 50%; top: 0; bottom: 0; width: 1px; }   /* vw는 스크롤바 폭까지 포함해 메뉴 눈금과 어긋남 → % 사용 */
 .we-stage::after { top: 50%; left: 0; right: 0; height: 1px; }
 .we-stage > .label { position: absolute; top: 88px; left: var(--pad); }
 .we, .we-w { font: 400 16.25vw/.87 var(--en); letter-spacing: -0.06em; text-transform: uppercase; color: var(--white); white-space: nowrap; margin: 0; }
 .we { position: absolute; left: .6vw; top: 51%; transform: translateY(-50%); }
 .we-tag { position: absolute; left: 35.3vw; top: 51%; transform: translateY(-50%); font: 500 14px/1 var(--en); color: var(--white); }
-.we-col { position: absolute; left: 50vw; top: 51%; width: 50vw; margin-top: -7.07vw; }   /* 첫 단어(SEE) 가운데가 WE와 같은 높이 */
+.we-col { position: absolute; left: 50%; top: 51%; width: 50%; margin-top: -7.07vw; }   /* 첫 단어(SEE) 가운데가 WE와 같은 높이 */
 .we-w { display: block; will-change: transform; }
 .we-text { margin-top: 7vw; max-width: min(40vw, 640px); padding-left: 1vw; }   /* S·H·F 글자 왼쪽 여백(약 0.06em = 1vw)만큼 띄워 세로선에 붙지 않게 */
 .we-text .lead { word-break: keep-all; }
@@ -160,14 +160,14 @@ h1, h2, h3, p { margin: 0; }
 .wd-pin { position: relative; height: calc(100vh + 4 * 90vh); }
 .wd-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; isolation: isolate; }
 .wd-stage::before, .wd-stage::after { content: ""; position: absolute; z-index: -1; pointer-events: none; background: currentColor; opacity: .08; }
-.wd-stage::before { left: 50vw; top: 0; bottom: 0; width: 1px; box-shadow: 25vw 0 0 currentColor; }
+.wd-stage::before { left: 50%; width: 25%; top: 0; bottom: 0; box-sizing: border-box; border: solid currentColor; border-width: 0 1px; background: none; }   /* Services·Company 눈금 두 선 */
 .wd-stage::after { top: 50%; left: 0; right: 0; height: 1px; }
 .wd-stage > .label { position: absolute; top: 88px; left: var(--pad); }
 .wd-title { position: absolute; left: .6vw; top: 22%; margin: 0; font: 400 16.25vw/.87 var(--en); letter-spacing: -0.06em; white-space: nowrap; will-change: transform; }
 .wd-names { position: absolute; left: 0; bottom: calc(50% + 2.4vh); display: flex; gap: 12vw; white-space: nowrap; will-change: transform; }
 .wd-n { font: 400 3.9vw/1 var(--en); letter-spacing: -0.03em; color: inherit; }
 .wd-k { margin-left: .35em; font: 400 .29em/1 var(--ko); letter-spacing: -0.01em; color: #8A8A86; }   /* 한글 분야명: 영문의 0.29배(0.42에서 30% 줄임), 중회색 */
-.wd-pics { position: absolute; left: 50vw; width: 25vw; top: 50%; bottom: 0; }
+.wd-pics { position: absolute; left: 50%; width: 25%; top: 50%; bottom: 0; }
 .wd-pic { position: absolute; inset: 0; display: grid; place-items: center; background: var(--pc); color: var(--fc); clip-path: inset(0 0 0 100%); will-change: clip-path; }
 .wd-pic .ico { width: 34%; aspect-ratio: 1; }
 .wd-ph { position: absolute; left: 14px; bottom: 14px; font: 500 12px/1 var(--ko); color: var(--fc); }
@@ -178,7 +178,7 @@ h1, h2, h3, p { margin: 0; }
 .wd-ci::after { content: ""; display: inline-block; width: 1px; height: 11px; background: currentColor; margin-left: 11px; vertical-align: -1px; }
 @media (max-width: 800px) {
   .wd-n { font-size: 8vw; } .wd-names { gap: 16vw; }
-  .wd-pics { left: 50vw; width: 46vw; }
+  .wd-pics { left: 50%; width: 46%; }
   .wd-descs { width: 44vw; } .wd-d { font-size: 14px; }
 }
 .services { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-l); }

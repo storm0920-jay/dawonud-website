@@ -312,7 +312,7 @@
       const k = Math.min(N - 1, Math.max(0, s - 1)), i0 = Math.floor(k), f = k - i0, i1 = Math.min(N - 1, i0 + 1);
       const x0 = names[i0].offsetLeft, x1 = names[i1].offsetLeft;
       const enter = cl(s) ;                                                    // 첫 진입
-      const base = innerWidth * .5 - (x0 + (x1 - x0) * f) + (1 - enter) * innerWidth * .55;
+      const base = st.clientWidth * .5 - (x0 + (x1 - x0) * f) + (1 - enter) * innerWidth * .55;
       row.style.transform = `translate3d(${base.toFixed(1)}px, 0, 0)`;
       names.forEach((n, i) => n.style.opacity = (.22 + .78 * cl(1 - Math.abs(i - k))).toFixed(3));
       // 사진: 오른쪽에서 왼쪽으로 열리며 앞 사진을 덮음
