@@ -105,6 +105,27 @@ const NAV = [
     el.href = "mailto:" + SITE.email;
     if (!el.textContent.trim()) el.textContent = SITE.email;
   });
+
+  // PC(마우스 화면)에서는 메일 프로그램 대신 주소를 복사하고 안내. 휴대폰은 메일 앱이 열림
+  const isPC = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const toast = msg => {
+    let t = document.getElementById("copy-toast");
+    if (!t) {
+      t = document.createElement("div"); t.id = "copy-toast"; t.setAttribute("role", "status");
+      t.style.cssText = "position:fixed;left:50%;bottom:48px;z-index:10000;transform:translate(-50%,12px);opacity:0;padding:14px 22px;border-radius:999px;background:#F4F2ED;color:#0E0E0E;font:500 15px/1 'SUIT',sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.25);pointer-events:none;transition:opacity .25s,transform .35s cubic-bezier(.23,1,.32,1)";
+      document.body.appendChild(t);
+    }
+    t.textContent = msg; t.style.opacity = "1"; t.style.transform = "translate(-50%,0)";
+    clearTimeout(t._h); t._h = setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translate(-50%,12px)"; }, 2200);
+  };
+  const copy = text => {
+    const old = () => { const a = document.createElement("textarea"); a.value = text; a.style.cssText = "position:fixed;opacity:0"; document.body.appendChild(a); a.select(); try { document.execCommand("copy"); } catch (e) {} a.remove(); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).catch(old); else old();
+  };
+  if (isPC) document.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="mailto:"]'); if (!a) return;
+    e.preventDefault(); copy(a.href.replace(/^mailto:/, "").split("?")[0]); toast("메일 주소가 복사되었습니다");
+  });
 })();
 
 /* ---------------------------------------------------------
