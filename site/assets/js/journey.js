@@ -37,6 +37,8 @@ const CONFIG = {
     word: .175, side: .175,                            // 글자 크기 (상자 높이 대비). 옆면 동사도 앞면 명사와 같은 크기·재질
     shift: { layer: 5, col: 2, depth: 1 },             // 단어 순환: 층마다 5칸, 열마다 2칸, 깊이마다 1칸 밀기
     stagger: { col: .25, colMax: 1 },                  // 가운데에서 먼 열일수록 뒤로 밀림 (층 엇갈림은 셰이더의 lstag)
+    stepDrop: .45,                                     // 위에서 내려다볼 때 한 칸 바깥마다 낮아지는 높이
+    stepRange: [.45, .62],                             // 계단이 생기는 스크롤 구간
     well: true,                                        // 꼭대기 층 가운데 상자를 비워 우물처럼 (바닥에 이미지)
   },
   // 카메라: tilt 정면→위(도), roll 화면 시계 방향 회전(도). 녹화 기준
@@ -95,12 +97,12 @@ const CONFIG = {
   const camera = new THREE.PerspectiveCamera(15, 1, .1, 1000);
   const U = { uCycle: { value: 0 }, uAlign: { value: 0 }, uMid: { value: 1 }, uAlpha: { value: 0 }, uDiag: { value: 1 },
               uWords: { value: 1 }, uMap: { value: null }, uReveal: { value: 0 }, uSeq: { value: 1 }, uD: { value: 8 },
-              uO2: { value: new THREE.Vector2() }, uO3: { value: new THREE.Vector2() }, uFront: { value: 1 } };
+              uStep: { value: 0 }, uO2: { value: new THREE.Vector2() }, uO3: { value: new THREE.Vector2() }, uFront: { value: 1 } };
   const common = `
     attribute vec4 aBox;   // x, 층 높이, z, 층 불투명도
     attribute float aRow;  // 같은 자리에 겹친 상자 중 뒤쪽이면 1 (정면에서 숨김)
     attribute vec4 aInfo;  // 열 엇갈림, 가운데 층 여부, 세 줄 상자 번호(1 Place, 2 Defines, 3 Life), 가운데에서의 거리(0~1)
-    uniform float uCycle, uAlign, uMid, uAlpha, uReveal;
+    uniform float uCycle, uAlign, uMid, uAlpha, uReveal, uStep;
     varying float vOp;
     float rev;
     float lstag(float y) { return y <= 0. ? 0. : y <= 1. ? .25 * y : y <= 2. ? .25 + .5 * (y - 1.) : .75 + (y - 2.); }
@@ -110,6 +112,7 @@ const CONFIG = {
       if (aInfo.y > .5) { y = mod(aBox.y - uCycle + 1.5, 6.) - 1.5; vOp = midOp(y) * uMid; }
       rev = clamp(uReveal * 1.8 - aInfo.w * .8, 0., 1.);
       vOp *= uAlpha * rev;
+      y -= uStep * ${C.cubes.stepDrop.toFixed(2)} * max(0., max(abs(aBox.x), abs(aBox.z)) - 1.);   // 가운데에서 한 칸 멀어질 때마다 한 단씩 낮아지는 계단
       return vec3(aBox.x, y, aBox.z - (aInfo.x + lstag(y)) * (1. - uAlign));
     }`;
   const proj = `gl_Position = projectionMatrix * modelViewMatrix * vec4(bp + local, 1.);`;
@@ -372,7 +375,7 @@ const CONFIG = {
     U.uFront.value = 1 - io(seg(p, C.front.range));
     U.uCycle.value = C.cycle.steps * seg(p, C.cycle.range);
     const m = io(seg(p, C.middleOut));
-    U.uMid.value = 1 - m; U.uDiag.value = 1 - m; U.uAlign.value = m;
+    U.uStep.value = io(seg(p, C.cubes.stepRange)); U.uMid.value = 1 - m; U.uDiag.value = 1 - m; U.uAlign.value = m;
     set(canvas, "opacity", U.uAlpha.value > 0 ? "1" : "0");
     placeCamera(p);
     paint();
