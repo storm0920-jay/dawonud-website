@@ -25,6 +25,9 @@ const SITE = {
   // true 이면 위쪽에 "미리보기" 안내 띠가 보입니다. 자료를 모두 넣은 뒤 false 로 바꾸세요.
   preview: true,
 
+  // true 이면 하위 페이지 머리말의 메뉴(About, Business 등)를 숨기고 로고(홈으로)만 보임. 하위 페이지를 다 손본 뒤 false 로
+  hideSubNav: true,
+
   logo: "assets/img/logo.svg",
   logoWhite: "assets/img/logo-white.svg",
 };
@@ -55,15 +58,15 @@ const NAV = [
         <a class="brand" href="index.html" aria-label="${SITE.name} 홈">
           <img src="${SITE.logo}" alt="${SITE.name}" width="148" height="48">
         </a>
-        <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+        ${SITE.hideSubNav ? "" : `<button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span><span class="sr-only">메뉴 열기</span>
         </button>
         <nav id="site-nav" class="site-nav" aria-label="주 메뉴">
           ${NAV.map(n => `<a href="${n.href}"${page === n.href ? ' aria-current="page"' : ""}>${n.label}</a>`).join("")}
-        </nav>
+        </nav>`}
       </div>`;
     const btn = header.querySelector(".nav-toggle");
-    btn.addEventListener("click", () => {
+    if (btn) btn.addEventListener("click", () => {
       const open = header.classList.toggle("nav-open");
       btn.setAttribute("aria-expanded", open);
     });
