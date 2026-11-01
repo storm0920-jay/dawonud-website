@@ -23,7 +23,7 @@ const SITE = {
   formEndpoint: "https://formsubmit.co/dawon@dawonud.com",
 
   // true 이면 위쪽에 "미리보기" 안내 띠가 보입니다. 자료를 모두 넣은 뒤 false 로 바꾸세요.
-  preview: true,
+  preview: false,
 
   // true 이면 하위 페이지 머리말의 메뉴(About, Business 등)를 숨기고 로고(홈으로)만 보임. 하위 페이지를 다 손본 뒤 false 로
   hideSubNav: true,
