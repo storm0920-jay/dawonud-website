@@ -33,7 +33,7 @@ const CONFIG = {
              [-2, 1, 1, .12], [-3, 3, 3, .1], [-4, 5, 5, 0]],
     middle: [-1, 4],                                   // 흐르다 사라지는 가운데 층(11×3)
     faces: { front: .7, left: .4, right: .2, top: .6 }, // 면 불투명도
-    line: .5,                                          // 모서리 선 불투명도 (원본 .2, 더 잘 보이도록 올림)
+    line: .3,                                          // 모서리 선 불투명도 (원본 .2). 선은 면 위에 그려 가운데까지 고르게 보임
     word: .175, side: .175,                            // 글자 크기 (상자 높이 대비). 옆면 동사도 앞면 명사와 같은 크기·재질
     shift: { layer: 5, col: 2, depth: 1 },             // 단어 순환: 층마다 5칸, 열마다 2칸, 깊이마다 1칸 밀기
     stagger: { col: .25, colMax: 1 },                  // 가운데에서 먼 열일수록 뒤로 밀림 (층 엇갈림은 셰이더의 lstag)
@@ -125,7 +125,7 @@ const CONFIG = {
     `varying float vOp; varying float vFace; void main(){ gl_FragColor = vec4(vec3(.067), vFace * vOp); }`, false, 2);
   const lineShift = new THREE.Vector2();   // 고해상도 화면에서 선을 CSS 1px 두께로 만들기 위해 한 번 더 그리는 어긋남(장치 픽셀 1칸)
   const lineMat = mat(`attribute float aDiag; uniform float uDiag; void main(){ vec3 bp = boxAt(); vec3 local = position; vOp *= mix(1., uDiag, aDiag); ${proj} }`,
-    `varying float vOp; void main(){ gl_FragColor = vec4(.949, .941, .941, ${C.cubes.line} * vOp); if (gl_FragColor.a < .003) discard; }`, false, 0);   // 선·면은 깊이를 기록하지 않음 (뒤의 선이 비쳐 보임)
+    `varying float vOp; void main(){ gl_FragColor = vec4(.949, .941, .941, ${C.cubes.line} * vOp); if (gl_FragColor.a < .003) discard; }`, false, 3);   // 선·면은 깊이를 기록하지 않음 (뒤의 선이 비쳐 보임)
   const wordFS = `uniform sampler2D uMap; uniform float uWords; varying float vOp; varying vec2 vUv;
     void main(){
       // 글자 그림은 작게 줄여 쓰므로 가장자리가 번져 있음. 번진 가장자리(알파 0.5가 글자 윤곽)를 SDF처럼 한 픽셀 폭으로 또렷하게 다듬음
@@ -233,7 +233,7 @@ const CONFIG = {
     const lg = inst(lines, B, n);
     add(new THREE.LineSegments(lg, lineMat), lineMat);
     const lineMat2 = new THREE.ShaderMaterial({ uniforms: { ...U, uShift: { value: lineShift } }, vertexShader: lineMat.vertexShader.replace(/\}\s*$/, " gl_Position.xy += uShift * gl_Position.w; }").replace("uniform float uDiag;", "uniform float uDiag; uniform vec2 uShift;"), fragmentShader: lineMat.fragmentShader, transparent: true, depthWrite: false, side: THREE.DoubleSide });
-    lineMat2._order = 0; lineMat2.userData.second = true;
+    lineMat2._order = 3; lineMat2.userData.second = true;
     lineSecond = new THREE.LineSegments(lg, lineMat2); add(lineSecond, lineMat2);
     const fg = inst(plane, { ...B, aUV: { a: fUV, n: 4 }, aSize: { a: fSize, n: 2 } }, n), sg = inst(plane, { ...B, aUV: { a: sUV, n: 4 }, aSize: { a: sSize, n: 2 } }, n);
     add(new THREE.Mesh(fg, frontMat), frontMat);
