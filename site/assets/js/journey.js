@@ -40,7 +40,8 @@ const CONFIG = {
     stagger: { col: .25, colMax: 1 },                  // 가운데에서 먼 열일수록 뒤로 밀림 (층 엇갈림은 셰이더의 lstag)
     stepDrop: 1,                                       // 위에서 내려다볼 때 한 칸 바깥마다 낮아지는 높이
     stepRange: [.45, .62],                             // 계단이 생기는 스크롤 구간
-    well: true,                                        // 꼭대기 층 가운데 상자를 비워 우물처럼 (바닥에 이미지)
+    well: true,
+    wellWord: .5,                                      // 우물 네 벽 단어 진하기 (옆칸보다 진하고 너무 튀지 않게)                                        // 꼭대기 층 가운데 상자를 비워 우물처럼 (바닥에 이미지)
   },
   // 카메라: tilt 정면→위(도), roll 화면 시계 방향 회전(도). 녹화 기준
   camera: [
@@ -149,6 +150,7 @@ const CONFIG = {
       ${place}
       local.xy = local.xy * (z > 1.5 ? comp : 1.) + (z > 1.5 ? off : vec2(0.));
       if (z > .5) vOp = uAlpha * (z > 1.5 ? mix(1., .75, uSeq) * (1. - uFront * (1. - uSeq)) : 1.);
+      if (aBox.y > ${(C.cubes.layers[0][0] - .5).toFixed(1)} && abs(abs(aBox.x) + abs(aBox.z) - 1.) < .01) vOp *= ${C.cubes.wellWord.toFixed(2)};   // 우물 벽 단어는 면에 가려지지 않아 옆칸보다 또렷하므로 낮춤
       ${proj} }`;
   const frontMat = mat(wordVS(`vec3 local = vec3(position.xy * aSize, .501);`, true), wordFS, true, 1);
   // 옆면 단어: 왼쪽 면에 90° 돌려 붙임 (아래에서 위로 읽힘)
