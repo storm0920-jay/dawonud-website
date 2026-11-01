@@ -11,8 +11,8 @@ const CONFIG = {
   words: {
     first: ["Design", "Shapes", "Place"],              // 1단계 세 줄. 마지막 줄이 피벗 단어
     second: ["Defines", "Life"],                       // 3단계: 피벗 단어 아래 두 줄 (Place / Defines / Life)
-    core: ["Landscape", "Public", "Color", "Streetscape"],   // 가운데 줄(업종 키워드)
-    rel: ["Community", "Connects", "Shapes", "Place"],        // 맨 윗줄·맨 아랫줄(관계 단어)
+    core: ["Landscape", "Public", "Color", "Streetscape", "Civil", "Architecture", "Urban", "City", "Park", "Plaza", "Boulevard", "Terrain", "Skyline", "Facade", "Pavement", "Garden", "Street", "Bridge", "Waterfront", "Lighting", "Signage", "Universal", "Heritage", "Square"],   // 가운데 줄(업종 키워드)
+    rel: ["Community", "Connects", "Shapes", "Together", "Network", "Flow", "Link", "Commons", "Fabric", "Edge", "Grid", "Axis", "Path", "Section", "Plan", "Elevation", "Order", "Rhythm", "Balance", "Layers", "Context", "Memory", "Identity", "Culture", "People", "Welcome", "Access", "Shared", "Threshold", "Unity", "Harmony", "Belonging"],   // 윗줄·아랫줄(관계·건축 단어)
     sense: ["Walk", "Pause", "Gather"],                // 상자 왼쪽 옆면 동사 3개 순환
   },
   // 구간 비율은 밝은 녹화(Video Project_색반전, 0~33초)의 스크롤바 위치를 0.5초마다 재서 맞춤. 일정한 속도로 내리면 녹화와 같은 속도로 바뀜
@@ -204,17 +204,17 @@ const CONFIG = {
     scene.clear();
     const K = C.cubes, rects = buildAtlas(), nc = Wd.core.length, nr = Wd.rel.length, nf = nc + nr, ns = Wd.sense.length;
     const box = [], info = [], rows = [], fUV = [], fSize = [], sUV = [], sSize = [];
-    const mod = (a, n) => ((a % n) + n) % n;
+    const mod = (a, n) => ((a % n) + n) % n; let wi = 0;
     for (const [L, cols, depth, op] of K.layers) {
       const mid = L >= C.cubes.middle[0] && L <= C.cubes.middle[1];
       for (let c = -(cols - 1) / 2; c <= (cols - 1) / 2; c++) for (let d = -(depth - 1) / 2; d <= (depth - 1) / 2; d++) {
         if (K.well && L === K.layers[0][0] && c === 0 && d === 0) continue;
         // 가운데 줄 세 상자(앞에서부터 Place, Defines, Life)가 화면에서 겹쳐 서 있음. 망원 카메라라 한 점에 모여 보임
         const stack = L === 0 && c === 0 ? 1 + ((depth - 1) / 2 - d) : 0;
-        box.push(c, L, d, op); rows.push(d < (depth - 1) / 2 - .001 ? 1 : 0);
+        box.push(c, L, d, op); wi++; rows.push(d < (depth - 1) / 2 - .001 ? 1 : 0);
         info.push(Math.min(K.stagger.colMax, Math.abs(c) * K.stagger.col), mid ? 1 : 0, stack, Math.min(1, Math.hypot(c, L * .5, d - (depth - 1) / 2) / 7));
         const sh = K.shift, k = L * sh.layer + c * sh.col - d * sh.depth;
-        const fr = stack ? rects[nf + ns + stack - 1] : L === 0 ? rects[mod(c, nc)] : rects[nc + mod(k, nr)], sr = rects[nf + mod(k, ns)];
+        const fr = stack ? rects[nf + ns + stack - 1] : L === 0 ? rects[mod(c, nc)] : rects[nc + mod(wi, nr)], sr = rects[nf + mod(k, ns)];
         fUV.push(...fr.uv); fSize.push(fr.w * K.word, fr.h * K.word);
         sUV.push(...sr.uv); sSize.push(sr.w * K.side, sr.h * K.side);
       }
