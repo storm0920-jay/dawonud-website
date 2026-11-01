@@ -19,7 +19,7 @@ const CONFIG = {
     well: { "0,1": "Landscape", "0,-1": "Universal", "-1,0": "Color Design", "1,0": "Public Design" },   // 가운데 우물 네 벽 (내려다볼 때 12시·6시·3시·9시). Universal Design은 벽보다 길어 Design 뺌
   },
   // 구간 비율은 밝은 녹화(Video Project_색반전, 0~33초)의 스크롤바 위치를 0.5초마다 재서 맞춤. 일정한 속도로 내리면 녹화와 같은 속도로 바뀜
-  scroll: { scrub: 1, length: 900 },                   // 관성(초), 장면을 붙잡아 둔 채 스크롤하는 길이(vh)
+  scroll: { scrub: 0.3, length: 900 },                 // 관성(초), 장면을 붙잡아 둔 채 스크롤하는 길이(vh)
   upTo: 9,                                             // 4면 1~4단계까지만 보여 줌
   type: { tracking: "-0.02em", leading: .98, white2: .75 },
 
@@ -470,7 +470,7 @@ const CONFIG = {
   // 부드러운 스크롤(Lenis)은 단독 페이지에서만. 미리보기처럼 다른 화면 안에 들어가 있으면 스크롤을 막을 수 있어서 끔
   let framed = true; try { framed = window.self !== window.top; } catch (e) {}
   if (window.Lenis && !calm && !framed) {
-    const lenis = new Lenis();
+    const lenis = new Lenis({ lerp: 0.12, wheelMultiplier: 1.6 });   // 휠 한 칸에 더 멀리, 따라오는 지연은 짧게
     window.lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(t => lenis.raf(t * 1000));

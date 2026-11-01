@@ -330,7 +330,7 @@
       const r = pin.getBoundingClientRect();
       if (r.bottom < -innerHeight || r.top > 2 * innerHeight) return;              // 화면 밖이면 쉼
       const tgt = calm ? 1 : cl(-r.top / Math.max(1, r.height - innerHeight));
-      cur = cur === null || calm ? tgt : cur + (tgt - cur) * .1;
+      cur = cur === null || calm ? tgt : cur + (tgt - cur) * .25;
       if (Math.abs(tgt - cur) < 1e-4) cur = tgt;
       const lh = .87 * .1625 * innerWidth;
       const stageTop = r.top > 0 ? r.top : Math.min(0, r.bottom - innerHeight);   // 고정(sticky) 무대의 화면 위치
@@ -369,7 +369,7 @@
       const r = pin.getBoundingClientRect();
       if (r.bottom < -innerHeight || r.top > 2 * innerHeight) return;
       const tgt = cl(-r.top / Math.max(1, r.height - innerHeight)) * N;      // 0 ~ N
-      cur = cur === null || calm ? tgt : cur + (tgt - cur) * .1;
+      cur = cur === null || calm ? tgt : cur + (tgt - cur) * .25;
       if (Math.abs(tgt - cur) < 1e-4) cur = tgt;
       // 제목: 처음 1구간 동안 화면 위로 빠져나감
       title.style.transform = `translate3d(0, ${(-cur * innerHeight * .75).toFixed(1)}px, 0)`;
