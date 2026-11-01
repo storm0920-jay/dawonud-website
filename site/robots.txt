@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /manage.html
+Disallow: /thanks.html
+Sitemap: https://www.dawonud.com/sitemap.xml
