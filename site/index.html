@@ -257,14 +257,15 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 
   // ---------- About: 녹화 실측. 단어 묶음이 FEEL까지 3줄 올라가는 동안 WE는 고정.
-  // 각 단어는 화면 세로 위치(y)에 따라 오른쪽으로 밀림: y .27→0, .53→10%, .79→21%, .97→29% (화면 폭 기준) ----------
+  // 각 단어는 화면 세로 위치(y)에 따라 오른쪽으로 밀림 (아래 push 참고) ----------
   (() => {
     const pin = document.querySelector(".we-pin"); if (!pin) return;
     const col = pin.querySelector(".we-col"), words = [...col.querySelectorAll(".we-w")];
     const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cl = v => Math.min(1, Math.max(0, v));
-    // 화면 아래로 갈수록 부드럽게 커지는 곡선(꺾이는 곳 없음): y .27→0, .53→10%, .79→21%, .97→29%
-    const push = y => { const d = Math.max(0, y - .2); return .40 * d * d * d / (d * d + .03); };
+    // jay 녹화(Video Project 9) 프레임 실측: 단어가 오른쪽으로 밀린 정도 = 0.4 × (화면 세로 위치)³ (화면 폭 기준)
+    // y .22→0.4%, .44→3.4%, .60→8.6%, .71→14%, .85→25%, .89→28% (네 단어 모두 같은 곡선)
+    const push = y => .4 * Math.pow(Math.max(0, y), 3);
     // Santal은 GSAP scrub + Lenis로 스크롤 값을 부드럽게 따라감. 여기서도 목표 위치를 매 프레임 조금씩(10%) 따라가 휠 한 칸의 끊김을 없앰
     let cur = null;
     function frame() {
@@ -276,9 +277,11 @@
       if (Math.abs(tgt - cur) < 1e-4) cur = tgt;
       const lh = .87 * .1625 * innerWidth;
       const stageTop = r.top > 0 ? r.top : Math.min(0, r.bottom - innerHeight);   // 고정(sticky) 무대의 화면 위치
-      col.style.transform = `translate3d(0, ${(-cur * 3 * lh).toFixed(2)}px, 0)`;
+      // 들어오는 동안 단어 묶음이 WE보다 화면 높이 12%만큼 먼저 올라감(녹화: WE가 멈출 때 SEE는 WE보다 위), 이후 FEEL이 WE 높이에 올 때까지
+      const ent = calm ? 1 : cl(1 - r.top / innerHeight), lift = .12 * innerHeight * ent + cur * (3 * lh - .12 * innerHeight);
+      col.style.transform = `translate3d(0, ${(-lift).toFixed(2)}px, 0)`;
       words.forEach((w, i) => {
-        const y = (stageTop + innerHeight * .51 + (i - cur * 3) * lh) / innerHeight;   // 단어 가운데의 화면 세로 위치
+        const y = (stageTop + innerHeight * .51 + i * lh - lift) / innerHeight;   // 단어 가운데의 화면 세로 위치
         w.style.transform = calm ? "" : `translate3d(${(push(y) * innerWidth).toFixed(2)}px, 0, 0)`;
       });
     }
