@@ -342,29 +342,40 @@
     requestAnimationFrame(frame);
   })();
 
-  // ---------- Process: 스크롤하면 단계 목록이 올라오며 한 단계씩 펼쳐짐(펼침 .8초). 단계를 누르면 그 단계로 이동 ----------
+  // ---------- Process: 녹화 검토 결과. 목록은 스크롤과 같은 속도로 올라가고, 단계는 +를 눌러야 펼쳐짐(한 번에 하나).
+  // 글씨 농도는 화면 가운데 가로선에 가까울수록 진하고 멀수록 연해짐 ----------
   (() => {
     const pin = document.querySelector(".pr-pin"); if (!pin) return;
     const list = pin.querySelector(".pr-list"), items = [...list.children], N = items.length;
     const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const cl = v => Math.min(1, Math.max(0, v)), START = .06;
-    if (calm) { pin.classList.add("static"); items.forEach(i => { i.classList.add("open"); i.querySelector(".pr-head").setAttribute("aria-expanded", "true"); }); return; }
-    let cur = null, act = -2;
-    const idxAt = p => p < START ? -1 : Math.min(N - 1, Math.floor((p - START) / (1 - START) * N));
-    items.forEach((it, i) => it.querySelector(".pr-head").addEventListener("click", () => {
-      const r = pin.getBoundingClientRect(), range = r.height - innerHeight;
-      scrollTo({ top: scrollY + r.top + (START + (i + .5) / N * (1 - START)) * range, behavior: "smooth" });
+    const cl = v => Math.min(1, Math.max(0, v));
+    const set = (it, on) => { it.classList.toggle("open", on); it.querySelector(".pr-head").setAttribute("aria-expanded", on); };
+    items.forEach(it => it.querySelector(".pr-head").addEventListener("click", () => {
+      const on = !it.classList.contains("open");
+      if (!calm) items.forEach(o => set(o, false));
+      set(it, on);
     }));
+    if (calm) { pin.classList.add("static"); items.forEach(i => set(i, true)); return; }
+    let cur = null;
     function frame() {
       requestAnimationFrame(frame);
       const r = pin.getBoundingClientRect();
       if (r.bottom < -innerHeight || r.top > 2 * innerHeight) return;
-      const p = cl(-r.top / Math.max(1, r.height - innerHeight)), idx = idxAt(p);
-      if (idx !== act) { act = idx; items.forEach((it, i) => { const on = i === idx; it.classList.toggle("open", on); it.querySelector(".pr-head").setAttribute("aria-expanded", on); }); }
-      const anchor = (idx < 0 ? .40 : .16) * innerHeight, tgt = anchor - items[Math.max(0, idx)].offsetTop;
-      cur = cur === null ? tgt : cur + (tgt - cur) * .12;
+      const p = cl(-r.top / Math.max(1, r.height - innerHeight));
+      const head = items[0].querySelector(".pr-head").offsetHeight, pitch = head + 1;
+      const t0 = .32 * innerHeight - head * .3, t1 = .5 * innerHeight - (N - 1) * pitch - head * .3;
+      const tgt = t0 + (t1 - t0) * p;
+      cur = cur === null ? tgt : cur + (tgt - cur) * .2;
       if (Math.abs(tgt - cur) < .1) cur = tgt;
       list.style.transform = `translate3d(0, ${cur.toFixed(1)}px, 0)`;
+      // 농도: 가운데 가로선(화면 높이 50%)에서 멀어질수록 연해짐
+      items.forEach(it => {
+        const hd = it.querySelector(".pr-head"), b = hd.getBoundingClientRect();
+        const d = Math.abs((b.top + innerWidth * .02) - innerHeight * .5) / innerHeight;
+        let o = Math.max(.28, 1 - Math.pow(d / .55, 1.6));
+        if (it.classList.contains("open")) o = Math.max(o, .6);
+        hd.style.opacity = o.toFixed(3);
+      });
     }
     requestAnimationFrame(frame);
   })();
