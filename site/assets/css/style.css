@@ -392,3 +392,7 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 .field-detail-head h2 small { font-size: 17px; }
 .stat .label small { display: block; font-weight: 500; font-size: 14px; color: var(--ink-2); margin-top: 2px; }
 .site-nav a { font-family: var(--disp); font-weight: 600; letter-spacing: 0; }
+
+/* 카드 칸이 긴 이름 때문에 늘어나지 않게 */
+.proj-card { min-width: 0; }
+.proj-card .proj-name { overflow-wrap: anywhere; }
