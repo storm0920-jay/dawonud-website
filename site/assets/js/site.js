@@ -4,7 +4,7 @@
    값이 null 이면 화면에 표시되지 않습니다.
    ========================================================= */
 const SITE = {
-  naverMapKey: "", // 네이버 클라우드 Maps 인증 키(Client ID)를 넣으면 네이버 지도가 바로 열립니다
+  naverMapKey: "a9txtd7472", // 네이버 클라우드 Maps 인증 키(Client ID)를 넣으면 네이버 지도가 바로 열립니다
   name: "다원 도시디자인",
   nameEn: "DAWON URBAN DESIGN",
   fields: ["경관", "공공디자인", "색채디자인", "유니버설디자인"],
