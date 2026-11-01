@@ -211,12 +211,22 @@
   <!-- Contact -->
   <section class="sec pad" id="contact" style="padding-bottom:64px">
     <span class="label">Contact <span class="ko">문의하기</span></span>
-    <p class="talk" style="margin-top:28px"><a href="contact.html" data-magnet=".1" data-cursor="Contact">Let's Talk<span>.</span></a></p>
+    <p class="talk" style="margin-top:28px"><a data-site-email data-magnet=".1" data-cursor="Mail">Let's Talk<span>.</span></a></p>
     <div class="enquire">
-      <div><span class="label">Projects &amp; General</span><a data-site-email></a></div>
-      <div><span class="label">Careers</span><a data-site-email></a></div>
-      <div><span class="label">Office</span><address data-site="address"></address></div>
+      <div><span class="label">Enquiry <span class="ko">프로젝트·채용 문의</span></span><a data-site-email></a></div>
+      <div><span class="label">Office <span class="ko">주소를 누르면 지도가 열립니다</span></span>
+        <button type="button" class="addr" id="addr-btn" aria-expanded="false" aria-controls="addr-map"><span data-site="address"></span><i aria-hidden="true">+</i></button>
+      </div>
     </div>
+    <div class="addr-map" id="addr-map" hidden>
+      <iframe title="다원 도시디자인 위치 지도" loading="lazy" data-src="https://maps.google.com/maps?q=%EC%84%9C%EC%9A%B8%20%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC%20%EC%97%AC%EC%9D%98%EB%82%98%EB%A3%A8%EB%A1%9C%2067&hl=ko&z=16&output=embed"></iframe>
+      <p><a target="_blank" rel="noopener" href="https://map.naver.com/p/search/%EC%97%AC%EC%9D%98%EB%82%98%EB%A3%A8%EB%A1%9C%2067">네이버 지도</a><a target="_blank" rel="noopener" href="https://map.kakao.com/?q=%EC%97%AC%EC%9D%98%EB%82%98%EB%A3%A8%EB%A1%9C%2067">카카오맵</a></p>
+    </div>
+    <script>
+      (function(){var b=document.getElementById('addr-btn'),m=document.getElementById('addr-map');
+        b.addEventListener('click',function(){var o=m.hidden;m.hidden=!o;b.setAttribute('aria-expanded',o);
+          if(o){var f=m.querySelector('iframe');if(!f.src)f.src=f.dataset.src;}});})();
+    </script>
   </section>
 </main>
 
