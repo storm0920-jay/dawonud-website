@@ -450,11 +450,12 @@ html.inverted .j-reveal { filter: invert(1); }
 .dg.spin u { color: var(--orange); }
 
 /* Contact: Services 세로선(50%)·Company 세로선(75%)에 맞춤 */
-#contact .enquire { margin: 0 calc(-1 * var(--pad)); grid-template-columns: 50% 25% 25%; gap: 0; padding-top: 0; }
+#contact .enquire { margin: 0 calc(-1 * var(--pad)); grid-template-columns: 50% 50%; gap: 0; padding-top: 0; }
 #contact .enquire > div { border-left: 1px solid var(--rule-d); padding: 28px 1vw 40px; gap: 14px; }
-#contact .enquire > div:first-child { grid-column: 2; }
-#contact .enquire a[data-site-email] { font: 600 clamp(18px, 1.9vw, 30px)/1.15 var(--en); letter-spacing: -0.03em; white-space: nowrap; width: fit-content; border-bottom: 2px solid var(--orange); padding-bottom: 4px; }
+#contact .enquire > div { grid-column: 2; }
+#contact .enquire > div + div { border-top: 1px solid var(--rule-d); }
+#contact .enquire a[data-site-email] { font: 600 clamp(20px, 2.6vw, 42px)/1.15 var(--en); letter-spacing: -0.03em; white-space: nowrap; width: fit-content; border-bottom: 2px solid var(--orange); padding-bottom: 4px; }
 #contact .enquire a[data-site-email]::after { content: " \2197"; color: var(--orange); }
 #contact .enquire a[data-site-email]:hover { color: var(--orange); }
-#contact .addr { font-size: clamp(15px, 1.35vw, 20px); }
-@media (max-width: 800px) { #contact .enquire { grid-template-columns: 1fr; margin: 0; } #contact .enquire > div { border-left: 0; border-top: 1px solid var(--rule-d); padding: 20px 0; } #contact .enquire > div:first-child { grid-column: 1; } }
+#contact .addr { font-size: clamp(16px, 1.5vw, 22px); }
+@media (max-width: 800px) { #contact .enquire { grid-template-columns: 1fr; margin: 0; } #contact .enquire > div { border-left: 0; border-top: 1px solid var(--rule-d); padding: 20px 0; } #contact .enquire > div { grid-column: 1; } }
