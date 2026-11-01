@@ -344,6 +344,9 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .plus i::after { transform: translate(-50%, -50%) rotate(90deg); }
 .plus:hover i::before { transform: translate(-50%, -50%) rotate(90deg); }
 .plus:hover i::after { transform: translate(-50%, -50%) rotate(180deg); }
+.plus:disabled { cursor: default; }
+.plus:disabled:hover i::before { transform: translate(-50%, -50%); }
+.plus:disabled:hover i::after { transform: translate(-50%, -50%) rotate(90deg); }
 .mast-nav .plus { position: absolute; left: 20px; top: 2px; }
 .plus.float { position: fixed; left: 20px; top: 20px; z-index: 45; color: #fff; mix-blend-mode: difference; opacity: 0; pointer-events: none; transition: opacity .3s; }
 .plus.float.show { opacity: 1; pointer-events: auto; }

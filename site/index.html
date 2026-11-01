@@ -540,7 +540,10 @@
     document.body.style.overflow = open ? "hidden" : "";
     if (open) ov.querySelector(".close").focus(); else mb.focus();
   }
-  pluses.forEach(b => b.addEventListener("click", () => { mb = b; menu(true); }));
+  // 외부 공개용 잠금(jay 2026-11-01): 완성 전 내용이 보이지 않도록 + 전체 메뉴를 막아 둠. 풀려면 false
+  const MENU_LOCKED = true;
+  if (MENU_LOCKED) pluses.forEach(b => { b.disabled = true; b.setAttribute("aria-label", "전체 메뉴 (준비 중)"); });
+  else pluses.forEach(b => b.addEventListener("click", () => { mb = b; menu(true); }));
   ov.querySelector(".close").addEventListener("click", () => menu(false));
   document.addEventListener("keydown", e => { if (e.key === "Escape" && ov.classList.contains("open")) menu(false); });
 </script>
