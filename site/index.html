@@ -89,22 +89,20 @@
     </div>
   </section>
 
-  <!-- About: Santal처럼 WE 옆으로 SEE / HEAR / TOUCH / FEEL이 아치를 그리며 위로 지나가고, 마지막에 소개 글이 WE 옆에 멈춤 -->
+  <!-- About: Santal 녹화처럼 WE 옆으로 SEE / HEAR / TOUCH / FEEL이 아치를 그리며 위로 올라오고, FEEL이 WE 옆에 멈추면 소개 글이 그 아래 놓임 -->
   <section class="sec" id="about">
     <div class="we-pin">
-      <div class="we-stage pad">
+      <div class="we-stage">
         <span class="label">About <span class="ko">회사소개</span></span>
-        <div class="we-row">
-          <p class="we" aria-hidden="true">WE</p>
-          <div class="we-arc">
-            <p class="we-tag">Our Approach</p>
-            <span class="we-w" aria-hidden="true">SEE</span><span class="we-w" aria-hidden="true">HEAR</span><span class="we-w" aria-hidden="true">TOUCH</span><span class="we-w" aria-hidden="true">FEEL</span>
-            <div class="we-text">
-              <p class="sr">We see, hear, touch, feel.</p>
-              <p>관찰이 방향을 정하고, 설계가 그 방향을 지킵니다.</p>
-              <p>다원 도시디자인은 현장에서 보고, 듣고, 만지고, 느낀 것을 체계적인 과정으로 도시의 풍경에 옮깁니다.</p>
-              <a class="more" href="about.html">More about us</a>
-            </div>
+        <p class="we" aria-hidden="true">WE</p>
+        <p class="we-tag">Our Approach</p>
+        <div class="we-col">
+          <span class="we-w" aria-hidden="true">SEE</span><span class="we-w" aria-hidden="true">HEAR</span><span class="we-w" aria-hidden="true">TOUCH</span><span class="we-w" aria-hidden="true">FEEL</span>
+          <div class="we-text">
+            <p class="sr">We see, hear, touch, feel.</p>
+            <p class="lead">관찰이 방향을 정하고, 설계가 그 방향을 지킵니다.</p>
+            <p>다원 도시디자인은 현장에서 보고, 듣고, 만지고, 느낀 것을 체계적인 과정으로 도시의 풍경에 옮깁니다.</p>
+            <a class="more" href="about.html">More about us</a>
           </div>
         </div>
       </div>
@@ -258,24 +256,21 @@
   document.getElementById("pj-total").textContent = PROJECTS.length;
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // ---------- About: 단어가 아치(원호)를 따라 아래에서 위로 지나감. 마지막 소개 글은 같은 호를 따라 올라와 WE 옆 가운데에 멈춤 ----------
+  // ---------- About: 녹화 실측. 단어 묶음이 FEEL까지 3줄 올라가는 동안 WE는 고정.
+  // 각 단어는 화면 세로 위치(y)에 따라 오른쪽으로 밀림: y .27→0, .53→10%, .79→21%, .97→29% (화면 폭 기준) ----------
   (() => {
     const pin = document.querySelector(".we-pin"); if (!pin) return;
-    const arc = pin.querySelector(".we-arc"), words = [...arc.querySelectorAll(".we-w")], text = arc.querySelector(".we-text");
+    const col = pin.querySelector(".we-col"), words = [...col.querySelectorAll(".we-w")];
     const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const cl = v => Math.min(1, Math.max(0, v)), sg = (p, a, b) => cl((p - a) / (b - a));
-    const SPAN = 40 * Math.PI / 180;               // 호의 시작·끝 각도(아래 +40°, 위 -40°)
-    function place(el, t, stop) {                  // t 0: 아래, .5: 가운데, 1: 위
-      const R = innerHeight * .85, th = SPAN * (1 - 2 * t);
-      const x = R * (Math.cos(th) - 1), y = R * Math.sin(th);
-      const o = stop ? cl(t * 4) : Math.sin(Math.PI * cl(t));
-      el.style.transform = `translate(${x.toFixed(1)}px, calc(-50% + ${y.toFixed(1)}px)) rotate(${(th * 180 / Math.PI).toFixed(2)}deg)`;
-      el.style.opacity = o.toFixed(3);
-    }
+    const cl = v => Math.min(1, Math.max(0, v));
+    const push = y => { const d = Math.max(0, y - .25); return .45 * d * d / (d + .08); };
     function draw() {
       const r = pin.getBoundingClientRect(), p = calm ? 1 : cl(-r.top / Math.max(1, r.height - innerHeight));
-      words.forEach((w, i) => place(w, calm ? 1 : sg(p, .02 + i * .16, .32 + i * .16), false));
-      place(text, .5 * sg(p, .66, .9), true);      // 가운데(.5)에서 멈춤
+      col.style.transform = `translateY(${(-p * 3 * .87 * .1625 * innerWidth).toFixed(1)}px)`;
+      words.forEach(w => {
+        const b = w.getBoundingClientRect(), y = (b.top + b.height / 2) / innerHeight;
+        w.style.transform = calm ? "" : `translateX(${(push(y) * innerWidth).toFixed(1)}px)`;
+      });
     }
     addEventListener("scroll", () => requestAnimationFrame(draw), { passive: true });
     addEventListener("resize", draw); draw();
