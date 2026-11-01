@@ -16,6 +16,7 @@ const CONFIG = {
     bot: ["Identity", "Heritage", "People", "Balance", "Life"],       // 정면 아랫줄
     back: ["Civil", "Architecture", "Urban", "City", "Park", "Plaza", "Boulevard", "Terrain", "Skyline", "Facade", "Pavement", "Garden", "Street", "Bridge", "Waterfront", "Lighting", "Signage", "Square", "Axis", "Section", "Plan", "Network", "Flow", "Link", "Commons", "Fabric", "Edge", "Order", "Rhythm", "Memory", "Culture", "Welcome", "Access", "Shared", "Threshold", "Unity", "Harmony", "Belonging", "Together", "Community", "Connects", "Shapes", "Defines"],   // 회전하며 뒤에 보이는 단어(겹치지 않게 돌아가며)
     sense: ["Walk", "Pause", "Gather"],                // 상자 왼쪽 옆면 동사 3개 순환
+    well: { "0,1": "Landscape", "0,-1": "Universal", "-1,0": "Color Design", "1,0": "Public Design" },   // 가운데 우물 네 벽 (내려다볼 때 12시·6시·3시·9시). Universal Design은 벽보다 길어 Design 뺌
   },
   // 구간 비율은 밝은 녹화(Video Project_색반전, 0~33초)의 스크롤바 위치를 0.5초마다 재서 맞춤. 일정한 속도로 내리면 녹화와 같은 속도로 바뀜
   scroll: { scrub: 1, length: 900 },                   // 관성(초), 장면을 붙잡아 둔 채 스크롤하는 길이(vh)
@@ -178,7 +179,7 @@ const CONFIG = {
 
   // 단어 그림판: 글자를 한 장의 텍스처에 모아 그림 (HTML 글자와 같은 서체·자간·줄 높이)
   function buildAtlas() {
-    const words = [...Wd.mid, ...Wd.top, ...Wd.bot, ...Wd.back, ...Wd.sense, Wd.first[2], ...Wd.second];
+    const words = [...Wd.mid, ...Wd.top, ...Wd.bot, ...Wd.back, ...Wd.sense, Wd.first[2], ...Wd.second, ...Object.values(Wd.well)];
     const F = 160, lead = C.type.leading, pad = 12, fam = getComputedStyle(stage).fontFamily;
     const cv = document.createElement("canvas"), cx = cv.getContext("2d");
     const font = () => { cx.font = `400 ${F}px ${fam}`; cx.letterSpacing = (-.02 * F) + "px"; cx.fillStyle = "#fff"; };
@@ -227,7 +228,8 @@ const CONFIG = {
         info.push(Math.min(K.stagger.colMax, Math.abs(c) * K.stagger.col), mid ? 1 : 0, stack, Math.min(1, Math.hypot(c, L * .5, d - (depth - 1) / 2) / 7));
         const sh = K.shift, k = L * sh.layer + c * sh.col - d * sh.depth;
         const front = d >= (depth - 1) / 2 - .001, row = L === 0 ? 0 : L === 1 ? 1 : L === -1 ? 2 : -1;
-        const fr = stack ? rects[nf + ns + stack - 1] : front && row >= 0 ? rects[row * 5 + mod(c + 2, 5)] : rects[15 + mod(wi, nb)], sr = rects[nf + mod(k, ns)];
+        const wk = K.well && L === K.layers[0][0] ? Object.keys(Wd.well).indexOf(c + "," + d) : -1;
+        const fr = wk >= 0 ? rects[nf + ns + 3 + wk] : stack ? rects[nf + ns + stack - 1] : front && row >= 0 ? rects[row * 5 + mod(c + 2, 5)] : rects[15 + mod(wi, nb)], sr = rects[nf + mod(k, ns)];
         fUV.push(...fr.uv); fSize.push(fr.w * K.word, fr.h * K.word);
         sUV.push(...sr.uv); sSize.push(sr.w * K.side, sr.h * K.side);
       }
