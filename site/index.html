@@ -218,6 +218,18 @@
   </section>
 
 
+  <!-- Location: 서울 → 여의도 → 사무실 스크롤 지도 (작업지시서, tools/build-map.py) -->
+  <section class="light smap" id="location" aria-label="서울 여의도, 다원 도시디자인 사무실 위치">
+    <div class="smap-stage">
+      <canvas aria-hidden="true"></canvas>
+      <span class="label smap-head">Location <span class="ko">오시는 길</span></span>
+      <span class="smap-tag smap-han" aria-hidden="true">한강</span>
+      <span class="smap-tag smap-yeo" aria-hidden="true">여의도</span>
+      <div class="smap-tag smap-office"><div class="smap-card"><span class="wordmark"><b>DAWON</b> <span>Urban Design</span></span><small>여의나루로 67, 신송빌딩 1205호</small></div></div>
+      <small class="smap-src">© OpenStreetMap contributors, Overture Maps, KOSTAT</small>
+    </div>
+  </section>
+
   <!-- Contact -->
   <section class="sec pad" id="contact" style="padding-bottom:64px">
     <span class="label">Contact <span class="ko">문의하기</span></span>
@@ -269,6 +281,8 @@
 <script src="assets/js/site.js"></script>
 <script src="data/projects.js"></script>
 <script src="data/advisory.js"></script>
+<script src="data/seoul-map.js" defer></script>
+<script src="assets/js/seoul-map.js" defer></script>
 <script src="assets/js/projects-ui.js"></script>
 <script src="assets/js/cursor.js" defer></script>
 <script src="assets/vendor/gsap.min.js"></script>

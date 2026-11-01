@@ -505,3 +505,30 @@ html.intro-on .mast *, html.intro-on .mast::before, html.intro-on .mast::after {
 /* 자문 목록 글자를 50% 세로선에서 살짝 띄움(가로선은 선까지) */
 .adv-g h3, .adv-g li { padding-left: 1vw; }
 @media (max-width: 800px) { .adv-g h3, .adv-g li { padding-left: 0; } }
+
+/* ===== Location: 서울 → 여의도 → 사무실 스크롤 지도 ===== */
+.smap {
+  --map-bg: #F4F2ED; --map-block: #DDD9D0; --map-core: #3D3B37; --map-water: #DEE5F0;
+  --map-park: #3F7A63; --map-park-bg: #DFE9E1; --map-line: rgba(14,14,14,.14); --map-point: #E5481B; --map-text: #0E0E0E;
+  position: relative; height: 400vh; background: var(--map-bg);
+}
+html.inverted .smap {
+  --map-bg: #0E0E0E; --map-block: #2A2927; --map-core: #C9C6BE; --map-water: #1E2633;
+  --map-park: #3F7A63; --map-park-bg: #18211C; --map-line: rgba(244,242,237,.16); --map-text: #F4F2ED;
+}
+.smap.calm { height: 100vh; }
+.smap-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.smap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.smap-head { position: absolute; left: var(--pad); top: calc(var(--header-h, 72px) + 24px); z-index: 2; padding: 6px 10px; margin-left: -10px; background: var(--map-bg); }
+.smap-tag { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; color: var(--map-text); white-space: nowrap; will-change: transform, opacity; opacity: 0; }
+.smap-han, .smap-yeo { font: 400 14px/1 var(--ko); letter-spacing: .02em; margin: -7px 0 0 -1em; }
+.smap-han { color: #6E7F99; }
+html.inverted .smap-han { color: #8796AE; }
+.smap-yeo { font-size: 15px; font-weight: 600; margin-left: -1.5em; color: var(--map-bg); }
+.smap-card { position: absolute; left: 22px; top: -36px; display: flex; flex-direction: column; gap: 8px; padding: 16px 20px; background: var(--map-bg); }
+@media (max-width: 700px) { .smap-card { left: 0; top: 22px; transform: translateX(-50%); } }
+.smap-office .wordmark { display: inline-flex; align-items: baseline; gap: .35em; font: 400 clamp(20px, 2vw, 28px)/1 var(--en); letter-spacing: -0.02em; }
+.smap-office .wordmark b { font-weight: 800; }
+.smap-office .wordmark span { font-weight: 300; }
+.smap-office small { font: 400 14px/1.3 var(--ko); color: inherit; opacity: .75; }
+.smap-src { position: absolute; right: var(--pad); bottom: 16px; font: 400 10px/1 var(--mono); color: var(--map-text); opacity: .45; z-index: 2; }
