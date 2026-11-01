@@ -251,17 +251,22 @@
           if(loaded)return;loaded=true;
           var key=(typeof SITE!=='undefined'&&SITE.naverMapKey)||'';
           if(!key){fallback();return;}
+          var done=false;
+          function ok(){done=true;}
+          function bad(){if(!done){done=true;fallback();}}
+          window.navermap_authFailure=function(){done=false;bad();};   // 키·등록 주소 인증 실패 시 구글 지도로
           var sc=document.createElement('script');
-          sc.src='https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId='+key+'&submodules=geocoder';
-          sc.onerror=fallback;
+          sc.src='https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId='+key;
+          sc.onerror=bad;
           sc.onload=function(){
-            naver.maps.Service.geocode({query:SITE.address.split(',')[0]},function(st,res){
-              if(st!==naver.maps.Service.Status.OK||!res.v2.addresses.length){fallback();return;}
-              var a=res.v2.addresses[0],pos=new naver.maps.LatLng(a.y,a.x);
+            try{
+              var pos=new naver.maps.LatLng(37.52344,126.92658);   // 여의나루로 67 (신송빌딩)
               var map=new naver.maps.Map('naver-map',{center:pos,zoom:17,scrollWheel:false});
               new naver.maps.Marker({position:pos,map:map});
-            });
+              ok();
+            }catch(e){bad();}
           };
+          setTimeout(function(){if(!done&&!document.querySelector('#naver-map canvas, #naver-map img')){bad();}},5000);
           document.head.appendChild(sc);
         }
         b.addEventListener('click',function(){var o=m.hidden;m.hidden=!o;b.setAttribute('aria-expanded',o);if(o)load();});
