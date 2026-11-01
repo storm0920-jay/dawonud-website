@@ -194,20 +194,45 @@ h1, h2, h3, p { margin: 0; }
 @media (max-width: 800px) { .service { grid-template-columns: 1fr auto; gap: 10px 16px; } .service .n { display: none; } .service p { grid-column: 1 / -1; } .service .ico { grid-row: 1; grid-column: 2; width: 52px; height: 52px; } }
 
 /* Process: 펼쳐 보는 단계 */
-.steps { border-top: 1px solid var(--rule-d); }
-.steps details { border-bottom: 1px solid var(--rule-d); }
-.steps summary { list-style: none; display: grid; grid-template-columns: 64px 1fr auto; gap: 16px; align-items: baseline; padding: 24px 0; cursor: pointer; }
-.steps summary::-webkit-details-marker { display: none; }
-.steps summary .n { font: 500 12px/1 var(--mono); color: var(--mute); }
-.steps summary b { font: 600 clamp(26px, 3.4vw, 48px)/1.05 var(--en); letter-spacing: -0.035em; }
-.steps summary b small { font: 600 15px/1 var(--ko); color: var(--mute); margin-left: 14px; letter-spacing: 0; }
-.steps summary::after { content: "+"; font: 300 32px/1 var(--en); transition: transform .3s; }
-.steps details[open] summary::after { transform: rotate(45deg); }
-.step-body { display: grid; grid-template-columns: 64px 1fr 1fr; gap: 16px; padding: 0 0 32px; }
-.step-body p { grid-column: 2; color: var(--text-d); max-width: 46ch; }
-.step-body ul { grid-column: 3; margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 15px; }
-.step-body li::before { content: "— "; color: var(--mute); }
-@media (max-width: 700px) { .step-body { grid-template-columns: 1fr; } .step-body p, .step-body ul { grid-column: 1; } .steps summary { grid-template-columns: 40px 1fr auto; } }
+/* Process: Santal 녹화 실측(1887px 기준). 목록은 50% 세로선부터, 단계 이름 2.55vw Regular, 접힌 단계 높이 약 8vw,
+   펼치면 설명(왼쪽, 폭은 오른쪽 절반의 51%)과 업무 범위 체크 목록(오른쪽 75% 지점부터). 선은 접힘 흐리게, 펼침 진하게 */
+.pr-pin { position: relative; height: calc(100vh + 6 * 70vh); }
+.pr-pin.static { height: auto; }
+.pr-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; isolation: isolate; }
+.pr-pin.static .pr-stage { position: relative; height: auto; overflow: visible; padding: 160px 0 80px; }
+.pr-stage::before, .pr-stage::after { content: ""; position: absolute; z-index: -1; pointer-events: none; background: var(--white); opacity: .10; }
+.pr-stage::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+.pr-stage::after { top: 51%; left: 0; right: 0; height: 1px; }
+.pr-stage > .label { position: absolute; top: 88px; left: var(--pad); }
+.pr-intro { position: absolute; left: .55vw; top: calc(51% + 8px); width: 15vw; min-width: 150px; margin: 0; font: 500 clamp(13px, .78vw, 16px)/1.3 var(--ko); color: var(--white); word-break: keep-all; }
+.pr-list { position: absolute; left: 50%; right: .6vw; top: 0; padding-bottom: 50vh; will-change: transform; }
+.pr-pin.static .pr-list { position: relative; left: 50%; width: 49.4%; }
+.pr-item { border-top: 1px solid var(--rule-d); transition: border-color .5s; }
+.pr-item.open { border-color: var(--white); }
+.pr-head { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; min-height: 8.2vw; padding: 1.15vw 0 0; background: none; border: 0; color: var(--white); text-align: left; cursor: pointer; opacity: .42; transition: opacity .5s; }
+.pr-item.open .pr-head { opacity: 1; }
+.pr-t { font: 400 clamp(26px, 2.55vw, 52px)/1.02 var(--en); letter-spacing: -0.03em; }
+.pr-x { position: relative; flex: none; width: 1.1vw; height: 1.1vw; min-width: 14px; min-height: 14px; margin: .75vw 1.4vw 0 0; }
+.pr-x::before, .pr-x::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -.75px; background: currentColor; }
+.pr-x::after { transform: rotate(90deg); transition: transform .5s var(--ease-out, cubic-bezier(.22,1,.36,1)); }
+.pr-item.open .pr-x::after { transform: rotate(0); }
+.pr-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .8s cubic-bezier(.22,1,.36,1); }
+.pr-item.open .pr-body { grid-template-rows: 1fr; }
+.pr-in { min-height: 0; overflow: hidden; display: grid; grid-template-columns: 75.4% 1fr; padding: 0; transition: padding .8s cubic-bezier(.22,1,.36,1); }
+.pr-item.open .pr-in { padding: 0 0 3vw; }
+.pr-in p { grid-column: 1; max-width: 68%; margin: 3.2vw 0 0; font: 400 clamp(15px, 1.1vw, 22px)/1.45 var(--ko); color: var(--white); word-break: keep-all; }
+.pr-sc { grid-column: 2; margin-top: 3.4vw; }
+.pr-sc h4 { margin: 0 0 1.1vw; font: 500 clamp(12px, .72vw, 14px)/1.2 var(--ko); color: var(--white); }
+.pr-sc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1vw; }
+.pr-sc li { position: relative; padding-left: 1.7vw; font: 400 clamp(12px, .72vw, 14px)/1.3 var(--ko); color: var(--text-d); word-break: keep-all; }
+.pr-sc li::before { content: ""; position: absolute; left: .15vw; top: .2em; width: .55vw; height: .28vw; min-width: 7px; min-height: 4px; border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); }
+@media (max-width: 800px) {
+  .pr-list { left: 6vw; right: 4vw; }
+  .pr-head { min-height: 22vw; padding-top: 4vw; } .pr-t { font-size: 8vw; } .pr-x { width: 14px; height: 14px; margin: 3vw 0 0; }
+  .pr-in { grid-template-columns: 1fr; } .pr-in p { max-width: 100%; margin-top: 4vw; font-size: 15px; } .pr-sc { grid-column: 1; margin-top: 5vw; } .pr-sc h4 { margin-bottom: 10px; } .pr-sc ul { gap: 8px; } .pr-sc li { padding-left: 22px; font-size: 13px; } .pr-sc li::before { left: 2px; width: 8px; height: 4px; }
+  .pr-intro { top: auto; bottom: 20px; left: var(--pad); width: 60vw; }
+  .pr-stage::before { display: none; }
+}
 
 /* Advisory: 이름 목록 */
 .boards { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
