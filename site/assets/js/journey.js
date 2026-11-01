@@ -57,8 +57,8 @@ const CONFIG = {
   centre: [.17, .40],                                  // 피벗 단어 자리에서 화면 정중앙으로
   front: { range: [.17, .215], rows: [1, .6, .35, .2] },   // 정면에서는 같은 자리에 겹친 단어 중 맨 앞 하나만 보이고, 줄(위아래)이 멀수록 옅음. 시점이 돌며 뒤 단어들이 드러남
   hold: { range: [.39, .76], push: .85 },              // 상자만 남아 천천히 다가감
-  dive: { range: [.76, .95], fov: 30, view: .9 },      // 가운데 상자로 내려감 (화각 30°로 넓어지며 벽이 보임)
-  image: { in: [.76, .82], fill: [.90, .95], zoom: [.95, 1], scale: 1.25 },
+  dive: { range: [.76, .95], fovRange: [.62, .80], fov: 30, view: .9 },      // 가운데 상자로 내려감 (화각 30°로 넓어지며 벽이 보임)
+  image: { in: [.82, .88], fill: [.92, .96], zoom: [.96, 1], scale: 1.25 },
   tilt: { x: 6, y: 3, damp: 4, minWidth: 1024 },       // 마우스 기울임 (좌우·상하 최대 각도)
   calm: { second: [.08, .11], field: [.11, .16], wordsOut: [.37, .45], image: [.85, .95] },  // 동작 줄이기: 3단계부터 페이드로
 };
@@ -286,7 +286,8 @@ const CONFIG = {
     let d = mix(C.orbit.dist[0], C.orbit.dist[1], o);
     let fov = 2 * Math.atan(V / 2 / d) / D;
     const dv = io(seg(p, C.dive.range));
-    if (dv > 0) { V = mix(V, C.dive.view, dv); fov = mix(fov, C.dive.fov, dv); d = V / 2 / Math.tan(fov * D / 2); }
+    const fv = io(seg(p, C.dive.fovRange));   // 화각을 먼저 넓혀 원근(단차)이 보이게 한 뒤 내려감
+    if (dv > 0 || fv > 0) { V = mix(V, C.dive.view, dv); fov = mix(fov, C.dive.fov, fv); d = V / 2 / Math.tan(fov * D / 2); }
     camera.fov = fov; U.uD.value = d;
     qA.setFromEuler(ex.set(-k.tilt * D, 0, 0));
     qB.setFromEuler(ex.set(0, 0, k.roll * D)); qA.multiply(qB);
