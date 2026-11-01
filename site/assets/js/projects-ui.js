@@ -11,6 +11,18 @@ function projectRow(p) {
     <li class="proj-row">
       <span class="proj-year">${projectYears(p)}</span>
       <span class="proj-name">${p.name}<small>${p.type}</small></span>
-      <span class="chip field-${FIELD_SLUG[p.field]}">${p.field}</span>
+      <span class="chip field-${FIELD_SLUG[p.field]}" title="${p.field}">${SITE.fieldsEn[p.field]}</span>
+    </li>`;
+}
+
+// 카드형 보기: 사진 대신 분야 파스텔 바탕(픽토그램은 jay 요청으로 뺌)
+function projectCard(p) {
+  const slug = FIELD_SLUG[p.field];
+  return `
+    <li class="proj-card fc-${slug}">
+      <span class="pc-art"></span>
+      <span class="proj-year">${projectYears(p)}</span>
+      <span class="proj-name">${p.name}<small>${p.type}</small></span>
+      <span class="chip field-${slug}" title="${p.field}">${SITE.fieldsEn[p.field]}</span>
     </li>`;
 }

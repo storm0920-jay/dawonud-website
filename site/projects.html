@@ -20,9 +20,9 @@
 <main>
   <section class="page-hero">
     <div class="wrap">
-      <span class="eyebrow">Projects</span>
-      <h1>사업실적</h1>
-      <p class="lead">다원 도시디자인이 수행한 주요 사업입니다. 분야와 연도를 골라 볼 수 있습니다.</p>
+      <span class="eyebrow">사업실적</span>
+      <h1>Projects</h1>
+      <p class="lead">다원 도시디자인이 수행한 주요 사업입니다. 분야와 연도를 골라 보고,<br>목록형과 카드형으로 바꿔 볼 수 있습니다.</p>
     </div>
   </section>
 
@@ -41,24 +41,39 @@
 <script src="data/projects.js"></script>
 <script src="assets/js/projects-ui.js"></script>
 <script>
-  const state = { field: new URLSearchParams(location.search).get("field") || "전체", year: "전체" };
+  // 다른 페이지에서 들어올 때 항상 맨 위부터 보이게
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  scrollTo(0, 0); addEventListener("load", () => scrollTo(0, 0));
+  const state = { field: new URLSearchParams(location.search).get("field") || "전체", year: "전체", view: "list" };
+  try { state.view = localStorage.getItem("dawon-view") || "list"; } catch (e) {}
+  const qv = new URLSearchParams(location.search).get("view"); if (qv === "list" || qv === "cards") state.view = qv;
   const years = [...new Set(PROJECTS.map(p => p.y0))].sort((a, b) => b - a);
   const filters = document.getElementById("filters");
 
   filters.innerHTML =
-    ["전체", ...SITE.fields].map(f => `<button type="button" data-f="${f}">${f}</button>`).join("") +
-    `<select id="year" aria-label="연도 선택"><option value="전체">전체 연도</option>${years.map(y => `<option value="${y}">${y}년 시작</option>`).join("")}</select>`;
+    ["전체", ...SITE.fields].map(f => `<button type="button" data-f="${f}">${f === "전체" ? "All" : SITE.fieldsEn[f]}</button>`).join("") +
+    `<select id="year" aria-label="연도 선택"><option value="전체">All Years</option>${years.map(y => `<option value="${y}">${y}</option>`).join("")}</select>` +
+    `<span class="view-toggle" role="group" aria-label="보기 방식"><button type="button" data-v="list">List</button><button type="button" data-v="cards">Cards</button></span>`;
 
   function render() {
-    filters.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === state.field));
+    filters.querySelectorAll("button[data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === state.field));
+    filters.querySelectorAll("button[data-v]").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === state.view));
     const list = PROJECTS.filter(p =>
       (state.field === "전체" || p.field === state.field) &&
       (state.year === "전체" || String(p.y0) === state.year));
-    document.getElementById("list").innerHTML = list.map(projectRow).join("");
-    document.getElementById("count").textContent = `${list.length}건`;
+    const ul = document.getElementById("list");
+    ul.className = state.view === "cards" ? "proj-cards" : "proj-list";
+    ul.innerHTML = list.map(state.view === "cards" ? projectCard : projectRow).join("");
+    document.getElementById("count").textContent = `${list.length} Projects`;
     document.getElementById("empty").hidden = list.length > 0;
   }
-  filters.addEventListener("click", e => { if (e.target.dataset.f) { state.field = e.target.dataset.f; render(); } });
+  filters.addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.f) state.field = b.dataset.f;
+    if (b.dataset.v) { state.view = b.dataset.v; try { localStorage.setItem("dawon-view", state.view); } catch (e) {} }
+    render();
+  });
   document.getElementById("year").addEventListener("change", e => { state.year = e.target.value; render(); });
   render();
 </script>

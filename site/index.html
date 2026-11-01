@@ -4,98 +4,585 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow"><!-- 오픈할 때 이 줄을 지웁니다 -->
-<title>다원 도시디자인 | 경관 · 공공디자인 · 색채디자인 · 유니버설디자인</title>
+<title>다원 도시디자인 | Dawon Urban Design</title>
 <meta name="description" content="다원 도시디자인은 경관, 공공디자인, 색채디자인, 유니버설디자인을 하는 도시디자인 전문 회사입니다.">
-<meta property="og:title" content="다원 도시디자인 | 경관 · 공공디자인 · 색채디자인 · 유니버설디자인">
+<meta property="og:title" content="다원 도시디자인 | Dawon Urban Design">
 <meta property="og:description" content="다원 도시디자인은 경관, 공공디자인, 색채디자인, 유니버설디자인을 하는 도시디자인 전문 회사입니다.">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#0E0E0E">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..900&family=Noto+Sans+KR:wght@300;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/css/home3.css">
 </head>
 <body data-page="index.html">
-<header data-site-header></header>
+<!-- 인트로(Santal preloader 녹화 Video Project 11 재현): 처음 방문(브라우저 세션)에 한 번만. 스크립트는 바로 아래 -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="in-line"><span class="in-lead">The city is read</span></div>
+  <div class="in-drift">
+    <i class="in-v in-v1"></i><i class="in-v in-v2"></i><i class="in-v in-v3"></i><i class="in-v in-v4"></i>
+    <div class="in-line"><span class="in-col in-c1"><span>layer</span></span><span class="in-col in-c2"><span>by</span></span><span class="in-col in-c3"><span>layer</span></span></div>
+  </div>
+  <p class="in-cap">An urban design studio built on<br>place, color and people</p>
+  <p class="in-load">Loading <b>0%</b></p>
+  <div class="in-black"><p>Until it becomes place</p></div>
+</div>
+<script>
+  (function () {
+    var skip = false;
+    try { skip = sessionStorage.getItem("dawonIntro") === "1"; } catch (e) {}
+    if (skip || matchMedia("(prefers-reduced-motion: reduce)").matches) { document.getElementById("intro").remove(); return; }
+    document.documentElement.classList.add("intro-on");
+  })();
+</script>
 
-<main>
-  <section class="hero">
-    <div class="wrap hero-top">
-      <span class="eyebrow">다원 도시디자인 · Dawon Urban Design</span>
-      <h1>도시의 풍경과<br><span class="o">색</span>을 디자인합니다</h1>
-      <div class="hero-foot">
-        <p>경관, 공공디자인, 색채디자인, 유니버설디자인. 사람이 머무는 도시의 얼굴을 함께 만듭니다.</p>
-        <div class="hero-actions">
-          <a class="btn" href="projects.html">사업실적 보기</a>
-          <a class="btn btn-line" href="contact.html">문의하기</a>
-        </div>
-      </div>
-    </div>
-    <nav class="field-strip" aria-label="사업분야">
-      <a class="field-panel fc-landscape" href="business.html#landscape">
-        <span class="en">LANDSCAPE</span>
-        <div><h3>경관</h3><p>도시와 지역의 경관을 계획하고, 경관심의와 야간경관까지 다룹니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-public" href="business.html#public">
-        <span class="en">PUBLIC DESIGN</span>
-        <div><h3>공공디자인</h3><p>거리, 광장, 공공시설물을 시민이 쓰기 좋고 보기 좋게 만듭니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-color" href="business.html#color">
-        <span class="en">COLOR DESIGN</span>
-        <div><h3>색채디자인</h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="go">자세히 보기</span></div>
-      </a>
-      <a class="field-panel fc-universal" href="business.html#universal">
-        <span class="en">UNIVERSAL DESIGN</span>
-        <div><h3>유니버설디자인</h3><p>나이, 장애와 상관없이 누구나 편하게 쓰는 공간을 설계합니다.</p><span class="go">자세히 보기</span></div>
-      </a>
+<i class="scroll-dot" aria-hidden="true"></i>
+<button class="invert" type="button" aria-pressed="false">Invert color</button>
+<nav class="fixnav" aria-label="고정 메뉴" aria-hidden="true">
+  <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay" tabindex="-1"><i></i></button>
+  <span class="nav-ind"></span>
+  <a href="#philosophy" class="c2" tabindex="-1">Philosophy</a><a href="#projects" class="c4" tabindex="-1">Works</a><a href="#business" class="c5" tabindex="-1">Services</a><a href="#process" class="c6" tabindex="-1">Process</a><a href="#company" class="c7" tabindex="-1">Company</a><a href="#contact" class="c8" tabindex="-1">Contact</a>
+</nav>
+
+<div class="overlay pad" id="overlay" role="dialog" aria-modal="true" aria-label="전체 메뉴" inert>
+  <div class="bar"><span class="label">Dawon Urban Design</span><button class="close" type="button">Close ✕</button></div>
+  <ol>
+    <li><a href="about.html"><b>About</b><span>회사소개</span></a></li>
+    <li><a href="business.html"><b>Business</b><span>사업분야</span></a></li>
+    <li><a href="projects.html"><b>Projects</b><span>사업실적</span></a></li>
+    <li><a href="contact.html"><b>Contact</b><span>문의하기</span></a></li>
+  </ol>
+  <div class="foot" style="border:0"><span data-site="address"></span><a data-site-email></a></div>
+</div>
+
+<main id="top">
+  <!-- 첫 화면 -->
+  <section class="mast" id="mast">
+    <h1 class="mast-word" aria-label="DAWON"><span>D</span><span>A</span><span>W</span><span>O</span><span>N</span></h1>
+    <nav class="mast-nav" aria-label="주 메뉴">
+      <button class="plus" type="button" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="overlay"><i></i></button>
+      <span class="nav-ind" aria-hidden="true"></span>
+      <a href="#philosophy" class="c2">Philosophy</a>
+      <a href="#projects" class="c4">Works</a>
+      <a href="#business" class="c5">Services</a>
+      <a href="#process" class="c6">Process</a>
+      <a href="#company" class="c7">Company</a>
+      <a href="#contact" class="c8">Contact</a>
     </nav>
+    <span class="vline v2" aria-hidden="true"></span><span class="vline v5" aria-hidden="true"></span>
+    <p class="mast-note">Clear plans.<br>Quiet streets.</p>
+    <div class="mast-lead">
+      <p class="mast-head"><span>Urban design studio</span><span>built on place, color</span><span>and people.</span></p>
+      <p class="mast-ko">도시의 풍경과 색을 디자인합니다.</p>
+    </div>
+    <svg class="ray" aria-hidden="true"><line x1="0" y1="0" x2="0" y2="0"/><circle r="3.5"/></svg>
   </section>
 
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Projects</span>
-          <h2 class="section-title">최근 수행 실적</h2>
+  <!-- 스크롤 장면: 작업지시서 1~9단계 (assets/js/journey.js) -->
+  <section class="journey" id="journey" aria-label="Design shapes place. Place defines life.">
+    <div class="j-stage">
+      <canvas class="j-gl" aria-hidden="true"></canvas>
+      <div class="j-reveal j-well">
+        <i class="w-sky" aria-hidden="true"></i><div class="w-art"><i class="w-sketch" aria-hidden="true"></i><img class="w-photo" src="assets/img/well-city.jpg" alt="도시 항공사진" width="1920" height="1358"></div>
+        <div class="w-copy">
+          <p class="w-k" data-step>Place defines life ···</p>
+          <div class="w-bar">
+            <p class="w-s" data-step>도시는 한 겹씩 읽어야 장소가 됩니다.</p>
+            <h2 class="w-h" data-step>우리는 <em>오래 머물고 싶은 장소</em>를 디자인합니다.</h2>
+          </div>
         </div>
-        <a class="more-link" href="projects.html">전체 실적 보기</a>
+        <div class="w-pins"></div>
       </div>
-      <ul class="proj-list" id="featured"></ul>
+      <p class="j-line j-l1"></p>
+      <p class="j-line j-l2"></p>
+      <i class="j-bar"></i>
+      <i class="j-shut j-shut-t"></i><i class="j-shut j-shut-b"></i>
+      <p class="j-line j-pivot"></p>
+      <p class="j-line j-l4"><span></span></p>
+      <p class="j-line j-l5"><span></span></p>
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">News</span>
-          <h2 class="section-title">최근 소식</h2>
-        </div>
-        <a class="more-link" href="news.html">소식 전체 보기</a>
-      </div>
-      <ul class="news-list">
-        <li><div class="row"><span class="cat">공지</span><span>다원 도시디자인 홈페이지를 새로 열었습니다.</span><span class="date">2026.11.02</span></div></li>
-      </ul>
+  <!-- 세 가지 태도 -->
+  <section class="light sec pad" id="philosophy">
+    <div class="sec-head">
+      <span class="label">Philosophy <span class="ko">디자인 철학</span></span>
+      <h2 class="mid">Three things we keep in every street, square and facade.</h2>
     </div>
+    <div class="pillars" data-reveal>
+      <div class="pillar"><span class="label">01</span><h3>Place</h3><p>먼저 현장을 걷습니다. 그 지역이 가진 지형, 길, 오래된 건물에서 디자인의 방향을 찾습니다.</p></div>
+      <div class="pillar"><span class="label">02</span><h3>Color</h3><p>지역의 색을 조사해 기준을 세웁니다. 눈에 띄는 색보다 오래 보아도 편안한 색을 고릅니다.</p></div>
+      <div class="pillar"><span class="label">03</span><h3>People</h3><p>어린이부터 어르신까지 누구나 불편 없이 쓰는 공간을 만듭니다. 시민이 매일 쓰는 곳이기 때문입니다.</p></div>
+    </div>
+  </section>
+
+  <!-- About: Santal 녹화처럼 WE 옆으로 SEE / HEAR / TOUCH / FEEL이 아치를 그리며 위로 올라오고, FEEL이 WE 옆에 멈추면 소개 글이 그 아래 놓임 -->
+  <section class="sec" id="about">
+    <div class="we-pin">
+      <div class="we-stage">
+        <span class="label">About <span class="ko">회사소개</span></span>
+        <p class="we" aria-hidden="true">WE</p>
+        <p class="we-tag">Our Approach</p>
+        <div class="we-col">
+          <span class="we-w" aria-hidden="true">SEE</span><span class="we-w" aria-hidden="true">HEAR</span><span class="we-w" aria-hidden="true">TOUCH</span><span class="we-w" aria-hidden="true">FEEL</span>
+          <div class="we-text">
+            <p class="sr">We see, hear, touch, feel.</p>
+            <p class="lead">관찰이 방향을 정하고,<br>설계가 그 방향을 지킵니다.</p>
+            <p>다원 도시디자인은 현장에서 보고, 듣고, 만지고, 느낀 것을 체계적인 과정으로 도시의 풍경에 옮깁니다.</p>
+            <a class="more" href="projects.html?view=list">More about us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section class="light sec pad">
+    <div class="sec-head">
+      <span class="label">Approach <span class="ko">디자인 원칙</span></span>
+      <div>
+        <h2 class="mid approach-head">Research sets the direction. Design makes it last.</h2>
+      </div>
+    </div>
+    <div class="principles" data-reveal>
+      <div class="principle"><div class="top-row"><span class="label">01</span><span class="label">Direction</span></div><h3>Place before Image</h3><p>보기 좋은 그림보다 현장을 중시합니다. 지역의 조건을 읽어야 오래 가는 디자인이 나옵니다.</p></div>
+      <div class="principle"><div class="top-row"><span class="label">02</span><span class="label">System</span></div><h3>Color as a System</h3><p>주변과 조화로운 색채 기준을 세웁니다. 바른 기준은 시간이 지나도 아름다움을 유지합니다.</p></div>
+      <div class="principle"><div class="top-row"><span class="label">03</span><span class="label">Access</span></div><h3>Design for Everyone</h3><p>나이, 장애, 언어의 장벽이 없이 모두에게 평등한 유니버설디자인 기준으로 계획합니다.</p></div>
+      <div class="principle"><div class="top-row"><span class="label">04</span><span class="label">Resolution</span></div><h3>Detail for Maintenance</h3><p>조성 후 관리까지 생각합니다. 유지관리가 용이한 계획을 수립합니다.</p></div>
+    </div>
+  </section>
+
+  <!-- Works (사업실적) -->
+  <section class="sec pad" id="projects">
+    <div class="sec-head">
+      <span class="label">Projects <span class="ko">사업실적</span></span>
+      <h2 class="mid"><span id="pj-total">91</span> projects across landscape and public design.</h2>
+    </div>
+    <ul class="works" id="works"></ul>
+    <div class="works-foot">
+      <button class="btn-o" type="button" id="more-works">Load more</button>
+      <a class="btn-o" href="projects.html">All Projects</a>
+    </div>
+  </section>
+
+  <!-- Services (사업분야): Santal "WE DO" 녹화(Video Project 9 (1)) 재현. 큰 WE DO가 올라가며 사라지고,
+       분야 이름 줄이 왼쪽으로 흘러 지금 분야가 가운데 세로선(Services 눈금)에 섬. 사진은 오른쪽에서 밀려 들어오며 덮음 -->
+  <section class="light sec" id="business">
+    <div class="wd-pin">
+      <div class="wd-stage">
+        <span class="label">Business <span class="ko">사업분야</span></span>
+        <h2 class="wd-title" aria-label="We do">WE DO</h2>
+        <div class="wd-names"><a class="wd-n" href="business.html#landscape"><span class="wd-e">Landscape</span><small class="wd-k">경관</small></a><a class="wd-n" href="business.html#public"><span class="wd-e">Public Design</span><small class="wd-k">공공디자인</small></a><a class="wd-n" href="business.html#color"><span class="wd-e">Color Design</span><small class="wd-k">색채계획</small></a><a class="wd-n" href="business.html#universal"><span class="wd-e">Universal Design</span><small class="wd-k">유니버설디자인</small></a></div>
+        <div class="wd-pics"><a class="wd-pic fc-landscape" href="business.html#landscape" aria-label="Landscape 경관"><span class="wd-ph">사진</span></a><a class="wd-pic fc-public" href="business.html#public" aria-label="Public Design 공공디자인"><span class="wd-ph">사진</span></a><a class="wd-pic fc-color" href="business.html#color" aria-label="Color Design 색채계획"><span class="wd-ph">사진</span></a><a class="wd-pic fc-universal" href="business.html#universal" aria-label="Universal Design 유니버설디자인"><span class="wd-ph">사진</span></a></div>
+        <div class="wd-descs"><p class="wd-d">경관계획, 경관심의, 통합심의, 경관성 검토, 도로경관과 야간경관을 다룹니다.</p><p class="wd-d">재개발·재건축 정비사업의 공공디자인, 가로환경, 공공시설물과 공공미술을 계획합니다.</p><p class="wd-d">지역의 색채를 분석하여 도시와 건축물의 색채 기준을 정립합니다.</p><p class="wd-d">누구나 편리하게 이동하고 이용하는 무장애공간과 안내체계를 디자인합니다.</p></div>
+        <p class="wd-count"><span class="wd-cn">Landscape</span><span class="wd-ci">01</span><span class="wd-ct">04</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <!-- Process: Santal 녹화(Video Project 9 (1)) 재현. 오른쪽 절반(50% 세로선부터)에 단계 목록이 올라오고, 가운데 온 단계가 펼쳐짐 -->
+  <section class="sec" id="process">
+    <div class="pr-pin">
+      <div class="pr-stage">
+        <span class="label">Process <span class="ko">일하는 과정</span></span>
+        <p class="pr-intro">모든 프로젝트는 명확하게 나뉜 단계에 따라 진행됩니다.</p>
+        <div class="pr-list">
+        <article class="pr-item"><button class="pr-head" type="button" aria-expanded="false"><span class="pr-t"><span class="pr-e">Site<br>Research</span><small class="wd-k">조사</small></span><span class="pr-x" aria-hidden="true"></span></button>
+          <div class="pr-body"><div class="pr-in"><p>현장을 걷고 자료를 모읍니다. 주민과 담당자의 이야기를 듣고 사업의 조건을 확인합니다.</p><div class="pr-sc"><h4>업무 범위</h4><ul><li>현장 조사와 사진 기록</li><li>관련 계획과 법규 검토</li><li>지역 색채 조사</li><li>주민·관계자 의견 청취</li></ul></div></div></div></article>
+        <article class="pr-item"><button class="pr-head" type="button" aria-expanded="false"><span class="pr-t"><span class="pr-e">Issue<br>Analysis</span><small class="wd-k">분석</small></span><span class="pr-x" aria-hidden="true"></span></button>
+          <div class="pr-body"><div class="pr-in"><p>조사한 내용을 정리해 이 지역이 가진 장점과 풀어야 할 과제를 찾습니다.</p><div class="pr-sc"><h4>업무 범위</h4><ul><li>경관 자원과 조망 분석</li><li>보행·이동 환경 분석</li><li>색채 분포 분석</li><li>과제 정리</li></ul></div></div></div></article>
+        <article class="pr-item"><button class="pr-head" type="button" aria-expanded="false"><span class="pr-t"><span class="pr-e">Master<br>Planning</span><small class="wd-k">계획</small></span><span class="pr-x" aria-hidden="true"></span></button>
+          <div class="pr-body"><div class="pr-in"><p>방향과 기준을 세웁니다. 경관, 색채, 유니버설디자인 등 다양한 기준을 하나의 계획으로 묶습니다.</p><div class="pr-sc"><h4>업무 범위</h4><ul><li>기본 방향과 목표</li><li>구역별 계획</li><li>색채·경관 가이드라인</li><li>심의자료</li></ul></div></div></div></article>
+        <article class="pr-item"><button class="pr-head" type="button" aria-expanded="false"><span class="pr-t"><span class="pr-e">Design<br>Development</span><small class="wd-k">디자인</small></span><span class="pr-x" aria-hidden="true"></span></button>
+          <div class="pr-body"><div class="pr-in"><p>공간, 시설물, 색채를 구체적으로 설계합니다. 실제로 조성 가능하고 유지관리에 용이하도록 상세계획을 수립합니다.</p><div class="pr-sc"><h4>업무 범위</h4><ul><li>공간·가로 디자인</li><li>공공시설물 디자인</li><li>경관색채계획</li><li>도면과 시각화 자료</li></ul></div></div></div></article>
+        <article class="pr-item"><button class="pr-head" type="button" aria-expanded="false"><span class="pr-t"><span class="pr-e">Construction<br>Support</span><small class="wd-k">관리</small></span><span class="pr-x" aria-hidden="true"></span></button>
+          <div class="pr-body"><div class="pr-in"><p>시공 시 기술자문으로 계획이 온전히 반영되도록 돕고, 준공 시 유지관리방법까지 안내합니다.</p><div class="pr-sc"><h4>업무 범위</h4><ul><li>전문분야 기술자문</li><li>현장색채감리</li><li>준공 검토</li><li>사후 관리 안내</li></ul></div></div></div></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Advisory: 자문·심사 활동 (data/advisory.js). 날짜·기간은 싣지 않음 -->
+  <section class="light sec pad adv-sec" id="advisory">
+    <div class="adv-l">
+      <span class="label">Advisory <span class="ko">자문·심사 활동</span></span>
+      <h2 class="mid">Trusted by public bodies across Korea.</h2>
+      <p class="adv-sum" id="adv-sum"></p>
+    </div>
+    <div class="adv" id="adv"></div>
+  </section>
+
+  <!-- Company -->
+  <section class="light sec pad" style="padding-top:0" id="company">
+    <div class="sec-head">
+      <span class="label">Company <span class="ko">사람들</span></span>
+      <h2 class="mid">A dedicated team that stays with each project to the end.</h2>
+    </div>
+    <div class="team">
+      <div class="person"><div class="photo">사진</div><h3>김현호</h3><p>Director</p></div>
+      <div class="person"><div class="photo">사진</div><h3>이덕호</h3><p>Senior Designer</p></div>
+      <div class="person"><div class="photo">사진</div><h3>김지은</h3><p>Senior Designer</p></div>
+      <div class="person"><div class="photo">사진</div><h3>송은주</h3><p>Designer</p></div>
+    </div>
+  </section>
+
+
+  <!-- Contact -->
+  <section class="sec pad" id="contact" style="padding-bottom:64px">
+    <span class="label">Contact <span class="ko">문의하기</span></span>
+    <p class="talk" style="margin-top:28px"><a data-site-email data-magnet=".1" data-cursor="Mail">Let's Talk<span>.</span></a></p>
+    <div class="enquire">
+      <div><span class="label">Enquiry <span class="ko">프로젝트 문의</span></span><a data-site-email></a></div>
+      <div><span class="label">Office <span class="ko">주소를 누르면 지도가 열립니다</span></span>
+        <button type="button" class="addr" id="addr-btn" aria-expanded="false" aria-controls="addr-map"><span data-site="address"></span><i aria-hidden="true">+</i></button>
+      </div>
+    </div>
+    <div class="addr-map" id="addr-map" hidden>
+      <div id="naver-map" class="nmap"></div>
+      <iframe title="다원 도시디자인 위치 지도" loading="lazy" data-src="https://maps.google.com/maps?q=%EC%84%9C%EC%9A%B8%20%EC%98%81%EB%93%B1%ED%8F%AC%EA%B5%AC%20%EC%97%AC%EC%9D%98%EB%82%98%EB%A3%A8%EB%A1%9C%2067&hl=ko&z=16&output=embed" hidden></iframe>
+      <p><a target="_blank" rel="noopener" href="https://map.naver.com/p/search/%EC%97%AC%EC%9D%98%EB%82%98%EB%A3%A8%EB%A1%9C%2067">네이버 지도에서 크게 보기</a></p>
+    </div>
+    <script>
+      (function(){
+        var b=document.getElementById('addr-btn'),m=document.getElementById('addr-map'),loaded=false;
+        function fallback(){var f=m.querySelector('iframe');document.getElementById('naver-map').hidden=true;f.hidden=false;if(!f.src)f.src=f.dataset.src;}
+        function load(){
+          if(loaded)return;loaded=true;
+          var key=(typeof SITE!=='undefined'&&SITE.naverMapKey)||'';
+          if(!key){fallback();return;}
+          var sc=document.createElement('script');
+          sc.src='https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId='+key+'&submodules=geocoder';
+          sc.onerror=fallback;
+          sc.onload=function(){
+            naver.maps.Service.geocode({query:SITE.address.split(',')[0]},function(st,res){
+              if(st!==naver.maps.Service.Status.OK||!res.v2.addresses.length){fallback();return;}
+              var a=res.v2.addresses[0],pos=new naver.maps.LatLng(a.y,a.x);
+              var map=new naver.maps.Map('naver-map',{center:pos,zoom:17,scrollWheel:false});
+              new naver.maps.Marker({position:pos,map:map});
+            });
+          };
+          document.head.appendChild(sc);
+        }
+        b.addEventListener('click',function(){var o=m.hidden;m.hidden=!o;b.setAttribute('aria-expanded',o);if(o)load();});
+      })();
+    </script>
   </section>
 </main>
 
-<section class="cta-band">
-  <div class="wrap">
-    <div>
-      <h2>프로젝트를 함께 고민하고 싶으신가요?</h2>
-      <p>메일 <a class="mail" data-site-email></a> 로 연락 주시거나 문의 양식을 남겨 주세요.</p>
-    </div>
-    <a class="btn" href="contact.html">문의하기</a>
-  </div>
-</section>
+<footer class="foot pad">
+  <span>© <span id="year">2026</span> Dawon Urban Design. All Rights Reserved.</span>
+  <span><a href="privacy.html">Privacy Policy</a></span>
+  <a href="#top">Back to top ↑</a>
+</footer>
 
-<footer data-site-footer></footer>
 <script src="assets/js/site.js"></script>
 <script src="data/projects.js"></script>
+<script src="data/advisory.js"></script>
 <script src="assets/js/projects-ui.js"></script>
+<script src="assets/js/cursor.js" defer></script>
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script src="assets/js/well.js" defer></script>
+<script type="module" src="assets/js/journey.js"></script>
 <script>
-  document.getElementById("featured").innerHTML = PROJECTS.slice(-6).map(projectRow).join("");
+  // 사업실적: 최근 것부터 12개씩
+  const recent = PROJECTS.slice().reverse();
+  let shown = 0;
+  const works = document.getElementById("works");
+  function addWorks() {
+    works.insertAdjacentHTML("beforeend", recent.slice(shown, shown + 12).map(p => {
+      const slug = FIELD_SLUG[p.field];
+      return `<li class="work fc-${slug}" data-reveal>
+        <a href="projects.html?field=${encodeURIComponent(p.field)}" class="art" data-cursor="View"><span class="no">${String(p.no).padStart(3, "0")}</span></a>
+        <div class="meta"><span>${SITE.fieldsEn[p.field]}</span><span>${projectYears(p)}</span></div>
+        <h3>${p.name}<small>${p.type}</small></h3>
+      </li>`;
+    }).join(""));
+    shown += 12;
+    if (shown >= recent.length) document.getElementById("more-works").hidden = true;
+    works.querySelectorAll("[data-reveal]:not(.in)").forEach(el => el.classList.add("in"));
+  }
+  addWorks();
+  document.getElementById("more-works").addEventListener("click", addWorks);
+  document.getElementById("pj-total").textContent = PROJECTS.length;
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // ---------- About: 녹화 실측. 단어 묶음이 FEEL까지 3줄 올라가는 동안 WE는 고정.
+  // 각 단어는 화면 세로 위치(y)에 따라 오른쪽으로 밀림 (아래 push 참고) ----------
+  (() => {
+    const pin = document.querySelector(".we-pin"); if (!pin) return;
+    const col = pin.querySelector(".we-col"), words = [...col.querySelectorAll(".we-w")];
+    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cl = v => Math.min(1, Math.max(0, v));
+    // jay 녹화(Video Project 9) 프레임 실측: 단어가 오른쪽으로 밀린 정도 = 0.4 × (화면 세로 위치)³ (화면 폭 기준)
+    // y .22→0.4%, .44→3.4%, .60→8.6%, .71→14%, .85→25%, .89→28% (네 단어 모두 같은 곡선)
+    const push = y => .4 * Math.pow(Math.max(0, y), 3);
+    // Santal은 GSAP scrub + Lenis로 스크롤 값을 부드럽게 따라감. 여기서도 목표 위치를 매 프레임 조금씩(10%) 따라가 휠 한 칸의 끊김을 없앰
+    let cur = null;
+    function frame() {
+      requestAnimationFrame(frame);
+      const r = pin.getBoundingClientRect();
+      if (r.bottom < -innerHeight || r.top > 2 * innerHeight) return;              // 화면 밖이면 쉼
+      const tgt = calm ? 1 : cl(-r.top / Math.max(1, r.height - innerHeight));
+      cur = cur === null || calm ? tgt : cur + (tgt - cur) * .1;
+      if (Math.abs(tgt - cur) < 1e-4) cur = tgt;
+      const lh = .87 * .1625 * innerWidth;
+      const stageTop = r.top > 0 ? r.top : Math.min(0, r.bottom - innerHeight);   // 고정(sticky) 무대의 화면 위치
+      // 들어오는 동안 단어 묶음이 WE보다 화면 높이 12%만큼 먼저 올라감(녹화: WE가 멈출 때 SEE는 WE보다 위), 이후 FEEL이 WE 높이에 올 때까지
+      const ent = calm ? 1 : cl(1 - r.top / innerHeight), lift = .12 * innerHeight * ent + cur * (3 * lh - .12 * innerHeight);
+      col.style.transform = `translate3d(0, ${(-lift).toFixed(2)}px, 0)`;
+      words.forEach((w, i) => {
+        const y = (stageTop + innerHeight * .51 + i * lh - lift) / innerHeight;   // 단어 가운데의 화면 세로 위치
+        w.style.transform = calm ? "" : `translate3d(${(push(y) * innerWidth).toFixed(2)}px, 0, 0)`;
+      });
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  // ---------- Services: WE DO. 0~1 구간은 제목이 올라가고 첫 분야가 들어옴, 그 뒤 분야마다 1구간씩 ----------
+  (() => {
+    const pin = document.querySelector(".wd-pin"); if (!pin) return;
+    const st = pin.querySelector(".wd-stage"), title = st.querySelector(".wd-title"), row = st.querySelector(".wd-names");
+    const names = [...row.children], pics = [...st.querySelectorAll(".wd-pic")], descs = [...st.querySelectorAll(".wd-d")];
+    const cn = st.querySelector(".wd-cn"), ci = st.querySelector(".wd-ci"), N = names.length;
+    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cl = v => Math.min(1, Math.max(0, v)), ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    // 사진 칸(Services~Company 눈금, 폭 25%)보다 긴 영문 이름은 글자 장평을 줄여 마지막 글자가 오른쪽 세로선 안쪽에서 끝나게
+    function fit() {
+      const box = st.clientWidth * .25 - 6;
+      names.forEach(n => {
+        const e = n.querySelector(".wd-e"); e.style.transform = ""; e.style.marginRight = "";
+        const w = e.getBoundingClientRect().width;
+        if (w > box) { const s = box / w; e.style.transform = `scaleX(${s.toFixed(4)})`; e.style.marginRight = `${(-(w - box)).toFixed(1)}px`; }
+      });
+    }
+    fit(); addEventListener("resize", fit); document.fonts && document.fonts.ready.then(fit);
+    let cur = null, last = -1;
+    function frame() {
+      requestAnimationFrame(frame);
+      const r = pin.getBoundingClientRect();
+      if (r.bottom < -innerHeight || r.top > 2 * innerHeight) return;
+      const tgt = cl(-r.top / Math.max(1, r.height - innerHeight)) * N;      // 0 ~ N
+      cur = cur === null || calm ? tgt : cur + (tgt - cur) * .1;
+      if (Math.abs(tgt - cur) < 1e-4) cur = tgt;
+      // 제목: 처음 1구간 동안 화면 위로 빠져나감
+      title.style.transform = `translate3d(0, ${(-cur * innerHeight * .75).toFixed(1)}px, 0)`;
+      // 이름 줄: s = 0이면 첫 이름이 화면 오른쪽 밖, 1이면 첫 이름 왼쪽 끝이 세로선(50vw)
+      const s = cur < 1 ? ease(cur) : 1 + ease(cur - 1 - Math.floor(cur - 1)) + Math.floor(cur - 1);
+      const k = Math.min(N - 1, Math.max(0, s - 1)), i0 = Math.floor(k), f = k - i0, i1 = Math.min(N - 1, i0 + 1);
+      const x0 = names[i0].offsetLeft, x1 = names[i1].offsetLeft;
+      const enter = cl(s) ;                                                    // 첫 진입
+      const base = st.clientWidth * .5 - (x0 + (x1 - x0) * f) + (1 - enter) * innerWidth * .55;
+      row.style.transform = `translate3d(${base.toFixed(1)}px, 0, 0)`;
+      names.forEach((n, i) => n.style.opacity = (.22 + .78 * cl(1 - Math.abs(i - k))).toFixed(3));
+      // 사진: 오른쪽에서 왼쪽으로 열리며 앞 사진을 덮음
+      pics.forEach((p, i) => {
+        const o = i === 0 ? cl((s - .55) / .45) : cl(s - 1 - (i - 1) - 0);
+        const v = i === 0 ? o : cl(k - (i - 1));
+        p.style.clipPath = `inset(0 0 0 ${((1 - (i === 0 ? o : v)) * 100).toFixed(2)}%)`;
+      });
+      // 설명: 지금 분야만 보임
+      const now = Math.round(k);
+      descs.forEach((d, i) => d.style.opacity = (i === now ? cl((s - .7) / .3) * cl(1 - Math.abs(k - i) * 2.2) : 0).toFixed(3));
+      if (now !== last) { last = now; cn.textContent = names[now].querySelector(".wd-e").textContent; ci.textContent = String(now + 1).padStart(2, "0"); }
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  // ---------- Process: 녹화 검토 결과. 목록은 스크롤과 같은 속도로 올라가고, 단계는 +를 눌러야 펼쳐짐(한 번에 하나).
+  // 글씨 농도는 화면 가운데 가로선에 가까울수록 진하고 멀수록 연해짐 ----------
+  (() => {
+    const pin = document.querySelector(".pr-pin"); if (!pin) return;
+    const list = pin.querySelector(".pr-list"), items = [...list.children], N = items.length;
+    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cl = v => Math.min(1, Math.max(0, v));
+    const set = (it, on) => { it.classList.toggle("open", on); it.querySelector(".pr-head").setAttribute("aria-expanded", on); };
+    items.forEach(it => it.querySelector(".pr-head").addEventListener("click", () => {
+      const on = !it.classList.contains("open");
+      if (!calm) items.forEach(o => set(o, false));
+      set(it, on);
+      pin.classList.toggle("has-open", items.some(o => o.classList.contains("open")));
+    }));
+    if (calm) { pin.classList.add("static"); items.forEach(i => set(i, true)); return; }
+    // 목록이 끝까지 올라온 위치에서 다섯 단계가 화면 가운데에 옴. 메뉴의 Process는 이 위치로 이동
+    const endT = () => .5 * innerHeight - (items[1].offsetTop - items[0].offsetTop) * N / 2 - (list.offsetTop + items[0].offsetTop);
+    const goProcess = () => {
+      const y = pin.getBoundingClientRect().top + scrollY + (pin.offsetHeight - innerHeight);
+      if (window.lenis) window.lenis.scrollTo(y, { duration: 1.2 }); else scrollTo({ top: y, behavior: "smooth" });
+    };
+    document.querySelectorAll('a[href="#process"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); e.stopImmediatePropagation(); history.replaceState(null, "", "#process"); goProcess(); }, true));
+    if (location.hash === "#process") addEventListener("load", () => setTimeout(goProcess, 300));
+    let cur = null;
+    function frame() {
+      requestAnimationFrame(frame);
+      const r = pin.getBoundingClientRect();
+      if (r.bottom < -innerHeight || r.top > 2 * innerHeight) return;
+      const p = cl(-r.top / Math.max(1, r.height - innerHeight));
+      const head = items[0].querySelector(".pr-head").offsetHeight, pitch = head + 1;
+      const t0 = .32 * innerHeight - head * .3, t1 = endT();
+      const tgt = t0 + (t1 - t0) * p;
+      cur = cur === null ? tgt : cur + (tgt - cur) * .2;
+      if (Math.abs(tgt - cur) < .1) cur = tgt;
+      list.style.transform = `translate3d(0, ${cur.toFixed(1)}px, 0)`;
+      // 농도: 가운데 가로선(화면 높이 50%)에서 멀어질수록 연해짐
+      items.forEach(it => {
+        const hd = it.querySelector(".pr-head"), b = hd.getBoundingClientRect();
+        const d = Math.abs((b.top + innerWidth * .02) - innerHeight * .5) / innerHeight;
+        let o = Math.max(.28, 1 - Math.pow(d / .55, 1.6));
+        if (it.classList.contains("open")) o = Math.max(o, .6);
+        hd.style.opacity = o.toFixed(3);
+      });
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  // ---------- Advisory: data/advisory.js로 목록을 그림 ----------
+  (() => {
+    const box = document.getElementById("adv"); if (!box || !window.ADVISORY) return;
+    const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    const total = ADVISORY.reduce((n, g) => n + g.items.length, 0), orgs = new Set(ADVISORY.flatMap(g => g.items.map(i => i[0]))).size;
+    const roll = n => String(n).split("").map(d => `<i class="dg" data-d="${d}"><em>${"0123456789".repeat(3).split("").map(x => `<u>${x}</u>`).join("")}</em></i>`).join("");
+    const sum = document.getElementById("adv-sum");
+    sum.innerHTML = `<span class="o"><b aria-label="${total}">${roll(total)}</b>활동</span><span class="o"><b aria-label="${orgs}">${roll(orgs)}</b>기관</span>`;
+    const place = (em, d, on) => { em.style.transition = on || "none"; em.style.transform = `translate3d(0,${-(20 + +d) * .9}em,0)`; };
+    sum.querySelectorAll(".dg").forEach(g => place(g.firstChild, g.dataset.d));
+    if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      let armed = true;   // 화면에서 벗어났다가 다시 들어오면 또 돎
+      const io = new IntersectionObserver(es => es.forEach(e => {
+        if (!e.isIntersecting) { armed = true; return; }
+        if (!armed || e.intersectionRatio < .6) return; armed = false;
+        const gs = [...sum.querySelectorAll(".dg")];
+        gs.forEach(g => { g.firstChild.style.transition = "none"; g.firstChild.style.transform = "translate3d(0,0,0)"; g.classList.add("spin"); });
+        sum.offsetWidth;
+        gs.forEach((g, i) => {
+          const em = g.firstChild; em.style.transition = `transform ${1.5 + i * .3}s cubic-bezier(.16,1,.3,1) ${i * .12}s`;
+          em.style.transform = `translate3d(0,${-(20 + +g.dataset.d) * .9}em,0)`;
+          clearTimeout(g._t); g._t = setTimeout(() => g.classList.remove("spin"), (1.5 + i * .3 + i * .12) * 1000);
+        });
+      }), { threshold: [0, .6] });
+      io.observe(sum);
+    }
+    box.innerHTML = ADVISORY.map(g =>
+      `<div class="adv-g"><h3>${esc(g.group)}<small>${g.items.length}</small></h3><ul>` + g.items.map(([o, a, r]) =>
+      `<li><span class="o">${esc(o)}</span><span class="a">${esc(a)}</span><span class="r">${esc(r)}</span></li>`).join("") + `</ul></div>`).join("");
+  })();
+
+  const mast = document.getElementById("mast");
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const seg = (p, a, b) => clamp((p - a) / (b - a));
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const mix = (a, b, t) => a + (b - a) * t;
+
+  // ---------- 메뉴 줄: 첫 화면을 지나면 위에 고정, 굵은 선은 지금 보는 위치 ----------
+  const fixnav = document.querySelector(".fixnav");
+  const navs = [mast.querySelector(".mast-nav"), fixnav];
+  const order = ["philosophy", "projects", "business", "process", "company", "contact"];
+  let hoverX = null;
+  navs.forEach(nav => nav.querySelectorAll("a").forEach(a => {
+    a.addEventListener("mouseenter", () => { hoverX = a.offsetLeft + 16; });
+    a.addEventListener("mouseleave", () => { hoverX = null; });
+  }));
+  function navProgress() {
+    const links = [...navs[0].querySelectorAll("a")];
+    const ticks = links.map(a => a.offsetLeft + 16);
+    const tops = order.map(id => { const el = document.getElementById(id); return el ? el.getBoundingClientRect().top + scrollY : Infinity; });
+    const y = scrollY + innerHeight * .4;
+    let x;
+    if (y < tops[0]) x = mix(20, ticks[0], clamp((y - innerHeight) / (tops[0] - innerHeight)));
+    else {
+      let i = tops.length - 1;
+      while (i > 0 && y < tops[i]) i--;
+      const next = i + 1 < tops.length ? tops[i + 1] : document.documentElement.scrollHeight;
+      const endX = i + 1 < ticks.length ? ticks[i + 1] : navs[0].clientWidth;
+      x = mix(ticks[i], endX, clamp((y - tops[i]) / (next - tops[i])));
+    }
+    const w = Math.max(0, (hoverX ?? x) - 20);
+    navs[0].querySelector(".nav-ind").style.width = w + "px";
+    // 고정 헤더: 지금 보는 메뉴 아래에만 얇은 1px 선 (작업지시서 2장)
+    let cur = -1;
+    tops.forEach((t, k) => { if (y >= t) cur = k; });
+    const fl = [...fixnav.querySelectorAll("a")], hv = fl.find(a => a.matches(":hover")), on = hv || fl[cur];
+    const ind = fixnav.querySelector(".nav-ind");
+    ind.style.left = on ? on.offsetLeft + "px" : "0px";
+    ind.style.width = on ? on.offsetWidth + "px" : "0px";
+    fixnav.classList.toggle("show", mast.getBoundingClientRect().bottom < 44);   // 첫 화면 글자와 겹치지 않게, 첫 화면이 다 지나간 뒤에 나타남
+    fixnav.setAttribute("aria-hidden", !fixnav.classList.contains("show"));
+    fixnav.querySelectorAll("a, button").forEach(el => el.tabIndex = fixnav.classList.contains("show") ? 0 : -1);
+  }
+
+  function loop() { navProgress(); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+
+  // 흑백 반전
+  const inv = document.querySelector(".invert");
+  try { if (localStorage.getItem("dawon-invert") === "1") document.documentElement.classList.add("inverted"); } catch (e) {}
+  inv.setAttribute("aria-pressed", document.documentElement.classList.contains("inverted"));
+  inv.addEventListener("click", () => {
+    const on = document.documentElement.classList.toggle("inverted");
+    inv.setAttribute("aria-pressed", on);
+    try { localStorage.setItem("dawon-invert", on ? "1" : "0"); } catch (e) {}
+  });
+
+  // 왼쪽 위 모서리에서 마우스를 지나 화면 끝까지 이어지는 가는 사선
+  const ray = mast.querySelector(".ray"), line = ray.querySelector("line"), dot = ray.querySelector("circle");
+  let rx = innerWidth * .27, ry = innerHeight * .3, tx = rx, ty = ry;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (fine) mast.addEventListener("mousemove", e => { const r = mast.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; });
+  function drawRay(t) {
+    const W = mast.clientWidth, H = mast.clientHeight;
+    if (!fine) { tx = W * (.27 + Math.sin(t / 2400) * .06); ty = H * (.3 + Math.cos(t / 3100) * .05); }
+    rx += (tx - rx) * .12; ry += (ty - ry) * .12;
+    const k = Math.min(W / Math.max(rx, 1), H / Math.max(ry, 1));
+    line.setAttribute("x2", rx * k); line.setAttribute("y2", ry * k);
+    dot.setAttribute("cx", rx); dot.setAttribute("cy", ry);
+    requestAnimationFrame(drawRay);
+  }
+  requestAnimationFrame(drawRay);
+
+  // 전체 화면 메뉴
+  const ov = document.getElementById("overlay"), pluses = document.querySelectorAll(".plus");
+  let mb = pluses[0];
+  function menu(open) {
+    ov.classList.toggle("open", open);
+    ov.inert = !open;
+    mb.setAttribute("aria-expanded", open);
+    document.body.style.overflow = open ? "hidden" : "";
+    if (open) ov.querySelector(".close").focus(); else mb.focus();
+  }
+  // 외부 공개용 잠금(jay 2026-11-01): 완성 전 내용이 보이지 않도록 + 전체 메뉴를 막아 둠. 풀려면 false
+  const MENU_LOCKED = true;
+  if (MENU_LOCKED) pluses.forEach(b => { b.disabled = true; b.setAttribute("aria-label", "전체 메뉴 (준비 중)"); });
+  else pluses.forEach(b => b.addEventListener("click", () => { mb = b; menu(true); }));
+  ov.querySelector(".close").addEventListener("click", () => menu(false));
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && ov.classList.contains("open")) menu(false); });
+</script>
+<script>
+  // 인트로 타임라인(녹화 실측, 초): 0.3 문장 등장 → 0.6~2.6 단어 세 개가 칸 안으로 밀려 들어옴 → 2.8~3.5 문장이 가운데로 모이며 단어 접힘
+  // → 3.6 회색 → 3.8 검은 막 + 두 번째 문장 → 4.5~4.95 막이 가로 띠로 줄어 선이 됨 → 5.2 선 사라지고 첫 화면 시작
+  (function () {
+    var el = document.getElementById("intro"); if (!el) return;
+    try { sessionStorage.setItem("dawonIntro", "1"); } catch (e) {}
+    var q = function (s) { return el.querySelector(s); }, num = q(".in-load b");
+    var E = "cubic-bezier(.65,0,.35,1)", O = "cubic-bezier(.16,1,.3,1)";
+    var t0 = performance.now(), T = 4.6;
+    (function count() { var k = Math.min(1, (performance.now() - t0) / 1000 / T); num.textContent = Math.round(100 * (1 - Math.pow(1 - k, 1.6))) + "%"; if (k < 1) requestAnimationFrame(count); })();
+    var at = function (sec, fn) { setTimeout(fn, sec * 1000); };
+    at(.3, function () { el.classList.add("s1"); });
+    // 단어 칸 전체가 천천히 오른쪽으로 흐르고, 그 안으로 단어가 왼쪽 선 뒤에서 하나씩 밀려 나옴
+    at(.4, function () { q(".in-drift").animate([{ transform: "translateX(-9vw)" }, { transform: "none" }], { duration: 2400, easing: "cubic-bezier(.33,0,.2,1)", fill: "forwards" }); });
+    [[.55, ".in-c1"], [1.2, ".in-c2"], [1.75, ".in-c3"]].forEach(function (w) {
+      at(w[0], function () { q(w[1] + " span").animate([{ transform: "translateX(-110%)" }, { transform: "none" }], { duration: 1300, easing: O, fill: "forwards" }); });
+    });
+    at(2.8, function () { el.classList.add("s2"); });
+    at(3.6, function () { el.classList.add("s3"); });
+    at(3.8, function () { el.classList.add("s4"); });
+    at(4.5, function () { el.classList.add("s5"); });
+    at(5.0, function () { el.classList.add("s6"); });
+    at(5.25, function () { document.documentElement.classList.remove("intro-on"); el.classList.add("out"); });
+    at(5.8, function () { el.remove(); });
+  })();
 </script>
 </body>
 </html>
