@@ -375,6 +375,14 @@
       set(it, on);
     }));
     if (calm) { pin.classList.add("static"); items.forEach(i => set(i, true)); return; }
+    // 목록이 끝까지 올라온 위치에서 다섯 단계가 화면 가운데에 옴. 메뉴의 Process는 이 위치로 이동
+    const endT = () => .5 * innerHeight - (items[1].offsetTop - items[0].offsetTop) * N / 2 - (list.offsetTop + items[0].offsetTop);
+    const goProcess = () => {
+      const y = pin.getBoundingClientRect().top + scrollY + (pin.offsetHeight - innerHeight);
+      if (window.lenis) window.lenis.scrollTo(y, { duration: 1.2 }); else scrollTo({ top: y, behavior: "smooth" });
+    };
+    document.querySelectorAll('a[href="#process"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); e.stopImmediatePropagation(); history.replaceState(null, "", "#process"); goProcess(); }, true));
+    if (location.hash === "#process") addEventListener("load", () => setTimeout(goProcess, 300));
     let cur = null;
     function frame() {
       requestAnimationFrame(frame);
@@ -382,7 +390,7 @@
       if (r.bottom < -innerHeight || r.top > 2 * innerHeight) return;
       const p = cl(-r.top / Math.max(1, r.height - innerHeight));
       const head = items[0].querySelector(".pr-head").offsetHeight, pitch = head + 1;
-      const t0 = .32 * innerHeight - head * .3, t1 = .5 * innerHeight - (N - 1) * pitch - head * .3;
+      const t0 = .32 * innerHeight - head * .3, t1 = endT();
       const tgt = t0 + (t1 - t0) * p;
       cur = cur === null ? tgt : cur + (tgt - cur) * .2;
       if (Math.abs(tgt - cur) < .1) cur = tgt;
