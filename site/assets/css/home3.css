@@ -215,15 +215,15 @@ h1, h2, h3, p { margin: 0; }
 .pr-x::before, .pr-x::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -.75px; background: currentColor; }
 .pr-x::after { transform: rotate(90deg); transition: transform .5s var(--ease-out, cubic-bezier(.22,1,.36,1)); }
 .pr-item.open .pr-x::after { transform: rotate(0); }
-.pr-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .8s cubic-bezier(.22,1,.36,1); }
-.pr-item.open .pr-body { grid-template-rows: 1fr; }
+.pr-body { display: grid; grid-template-rows: 0fr; margin-top: 0; transition: grid-template-rows .8s cubic-bezier(.22,1,.36,1), margin-top .8s cubic-bezier(.22,1,.36,1); }
+.pr-item.open .pr-body { grid-template-rows: 1fr; margin-top: -3.9vw; }   /* 펼치면 제목과 본문 간격을 좁힘 */
 .pr-in { min-height: 0; overflow: hidden; display: grid; grid-template-columns: 75.4% 1fr; padding: 0; transition: padding .8s cubic-bezier(.22,1,.36,1); }
 .pr-item.open .pr-in { padding: 0 0 3vw; }
 .pr-in p { grid-column: 1; max-width: 68%; margin: 3.2vw 0 0; font: 400 clamp(15px, 1.1vw, 22px)/1.45 var(--ko); color: var(--white); word-break: keep-all; }
 .pr-sc { grid-column: 2; margin-top: 3.4vw; }
-.pr-sc h4 { margin: 0 0 1.1vw; font: 500 clamp(12px, .72vw, 14px)/1.2 var(--ko); color: var(--white); }
+.pr-sc h4 { margin: 0 0 1.1vw; font: 500 calc(clamp(12px, .72vw, 14px) + 1pt)/1.2 var(--ko); color: var(--white); }
 .pr-sc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1vw; }
-.pr-sc li { position: relative; padding-left: 1.7vw; font: 400 clamp(12px, .72vw, 14px)/1.3 var(--ko); color: var(--text-d); word-break: keep-all; }
+.pr-sc li { position: relative; padding-left: 1.7vw; font: 400 calc(clamp(12px, .72vw, 14px) + 1pt)/1.3 var(--ko); color: var(--text-d); word-break: keep-all; }
 .pr-sc li::before { content: ""; position: absolute; left: .15vw; top: .2em; width: .55vw; height: .28vw; min-width: 7px; min-height: 4px; border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); }
 @media (max-width: 800px) {
   .pr-list { left: 6vw; right: 4vw; }
