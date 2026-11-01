@@ -211,6 +211,7 @@ h1, h2, h3, p { margin: 0; }
 .pr-item.open { border-color: var(--white); }
 .pr-head { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; min-height: 9.8vw; padding: 1.15vw 0 0; background: none; border: 0; color: var(--white); text-align: left; cursor: pointer; }
 .pr-t { font: 400 clamp(26px, 2.55vw, 52px)/1.02 var(--en); letter-spacing: -0.03em; }
+.pr-t .wd-k { font: 400 14px/1 var(--ko); letter-spacing: 0; color: var(--mute); margin-left: .6em; }   /* 위 "일하는 과정" 라벨의 한글과 같은 크기·색 */
 .pr-x { position: relative; flex: none; width: 1.1vw; height: 1.1vw; min-width: 14px; min-height: 14px; margin: .75vw 1.4vw 0 0; }
 .pr-x::before, .pr-x::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -.75px; background: currentColor; }
 .pr-x::after { transform: rotate(90deg); transition: transform .5s var(--ease-out, cubic-bezier(.22,1,.36,1)); }
