@@ -43,6 +43,7 @@
 <script>
   const state = { field: new URLSearchParams(location.search).get("field") || "전체", year: "전체", view: "list" };
   try { state.view = localStorage.getItem("dawon-view") || "list"; } catch (e) {}
+  const qv = new URLSearchParams(location.search).get("view"); if (qv === "list" || qv === "cards") state.view = qv;
   const years = [...new Set(PROJECTS.map(p => p.y0))].sort((a, b) => b - a);
   const filters = document.getElementById("filters");
 
