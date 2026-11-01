@@ -89,7 +89,7 @@ const CONFIG = {
   const reveal = $(".j-reveal"), img = reveal.firstElementChild;
 
   // ---------- 3D 상자 공간 (three.js) ----------
-  let gl = null, sorter = null;
+  let gl = null, sorter = null, lineSecond = null;
   try { gl = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { gl = null; }
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(15, 1, .1, 1000);
@@ -119,6 +119,7 @@ const CONFIG = {
   };
   const faceMat = mat(`attribute float aFace; varying float vFace; void main(){ vec3 bp = boxAt(); vec3 local = position; vFace = aFace; if (abs(bp.y) < .5 && abs(aFace - ${C.cubes.faces.top}) < .001) vFace = 0.; ${proj} }`,   // 층 0은 위판 없음
     `varying float vOp; varying float vFace; void main(){ gl_FragColor = vec4(vec3(.067), vFace * vOp); }`, false, 2);
+  const lineShift = new THREE.Vector2();   // 고해상도 화면에서 선을 CSS 1px 두께로 만들기 위해 한 번 더 그리는 어긋남(장치 픽셀 1칸)
   const lineMat = mat(`attribute float aDiag; uniform float uDiag; void main(){ vec3 bp = boxAt(); vec3 local = position; vOp *= mix(1., uDiag, aDiag); ${proj} }`,
     `varying float vOp; void main(){ gl_FragColor = vec4(.949, .941, .941, ${C.cubes.line} * vOp); if (gl_FragColor.a < .003) discard; }`, false, 0);   // 선·면은 깊이를 기록하지 않음 (뒤의 선이 비쳐 보임)
   const wordFS = `uniform sampler2D uMap; uniform float uWords; varying float vOp; varying vec2 vUv;
@@ -225,7 +226,11 @@ const CONFIG = {
     const n = box.length / 4, B = { aBox: { a: box, n: 4 }, aInfo: { a: info, n: 4 }, aRow: { a: rows, n: 1 } };
     const { faces, lines } = boxGeometries();
     const add = (o, m) => { o.frustumCulled = false; o.renderOrder = m._order; scene.add(o); };
-    add(new THREE.LineSegments(inst(lines, B, n), lineMat), lineMat);
+    const lg = inst(lines, B, n);
+    add(new THREE.LineSegments(lg, lineMat), lineMat);
+    const lineMat2 = new THREE.ShaderMaterial({ uniforms: { ...U, uShift: { value: lineShift } }, vertexShader: lineMat.vertexShader.replace(/\}\s*$/, " gl_Position.xy += uShift * gl_Position.w; }").replace("uniform float uDiag;", "uniform float uDiag; uniform vec2 uShift;"), fragmentShader: lineMat.fragmentShader, transparent: true, depthWrite: false, side: THREE.DoubleSide });
+    lineMat2._order = 0; lineMat2.userData.second = true;
+    lineSecond = new THREE.LineSegments(lg, lineMat2); add(lineSecond, lineMat2);
     const fg = inst(plane, { ...B, aUV: { a: fUV, n: 4 }, aSize: { a: fSize, n: 2 } }, n), sg = inst(plane, { ...B, aUV: { a: sUV, n: 4 }, aSize: { a: sSize, n: 2 } }, n);
     add(new THREE.Mesh(fg, frontMat), frontMat);
     add(new THREE.Mesh(sg, sideMat), sideMat);
@@ -252,7 +257,11 @@ const CONFIG = {
     const u = fs / C.cubes.word;
     U.uO2.value.set((pv.left + C.s3.indent * fs + l4.offsetWidth / 2 - pv.cx) / u, -lh / u);
     U.uO3.value.set((pv.left + l5.offsetWidth / 2 - pv.cx) / u, -2 * lh / u);
-    if (gl) { gl.setPixelRatio(Math.min(devicePixelRatio, 2)); gl.setSize(W, H, false); }
+    if (gl) {
+      const dpr = Math.min(devicePixelRatio, 2); gl.setPixelRatio(dpr); gl.setSize(W, H, false);
+      lineShift.set(2 / (W * dpr), -2 / (H * dpr));   // 장치 픽셀 1칸
+      if (lineSecond) lineSecond.visible = dpr >= 1.5;
+    }
   }
 
   // ---------- 카메라 ----------
