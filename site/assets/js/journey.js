@@ -100,7 +100,9 @@ const CONFIG = {
               uStep: { value: 0 }, uO2: { value: new THREE.Vector2() }, uO3: { value: new THREE.Vector2() }, uFront: { value: 1 } };
   const common = `
     attribute vec4 aBox;   // x, 층 높이, z, 층 불투명도
-    attribute float aRow;  // 같은 자리에 겹친 상자 중 뒤쪽이면 1 (정면에서 숨김)
+    attribute float aRow;
+    attribute float aRot;  // 우물을 둘러싼 네 상자는 앞면(단어)이 우물 안쪽을 보도록 돌림 (y축 회전, 라디안)
+    vec3 rotL(vec3 v) { float c = cos(aRot), s = sin(aRot); return vec3(c * v.x + s * v.z, v.y, -s * v.x + c * v.z); }  // 같은 자리에 겹친 상자 중 뒤쪽이면 1 (정면에서 숨김)
     attribute vec4 aInfo;  // 열 엇갈림, 가운데 층 여부, 세 줄 상자 번호(1 Place, 2 Defines, 3 Life), 가운데에서의 거리(0~1)
     uniform float uCycle, uAlign, uMid, uAlpha, uReveal, uStep;
     varying float vOp;
@@ -113,10 +115,10 @@ const CONFIG = {
       rev = clamp(uReveal * 1.8 - aInfo.w * .8, 0., 1.);
       vOp *= uAlpha * rev;
       float ring = max(abs(aBox.x), abs(aBox.z));
-      y -= uStep * ${C.cubes.stepDrop.toFixed(2)} * (ring > .5 ? ring + 1. : 0.);   // 원본 1분36초: 가운데 상자가 가장 높고, 둘레 고리마다 상자 한 칸씩 낮아지는 계단(우물이라 가운데는 한 층 아래 상자)
+      y -= uStep * ${C.cubes.stepDrop.toFixed(2)} * max(0., ring - 1.);   // 가운데 우물(벽 4면)을 둘러싼 첫 고리는 그대로, 그 바깥 고리마다 상자 한 칸씩 낮아지는 계단
       return vec3(aBox.x, y, aBox.z - (aInfo.x + lstag(y)) * (1. - uAlign));
     }`;
-  const proj = `gl_Position = projectionMatrix * modelViewMatrix * vec4(bp + local, 1.);`;
+  const proj = `gl_Position = projectionMatrix * modelViewMatrix * vec4(bp + rotL(local), 1.);`;
   const mat = (vs, fs, depthWrite, order) => {
     const m = new THREE.ShaderMaterial({ uniforms: U, vertexShader: common + vs, fragmentShader: fs, transparent: true, depthWrite, side: THREE.DoubleSide });
     m._order = order; return m;
@@ -210,7 +212,7 @@ const CONFIG = {
   function buildWorld() {
     scene.clear();
     const K = C.cubes, rects = buildAtlas(), nb = Wd.back.length, nf = 15 + nb, ns = Wd.sense.length;
-    const box = [], info = [], rows = [], fUV = [], fSize = [], sUV = [], sSize = [];
+    const box = [], info = [], rows = [], rots = [], fUV = [], fSize = [], sUV = [], sSize = [];
     const mod = (a, n) => ((a % n) + n) % n; let wi = 0;
     for (const [L, cols, depth, op] of K.layers) {
       const mid = L >= C.cubes.middle[0] && L <= C.cubes.middle[1];
@@ -218,7 +220,8 @@ const CONFIG = {
         if (K.well && L === K.layers[0][0] && c === 0 && d === 0) continue;
         // 가운데 줄 세 상자(앞에서부터 Place, Defines, Life)가 화면에서 겹쳐 서 있음. 망원 카메라라 한 점에 모여 보임
         const stack = L === 0 && c === 0 ? 1 + ((depth - 1) / 2 - d) : 0;
-        box.push(c, L, d, op); wi++; rows.push(d < (depth - 1) / 2 - .001 ? 1 : 0);
+        box.push(c, L, d, op); wi++;
+        rots.push(K.well && L === K.layers[0][0] && Math.abs(c) + Math.abs(d) === 1 ? Math.atan2(-c, -d) : 0); rows.push(d < (depth - 1) / 2 - .001 ? 1 : 0);
         info.push(Math.min(K.stagger.colMax, Math.abs(c) * K.stagger.col), mid ? 1 : 0, stack, Math.min(1, Math.hypot(c, L * .5, d - (depth - 1) / 2) / 7));
         const sh = K.shift, k = L * sh.layer + c * sh.col - d * sh.depth;
         const front = d >= (depth - 1) / 2 - .001, row = L === 0 ? 0 : L === 1 ? 1 : L === -1 ? 2 : -1;
@@ -227,7 +230,7 @@ const CONFIG = {
         sUV.push(...sr.uv); sSize.push(sr.w * K.side, sr.h * K.side);
       }
     }
-    const n = box.length / 4, B = { aBox: { a: box, n: 4 }, aInfo: { a: info, n: 4 }, aRow: { a: rows, n: 1 } };
+    const n = box.length / 4, B = { aBox: { a: box, n: 4 }, aInfo: { a: info, n: 4 }, aRow: { a: rows, n: 1 }, aRot: { a: rots, n: 1 } };
     const { faces, lines } = boxGeometries();
     const add = (o, m) => { o.frustumCulled = false; o.renderOrder = m._order; scene.add(o); };
     const lg = inst(lines, B, n);
@@ -239,7 +242,7 @@ const CONFIG = {
     add(new THREE.Mesh(fg, frontMat), frontMat);
     add(new THREE.Mesh(sg, sideMat), sideMat);
     // 단어는 깊이를 기록하므로 먼 것부터 그려야 겹친 글자가 깨지지 않음 (three.js가 조각마다 정렬하는 것과 같은 효과)
-    sorter = { n, box, info, sets: [[fg, { aBox: box, aInfo: info, aRow: rows, aUV: fUV, aSize: fSize }], [sg, { aBox: box, aInfo: info, aRow: rows, aUV: sUV, aSize: sSize }]], key: "" };
+    sorter = { n, box, info, sets: [[fg, { aBox: box, aInfo: info, aRow: rows, aRot: rots, aUV: fUV, aSize: fSize }], [sg, { aBox: box, aInfo: info, aRow: rows, aRot: rots, aUV: sUV, aSize: sSize }]], key: "" };
     add(new THREE.Mesh(inst(faces, B, n), faceMat), faceMat);
   }
   if (gl) buildWorld();
