@@ -108,7 +108,7 @@ const CONFIG = {
     varying float vOp;
     float rev;
     float lstag(float y) { return y <= 0. ? 0. : y <= 1. ? .25 * y : y <= 2. ? .25 + .5 * (y - 1.) : .75 + (y - 2.); }
-    float midOp(float y) { return y < -1. ? .4 * (y + 1.5) : y < 0. ? mix(.2, 1., y + 1.) : y <= 4. ? 1. : max(0., 1. - (y - 4.) * 2.); }
+    float midOp(float y) { return y < -1. ? max(0., 1. - (-1. - y) * 2.) : y <= 4. ? 1. : max(0., 1. - (y - 4.) * 2.); }   // 아랫줄(-1)도 윗줄처럼 또렷하게, 그 아래에서 사라짐
     vec3 boxAt() {
       float y = aBox.y; vOp = aBox.w;
       if (aInfo.y > .5) { y = mod(aBox.y - uCycle + 1.5, 6.) - 1.5; vOp = midOp(y) * uMid; }
