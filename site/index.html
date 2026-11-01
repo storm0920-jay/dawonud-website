@@ -177,10 +177,11 @@
   </section>
 
   <!-- Advisory: 자문·심사 활동 (data/advisory.js). 날짜·기간은 싣지 않음 -->
-  <section class="light sec pad" id="advisory">
-    <div class="sec-head">
+  <section class="light sec pad adv-sec" id="advisory">
+    <div class="adv-l">
       <span class="label">Advisory <span class="ko">자문·심사 활동</span></span>
-      <h2 class="mid" id="adv-title">Trusted by public bodies across Korea.</h2>
+      <h2 class="mid">Trusted by public bodies across Korea.</h2>
+      <p class="adv-sum" id="adv-sum"></p>
     </div>
     <div class="adv" id="adv"></div>
   </section>
@@ -381,7 +382,8 @@
     const box = document.getElementById("adv"); if (!box || !window.ADVISORY) return;
     const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
     const total = ADVISORY.reduce((n, g) => n + g.items.length, 0), orgs = new Set(ADVISORY.flatMap(g => g.items.map(i => i[0]))).size;
-    box.innerHTML = `<p class="adv-sum"><b>${total}</b><span>활동</span><b>${orgs}</b><span>기관</span></p>` + ADVISORY.map(g =>
+    document.getElementById("adv-sum").innerHTML = `<span><b>${total}</b>활동</span><span><b>${orgs}</b>기관</span>`;
+    box.innerHTML = ADVISORY.map(g =>
       `<div class="adv-g"><h3>${esc(g.group)}<small>${g.items.length}</small></h3><ul>` + g.items.map(([o, a, r]) =>
       `<li><span class="o">${esc(o)}</span><span class="a">${esc(a)}</span><span class="r">${esc(r)}</span></li>`).join("") + `</ul></div>`).join("");
   })();

@@ -235,18 +235,25 @@ h1, h2, h3, p { margin: 0; }
 }
 
 /* Advisory: 이름 목록 */
-/* Advisory: 도면 목록처럼 얇은 선과 세 칸(기관 · 활동 · 직책) */
-.adv-sum { display: flex; align-items: baseline; gap: 10px; margin: 0 0 clamp(28px, 4vw, 56px); }
-.adv-sum b { font: 400 clamp(48px, 6vw, 96px)/1 var(--en); letter-spacing: -0.04em; }
-.adv-sum span { font: 500 14px/1 var(--ko); color: var(--mute-dark); margin-right: 28px; }
-.adv-g + .adv-g { margin-top: clamp(32px, 4vw, 56px); }
-.adv-g h3 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; font: 600 clamp(18px, 1.6vw, 24px)/1.2 var(--ko); letter-spacing: -0.03em; }
+/* Advisory: 왼쪽에 제목·숫자(스크롤해도 따라옴), 오른쪽 절반(50% 세로선부터)에 목록 */
+.adv-sec { position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: 0; align-items: start; }
+.adv-sec::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: currentColor; opacity: .09; pointer-events: none; }
+.adv-l { position: sticky; top: 110px; padding-right: 4vw; }
+.adv-l .mid { margin: 18px 0 0; max-width: 11em; }
+.adv-sum { display: flex; gap: clamp(28px, 4vw, 64px); margin: clamp(32px, 6vw, 96px) 0 0; }
+.adv-sum span { font: 500 14px/1 var(--ko); color: var(--mute-dark); }
+.adv-sum b { display: block; margin-bottom: 10px; font: 400 clamp(56px, 7vw, 120px)/.9 var(--en); letter-spacing: -0.04em; color: var(--black, #0E0E0E); }
+.adv-g + .adv-g { margin-top: clamp(28px, 3vw, 48px); }
+.adv-g h3 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 10px; font: 600 clamp(17px, 1.3vw, 22px)/1.2 var(--ko); letter-spacing: -0.03em; }
 .adv-g h3 small { font: 500 12px/1 var(--mono); color: var(--mute-dark); letter-spacing: 0; }
 .adv-g ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-l); }
-.adv-g li { display: grid; grid-template-columns: 1fr 1.6fr .9fr; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--rule-l); font: 400 clamp(15px, 1.05vw, 18px)/1.35 var(--ko); }
+.adv-g li { display: grid; grid-template-columns: 1fr 1.5fr .75fr; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--rule-l); font: 400 clamp(14px, .95vw, 17px)/1.35 var(--ko); word-break: keep-all; }
 .adv-g .o { font-weight: 600; }
 .adv-g .r { color: var(--mute-dark); text-align: right; }
-@media (max-width: 800px) { .adv-g li { grid-template-columns: 1fr auto; gap: 4px 12px; } .adv-g .a { grid-column: 1 / -1; grid-row: 2; color: var(--text-l); } }
+@media (max-width: 800px) {
+  .adv-sec { display: block; } .adv-sec::before { display: none; } .adv-l { position: static; padding: 0 0 32px; }
+  .adv-g li { grid-template-columns: 1fr auto; gap: 4px 12px; } .adv-g .a { grid-column: 1 / -1; grid-row: 2; color: var(--text-l); }
+}
 
 /* Company: 사람 */
 .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 28px); }
