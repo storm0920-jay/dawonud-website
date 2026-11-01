@@ -249,7 +249,7 @@ h1, h2, h3, p { margin: 0; }
 .adv-g ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-l); }
 .adv-g li { display: grid; grid-template-columns: 1fr 1.5fr .75fr; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--rule-l); font: 400 calc(clamp(14px, .95vw, 17px) + 1pt)/1.35 var(--ko); word-break: keep-all; }
 .adv-g .o { font-weight: 600; }
-.adv-g .r { color: var(--mute-dark); text-align: right; white-space: nowrap; }
+.adv-g .r { text-align: right; white-space: nowrap; }
 @media (max-width: 800px) {
   .adv-sec { display: block; } .adv-sec::before { display: none; } .adv-l { position: static; padding: 0 0 32px; }
   .adv-g li { grid-template-columns: 1fr auto; gap: 4px 12px; } .adv-g .a { grid-column: 1 / -1; grid-row: 2; color: var(--text-l); }
