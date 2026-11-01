@@ -392,6 +392,7 @@
       const on = !it.classList.contains("open");
       if (!calm) items.forEach(o => set(o, false));
       set(it, on);
+      pin.classList.toggle("has-open", items.some(o => o.classList.contains("open")));
     }));
     if (calm) { pin.classList.add("static"); items.forEach(i => set(i, true)); return; }
     // 목록이 끝까지 올라온 위치에서 다섯 단계가 화면 가운데에 옴. 메뉴의 Process는 이 위치로 이동
