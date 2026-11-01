@@ -12,7 +12,7 @@
 <meta name="theme-color" content="#0E0E0E">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..900&family=Noto+Sans+KR:wght@300;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/css/home3.css">
 </head>
 <body data-page="index.html">
@@ -82,7 +82,17 @@
   <section class="journey" id="journey" aria-label="Design shapes place. Place defines life.">
     <div class="j-stage">
       <canvas class="j-gl" aria-hidden="true"></canvas>
-      <div class="j-reveal" aria-hidden="true"><img src="assets/img/plan-top.svg" alt=""></div>
+      <div class="j-reveal j-well">
+        <img class="w-img" src="assets/img/well-city.jpg" alt="도시 항공사진" width="1920" height="1358">
+        <div class="w-copy">
+          <p class="w-k" data-step>Place defines life ···</p>
+          <div class="w-bar">
+            <p class="w-s" data-step>도시는 한 겹씩 읽어야 장소가 됩니다.</p>
+            <h2 class="w-h" data-step>우리는 <em>오래 머물고 싶은 장소</em>를 디자인합니다.</h2>
+          </div>
+        </div>
+        <div class="w-pins"></div>
+      </div>
       <p class="j-line j-l1"></p>
       <p class="j-line j-l2"></p>
       <i class="j-bar"></i>
@@ -274,6 +284,7 @@
 <script src="assets/vendor/gsap.min.js"></script>
 <script src="assets/vendor/ScrollTrigger.min.js"></script>
 <script src="assets/vendor/lenis.min.js"></script>
+<script src="assets/js/well.js" defer></script>
 <script type="module" src="assets/js/journey.js"></script>
 <script>
   // 사업실적: 최근 것부터 12개씩

@@ -62,7 +62,8 @@ const CONFIG = {
   front: { range: [.17, .215], rows: [1, .6, .35, .2] },   // 정면에서는 같은 자리에 겹친 단어 중 맨 앞 하나만 보이고, 줄(위아래)이 멀수록 옅음. 시점이 돌며 뒤 단어들이 드러남
   hold: { range: [.39, .76], push: .85 },              // 상자만 남아 천천히 다가감
   dive: { range: [.76, .95], fovRange: [.62, .80], fov: 30, view: .9 },      // 가운데 상자로 내려감 (화각 30°로 넓어지며 벽이 보임)
-  image: { in: [.82, .88], fill: [.92, .96], zoom: [.96, 1], scale: 1.25 },
+  image: { in: [.82, .88], fill: [.92, .96] },
+  well: { extra: 360 },                                // 우물 바닥 도시 전경: 화면을 채운 뒤 이만큼(vh) 더 스크롤하며 카피·원형이 차례로 (assets/js/well.js)
   tilt: { x: 6, y: 3, damp: 4, minWidth: 1024 },       // 마우스 기울임 (좌우·상하 최대 각도)
   calm: { second: [.08, .11], field: [.11, .16], wordsOut: [.37, .45], image: [.85, .95] },  // 동작 줄이기: 3단계부터 페이드로
 };
@@ -90,7 +91,9 @@ const CONFIG = {
   journey.setAttribute("aria-label", `${Wd.first.join(" ")}. ${[Wd.first[2], ...Wd.second].join(" ")}.`);
   const shutT = $(".j-shut-t"), shutB = $(".j-shut-b"), bar = $(".j-bar");
   const canvas = $(".j-gl");
-  const reveal = $(".j-reveal"), img = reveal.firstElementChild;
+  const reveal = $(".j-reveal");
+  let wellT = 0;   // 0~1: 우물 바닥 카피·원형 진행 (장면 뒤 추가 스크롤)
+  const drawWell = () => window.Well && window.Well.draw(wellT);
 
   // ---------- 3D 상자 공간 (three.js) ----------
   let gl = null, sorter = null, lineSecond = null;
@@ -397,7 +400,7 @@ const CONFIG = {
       set(reveal, "clipPath", `inset(${r.map(v => v.toFixed(1) + "px").join(" ")})`);
     } else set(reveal, "clipPath", "inset(50% 50% 50% 50%)");
     set(reveal, "opacity", show.toFixed(3));
-    set(img, "transform", `scale(${1 + (C.image.scale - 1) * seg(p, C.image.zoom)})`);
+    if (show > 0) drawWell();
   }
 
   // 동작 줄이기: 3단계부터는 회전·이동 없이 페이드로만 바뀜
@@ -415,6 +418,7 @@ const CONFIG = {
     paint();
     set(reveal, "clipPath", "none");
     set(reveal, "opacity", String(seg(p, K.image)));
+    if (p > K.image[0]) drawWell();
   }
 
   // ---------- 스크롤 연결 (GSAP ScrollTrigger scrub + Lenis) ----------
@@ -426,14 +430,24 @@ const CONFIG = {
   gsap.registerPlugin(ScrollTrigger);
   // 1~4단계만 확인할 때는 4단계 끝(단어 공간이 다 깔린 상태)에서 멈추고 스크롤 길이도 그만큼만
   const last = C.upTo >= 9 ? 1 : C.s4.reveal[1];
-  journey.style.height = `calc(100vh + ${C.scroll.length * last}vh)`;
+  const extra = C.upTo >= 9 && !calm ? C.well.extra : 0;
+  journey.style.height = `calc(100vh + ${C.scroll.length * last + extra}vh)`;
+  if (calm) wellT = 1;
   gsap.to(state, {
     p: last, ease: "none",
     // 고정은 CSS sticky가 맡고(미리보기 창 같은 iframe 안에서도 안정적), ScrollTrigger는 진행도만 읽음
-    scrollTrigger: { trigger: journey, start: "top top", end: "bottom bottom", scrub: calm ? true : C.scroll.scrub, invalidateOnRefresh: true },
+    scrollTrigger: { trigger: journey, start: "top top", end: () => `bottom-=${innerHeight * extra / 100} bottom`, scrub: calm ? true : C.scroll.scrub, invalidateOnRefresh: true },
     onUpdate: () => draw(edge(state.p)),
   });
   // 섹션 밖에서는 관성 때문에 지난 장면이 남아 보이지 않도록 처음·끝 장면으로 바로 맞춤 (스크롤바를 빠르게 끌 때)
+  // 장면이 끝난 뒤 추가 스크롤: 우물 바닥에서 카피·원형이 차례로
+  function wellScroll() {
+    if (!extra) return;
+    const rc = journey.getBoundingClientRect(), vh = innerHeight / 100;
+    const t = Math.min(1, Math.max(0, (-rc.top - C.scroll.length * last * vh) / (extra * vh)));
+    if (t !== wellT) { wellT = t; drawWell(); }
+  }
+  addEventListener("scroll", wellScroll, { passive: true });
   function edge(p) {
     const rc = journey.getBoundingClientRect();
     return rc.top > 0 ? 0 : rc.bottom < innerHeight ? last : p;

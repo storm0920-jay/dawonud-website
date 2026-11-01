@@ -424,7 +424,37 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 html.inverted .j-stage { filter: invert(1); }
 html.inverted .j-reveal { filter: invert(1); }
 .j-reveal { position: absolute; inset: 0; z-index: 6; clip-path: inset(50% 50% 50% 50%); overflow: hidden; background: #E4E2DC; }
-.j-reveal img { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: 50% 50%; }
+/* 우물 바닥 도시 전경 + 카피·원형 팝업 (assets/js/well.js) */
+.j-well { --wk: "Noto Sans KR", "SUIT Variable", sans-serif; background: #CADEDF; }   /* 사진 맨 위 하늘색 */
+.j-well .w-img { position: absolute; left: 0; top: 0; width: 1920px; height: 1358px; max-width: none; transform-origin: 0 0; display: block; }
+.w-copy { position: absolute; left: calc(var(--pad) + 24px); top: calc(72px + 4vh); z-index: 2; color: #0E0E0E; max-width: calc(100% - var(--pad) * 2 - 24px); }
+.w-copy [data-step] { opacity: 0; margin: 0; will-change: transform, opacity; }
+.w-k { font: 500 clamp(11px, .8vw, 15px)/1 var(--ko); letter-spacing: .08em; color: var(--orange); text-transform: uppercase; margin-bottom: 14px !important; }
+.w-bar { border-left: 1.5px solid rgba(14,14,14,.45); padding-left: 22px; margin-left: -23.5px; }
+.w-s { font: 300 clamp(18px, 2.1vw, 40px)/1.25 var(--wk); letter-spacing: -.07em; color: #2a2a2a; margin-bottom: .35em !important; }
+.w-h { font: 700 clamp(26px, 3.45vw, 66px)/1.15 var(--wk); letter-spacing: -.05em; word-break: keep-all; }
+.w-h em { font-style: normal; color: var(--orange); }
+.w-pins { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.w-pin { --cs: clamp(80px, 5.8vw, 112px); position: absolute; left: 0; top: 0; width: 0; height: 0; visibility: hidden; will-change: transform; }
+.w-dot { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: var(--orange); border: 2px solid #fff; box-sizing: border-box; opacity: calc(var(--l) * 2 - 1); }
+.w-ln { position: absolute; left: -1px; top: calc(-1 * var(--ln)); height: calc(var(--ln) * var(--l)); border-left: 2px dotted #fff; }
+.w-c { position: absolute; left: calc(var(--cs) / -2); bottom: calc(var(--ln) + 2px); width: var(--cs); height: var(--cs); border-radius: 50%; background: rgba(229,72,27,.92); color: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 0 6px rgba(255,255,255,.55);
+  transform: scale(var(--c)); transform-origin: 50% 100%; opacity: min(1, calc(var(--c) * 3)); }
+.w-c b { font: 700 clamp(16px, 1.15vw, 22px)/1.1 var(--wk); letter-spacing: -.03em; }
+.w-c small { font: 500 clamp(9px, .63vw, 12px)/1 var(--ko); letter-spacing: .06em; margin-top: 6px; opacity: .9; text-transform: uppercase; white-space: nowrap; }
+.w-cap { position: absolute; left: calc(var(--cs) / 2 + 12px); bottom: calc(var(--ln) + var(--cs) / 2 - 22px); white-space: nowrap; word-break: keep-all;
+  background: rgba(255,255,255,.94); padding: 12px 14px; font: 500 clamp(13px, .85vw, 16px)/1.4 var(--ko); color: #0E0E0E;
+  opacity: var(--cap); transform: translateX(calc((1 - var(--cap)) * -10px)); }
+.w-pin.l .w-cap { left: auto; right: calc(var(--cs) / 2 + 12px); transform: translateX(calc((1 - var(--cap)) * 10px)); }
+@media (max-width: 700px) {
+  .w-pin { --cs: 58px; }
+  .j-well .w-img { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%); mask-image: linear-gradient(to bottom, transparent 0, #000 22%); }
+  .w-c { box-shadow: 0 0 0 3px rgba(255,255,255,.55); }
+  .w-c b { font-size: 12px; } .w-c small { font-size: 7px; margin-top: 3px; letter-spacing: .02em; }
+  .w-cap { white-space: normal; width: 150px; padding: 8px 10px; font-size: 12px; bottom: calc(var(--ln) + var(--cs) / 2 - 18px); }
+  .w-dot { left: -5px; top: -5px; width: 10px; height: 10px; }
+}
 .scroll-dot { position: fixed; left: 50%; bottom: 22px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: #fff; mix-blend-mode: difference; z-index: 70; pointer-events: none; }
 @media (max-width: 768px) { .j-stage { font-size: 8vw; } }
 /* 효과 대본을 못 불러왔을 때: 두 번째 문장만 고정으로 보여 줌 */
