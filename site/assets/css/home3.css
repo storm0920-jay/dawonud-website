@@ -102,6 +102,11 @@ h1, h2, h3, p { margin: 0; }
    화면 아래쪽에 있을수록 오른쪽으로 밀려 아치를 그림. 크기 16.25vw(1440에서 234px), Regular, 줄 간격 .87, 대문자 */
 .we-pin { position: relative; height: calc(100vh + 56vw); }
 .we-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+/* 녹화 속 배경 + 가이드선: 세로선은 위 메뉴 Services 눈금(화면 폭 50%), 가로선은 화면 높이 50% */
+.we-stage { isolation: isolate; }
+.we-stage::before, .we-stage::after { content: ""; position: absolute; z-index: -1; pointer-events: none; background: var(--white); opacity: .12; }
+.we-stage::before { left: 50vw; top: 0; bottom: 0; width: 1px; }
+.we-stage::after { top: 50%; left: 0; right: 0; height: 1px; }
 .we-stage > .label { position: absolute; top: 88px; left: var(--pad); }
 .we, .we-w { font: 400 16.25vw/.87 var(--en); letter-spacing: -0.06em; text-transform: uppercase; color: var(--white); white-space: nowrap; margin: 0; }
 .we { position: absolute; left: .6vw; top: 51%; transform: translateY(-50%); }
