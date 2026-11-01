@@ -396,3 +396,10 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 /* 카드 칸이 긴 이름 때문에 늘어나지 않게 */
 .proj-card { min-width: 0; }
 .proj-card .proj-name { overflow-wrap: anywhere; }
+
+/* 영문 로고 글자: DAWON 두껍게, Urban Design 가늘게 */
+.wordmark { display: inline-flex; align-items: baseline; gap: .35em; font-family: "Inter Tight", "Archivo", sans-serif; font-size: 24px; line-height: 1; letter-spacing: -0.02em; color: inherit; white-space: nowrap; }
+.wordmark b { font-weight: 800; letter-spacing: -0.01em; }
+.wordmark span { font-weight: 300; }
+.site-footer .wordmark { font-size: 26px; color: #fff; }
+@media (max-width: 800px) { .wordmark { font-size: 20px; } }

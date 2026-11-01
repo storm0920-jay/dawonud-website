@@ -40,6 +40,12 @@ const NAV = [
 ];
 
 (function renderChrome() {
+  // 영문 로고 글자(DAWON 두껍게, Urban Design 가늘게)용 서체
+  if (!document.querySelector('link[href*="Inter+Tight"]')) {
+    const f = document.createElement("link"); f.rel = "stylesheet";
+    f.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;800&display=swap";
+    document.head.appendChild(f);
+  }
   const here = location.pathname.split("/").pop() || "index.html";
   const page = document.body.dataset.page || here;
 
@@ -56,7 +62,7 @@ const NAV = [
     header.innerHTML = `
       <div class="wrap header-inner">
         <a class="brand" href="index.html" aria-label="${SITE.name} 홈">
-          <img src="${SITE.logo}" alt="${SITE.name}" width="148" height="48">
+          <span class="wordmark"><b>DAWON</b> <span>Urban Design</span></span>
         </a>
         ${SITE.hideSubNav ? "" : `<button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span><span class="sr-only">메뉴 열기</span>
@@ -75,7 +81,6 @@ const NAV = [
   const footer = document.querySelector("[data-site-footer]");
   if (footer) {
     const info = [
-      ["CEO", `${SITE.ceo}`],
       ["Address", SITE.address],
       ["E-mail", SITE.email && `<a href="mailto:${SITE.email}">${SITE.email}</a>`],
       ["Tel", SITE.phone],
@@ -86,7 +91,7 @@ const NAV = [
     footer.innerHTML = `
       <div class="wrap footer-inner">
         <div>
-          <img src="${SITE.logoWhite}" alt="${SITE.name}" width="148" height="48">
+          <span class="wordmark"><b>DAWON</b> <span>Urban Design</span></span>
           <p class="footer-fields">${SITE.fields.map(f => SITE.fieldsEn[f]).join(" · ")}</p>
         </div>
         <dl class="footer-info">
