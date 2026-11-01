@@ -11,7 +11,8 @@ const CONFIG = {
   words: {
     first: ["Design", "Shapes", "Place"],              // 1단계 세 줄. 마지막 줄이 피벗 단어
     second: ["Defines", "Life"],                       // 3단계: 피벗 단어 아래 두 줄 (Place / Defines / Life)
-    field: ["Landscape", "Streetscape", "Community", "Shapes", "Connects", "Defines"],   // 상자 앞면 단어 6개 순환
+    core: ["Landscape", "Public", "Color", "Streetscape"],   // 가운데 줄(업종 키워드)
+    rel: ["Community", "Connects", "Shapes", "Place"],        // 맨 윗줄·맨 아랫줄(관계 단어)
     sense: ["Walk", "Pause", "Gather"],                // 상자 왼쪽 옆면 동사 3개 순환
   },
   // 구간 비율은 밝은 녹화(Video Project_색반전, 0~33초)의 스크롤바 위치를 0.5초마다 재서 맞춤. 일정한 속도로 내리면 녹화와 같은 속도로 바뀜
@@ -166,7 +167,7 @@ const CONFIG = {
 
   // 단어 그림판: 글자를 한 장의 텍스처에 모아 그림 (HTML 글자와 같은 서체·자간·줄 높이)
   function buildAtlas() {
-    const words = [...Wd.field, ...Wd.sense, Wd.first[2], ...Wd.second];
+    const words = [...Wd.core, ...Wd.rel, ...Wd.sense, Wd.first[2], ...Wd.second];
     const F = 160, lead = C.type.leading, pad = 12, fam = getComputedStyle(stage).fontFamily;
     const cv = document.createElement("canvas"), cx = cv.getContext("2d");
     const font = () => { cx.font = `400 ${F}px ${fam}`; cx.letterSpacing = (-.02 * F) + "px"; cx.fillStyle = "#fff"; };
@@ -201,7 +202,7 @@ const CONFIG = {
   };
   function buildWorld() {
     scene.clear();
-    const K = C.cubes, rects = buildAtlas(), nf = Wd.field.length, ns = Wd.sense.length;
+    const K = C.cubes, rects = buildAtlas(), nc = Wd.core.length, nr = Wd.rel.length, nf = nc + nr, ns = Wd.sense.length;
     const box = [], info = [], rows = [], fUV = [], fSize = [], sUV = [], sSize = [];
     const mod = (a, n) => ((a % n) + n) % n;
     for (const [L, cols, depth, op] of K.layers) {
@@ -213,7 +214,7 @@ const CONFIG = {
         box.push(c, L, d, op); rows.push(d < (depth - 1) / 2 - .001 ? 1 : 0);
         info.push(Math.min(K.stagger.colMax, Math.abs(c) * K.stagger.col), mid ? 1 : 0, stack, Math.min(1, Math.hypot(c, L * .5, d - (depth - 1) / 2) / 7));
         const sh = K.shift, k = L * sh.layer + c * sh.col - d * sh.depth;
-        const fr = stack ? rects[nf + ns + stack - 1] : rects[mod(k, nf)], sr = rects[nf + mod(k, ns)];
+        const fr = stack ? rects[nf + ns + stack - 1] : L === 0 ? rects[mod(c, nc)] : rects[nc + mod(k, nr)], sr = rects[nf + mod(k, ns)];
         fUV.push(...fr.uv); fSize.push(fr.w * K.word, fr.h * K.word);
         sUV.push(...sr.uv); sSize.push(sr.w * K.side, sr.h * K.side);
       }
