@@ -52,6 +52,7 @@ const CONFIG = {
   cycle: { range: [.18, .25], steps: 3 },              // 가운데 층이 한 칸씩 3번 흐름
   middleOut: [.25, .39],                               // 가운데 층·윗면 대각선이 사라지고 엇갈린 열이 반듯해짐
   centre: [.17, .40],                                  // 피벗 단어 자리에서 화면 정중앙으로
+  front: { range: [.17, .215], rows: [1, .6, .35, .2] },   // 정면에서는 같은 자리에 겹친 단어 중 맨 앞 하나만 보이고, 줄(위아래)이 멀수록 옅음. 시점이 돌며 뒤 단어들이 드러남
   hold: { range: [.39, .76], push: .85 },              // 상자만 남아 천천히 다가감
   dive: { range: [.76, .95], fov: 30, view: .9 },      // 가운데 상자로 내려감 (화각 30°로 넓어지며 벽이 보임)
   image: { in: [.76, .82], fill: [.90, .95], zoom: [.95, 1], scale: 1.25 },
@@ -91,9 +92,10 @@ const CONFIG = {
   const camera = new THREE.PerspectiveCamera(15, 1, .1, 1000);
   const U = { uCycle: { value: 0 }, uAlign: { value: 0 }, uMid: { value: 1 }, uAlpha: { value: 0 }, uDiag: { value: 1 },
               uWords: { value: 1 }, uMap: { value: null }, uReveal: { value: 0 }, uSeq: { value: 1 }, uD: { value: 8 },
-              uO2: { value: new THREE.Vector2() }, uO3: { value: new THREE.Vector2() } };
+              uO2: { value: new THREE.Vector2() }, uO3: { value: new THREE.Vector2() }, uFront: { value: 1 } };
   const common = `
     attribute vec4 aBox;   // x, 층 높이, z, 층 불투명도
+    attribute float aRow;  // 같은 자리에 겹친 상자 중 뒤쪽이면 1 (정면에서 숨김)
     attribute vec4 aInfo;  // 열 엇갈림, 가운데 층 여부, 세 줄 상자 번호(1 Place, 2 Defines, 3 Life), 가운데에서의 거리(0~1)
     uniform float uCycle, uAlign, uMid, uAlpha, uReveal;
     varying float vOp;
@@ -124,14 +126,16 @@ const CONFIG = {
       if (a < .01) discard;
       gl_FragColor = vec4(.941, .941, .941, a); }`;
   // 세 줄 상자(Place·Defines·Life)의 단어는 주변보다 먼저 보이고, Defines·Life는 처음엔 HTML 때와 같은 자리·크기(깊이 보정)에서 시작해 Place 자리로 모임
-  const wordVS = (place, front) => `attribute vec4 aUV; attribute vec2 aSize; uniform float uWords, uSeq, uD; uniform vec2 uO2, uO3; varying vec2 vUv;
+  const wordVS = (place, front) => `attribute vec4 aUV; attribute vec2 aSize; uniform float uWords, uSeq, uD, uFront; uniform vec2 uO2, uO3; varying vec2 vUv;
     void main(){ vec3 bp = boxAt(); vUv = mix(aUV.xy, aUV.zw, uv);
       float z = ${front ? "aInfo.z" : "0."}, k = max(z - 1., 0.), comp = mix(1., (uD + k) / uD, uSeq);
       vec2 off = z > 2.5 ? uO3 : z > 1.5 ? uO2 : vec2(0.);
       off = vec2(off.x, off.y * uSeq) * comp;
+      float ay = abs(bp.y), pos = ay < .5 ? ${C.front.rows[0].toFixed(2)} : ay < 1.5 ? ${C.front.rows[1].toFixed(2)} : ay < 2.5 ? ${C.front.rows[2].toFixed(2)} : ${C.front.rows[3].toFixed(2)};
+      vOp *= mix(1., pos, uFront) * (1. - uFront * aRow);
       ${place}
       local.xy = local.xy * (z > 1.5 ? comp : 1.) + (z > 1.5 ? off : vec2(0.));
-      if (z > .5) vOp = uAlpha * (z > 1.5 ? mix(1., .75, uSeq) : 1.);
+      if (z > .5) vOp = uAlpha * (z > 1.5 ? mix(1., .75, uSeq) * (1. - uFront * (1. - uSeq)) : 1.);
       ${proj} }`;
   const frontMat = mat(wordVS(`vec3 local = vec3(position.xy * aSize, .501);`, true), wordFS, true, 1);
   // 옆면 단어: 왼쪽 면에 90° 돌려 붙임 (아래에서 위로 읽힘)
@@ -198,7 +202,7 @@ const CONFIG = {
   function buildWorld() {
     scene.clear();
     const K = C.cubes, rects = buildAtlas(), nf = Wd.field.length, ns = Wd.sense.length;
-    const box = [], info = [], fUV = [], fSize = [], sUV = [], sSize = [];
+    const box = [], info = [], rows = [], fUV = [], fSize = [], sUV = [], sSize = [];
     const mod = (a, n) => ((a % n) + n) % n;
     for (const [L, cols, depth, op] of K.layers) {
       const mid = L >= C.cubes.middle[0] && L <= C.cubes.middle[1];
@@ -206,7 +210,7 @@ const CONFIG = {
         if (K.well && L === K.layers[0][0] && c === 0 && d === 0) continue;
         // 가운데 줄 세 상자(앞에서부터 Place, Defines, Life)가 화면에서 겹쳐 서 있음. 망원 카메라라 한 점에 모여 보임
         const stack = L === 0 && c === 0 ? 1 + ((depth - 1) / 2 - d) : 0;
-        box.push(c, L, d, op);
+        box.push(c, L, d, op); rows.push(d < (depth - 1) / 2 - .001 ? 1 : 0);
         info.push(Math.min(K.stagger.colMax, Math.abs(c) * K.stagger.col), mid ? 1 : 0, stack, Math.min(1, Math.hypot(c, L * .5, d - (depth - 1) / 2) / 7));
         const sh = K.shift, k = L * sh.layer + c * sh.col - d * sh.depth;
         const fr = stack ? rects[nf + ns + stack - 1] : rects[mod(k, nf)], sr = rects[nf + mod(k, ns)];
@@ -214,7 +218,7 @@ const CONFIG = {
         sUV.push(...sr.uv); sSize.push(sr.w * K.side, sr.h * K.side);
       }
     }
-    const n = box.length / 4, B = { aBox: { a: box, n: 4 }, aInfo: { a: info, n: 4 } };
+    const n = box.length / 4, B = { aBox: { a: box, n: 4 }, aInfo: { a: info, n: 4 }, aRow: { a: rows, n: 1 } };
     const { faces, lines } = boxGeometries();
     const add = (o, m) => { o.frustumCulled = false; o.renderOrder = m._order; scene.add(o); };
     add(new THREE.LineSegments(inst(lines, B, n), lineMat), lineMat);
@@ -222,7 +226,7 @@ const CONFIG = {
     add(new THREE.Mesh(fg, frontMat), frontMat);
     add(new THREE.Mesh(sg, sideMat), sideMat);
     // 단어는 깊이를 기록하므로 먼 것부터 그려야 겹친 글자가 깨지지 않음 (three.js가 조각마다 정렬하는 것과 같은 효과)
-    sorter = { n, box, info, sets: [[fg, { aBox: box, aInfo: info, aUV: fUV, aSize: fSize }], [sg, { aBox: box, aInfo: info, aUV: sUV, aSize: sSize }]], key: "" };
+    sorter = { n, box, info, sets: [[fg, { aBox: box, aInfo: info, aRow: rows, aUV: fUV, aSize: fSize }], [sg, { aBox: box, aInfo: info, aRow: rows, aUV: sUV, aSize: sSize }]], key: "" };
     add(new THREE.Mesh(inst(faces, B, n), faceMat), faceMat);
   }
   if (gl) buildWorld();
@@ -351,6 +355,7 @@ const CONFIG = {
     U.uAlpha.value = handOff ? 1 : 0;
     U.uSeq.value = 1 - io(seg(p, C.s4.merge));          // 1: 세 줄이 HTML 때처럼 벌어진 상태, 0: 한 점으로 모인 상태
     U.uReveal.value = seg(p, C.s4.reveal);
+    U.uFront.value = 1 - io(seg(p, C.front.range));
     U.uCycle.value = C.cycle.steps * seg(p, C.cycle.range);
     const m = io(seg(p, C.middleOut));
     U.uMid.value = 1 - m; U.uDiag.value = 1 - m; U.uAlign.value = m;
@@ -376,7 +381,7 @@ const CONFIG = {
     [l4, l5].forEach(el => { set(el.firstElementChild, "transform", "none"); set(el, "opacity", String(seg(p, K.second))); });
     const f = seg(p, K.field);
     [pivot, l4, l5].forEach(el => set(el, "visibility", f >= 1 ? "hidden" : "visible"));
-    U.uAlpha.value = f * (1 - seg(p, K.image)); U.uSeq.value = 0; U.uReveal.value = 1;
+    U.uAlpha.value = f * (1 - seg(p, K.image)); U.uSeq.value = 0; U.uReveal.value = 1; U.uFront.value = 1;
     U.uWords.value = 1 - seg(p, K.wordsOut);
     set(canvas, "opacity", U.uAlpha.value > 0 ? "1" : "0");
     placeCamera(C.s4.handOff);
