@@ -97,7 +97,7 @@ const CONFIG = {
 
   // ---------- 3D 상자 공간 (three.js) ----------
   let gl = null, sorter = null, lineSecond = null;
-  try { gl = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { gl = null; }
+  try { gl = new THREE.WebGLRenderer({ canvas, antialias: devicePixelRatio < 1.5, alpha: true }); } catch (e) { gl = null; }   // 레티나는 화소가 충분해 계단 보정(MSAA) 생략
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(15, 1, .1, 1000);
   const U = { uCycle: { value: 0 }, uAlign: { value: 0 }, uMid: { value: 1 }, uAlpha: { value: 0 }, uDiag: { value: 1 },
@@ -274,13 +274,14 @@ const CONFIG = {
     U.uO2.value.set((pv.left + C.s3.indent * fs + l4.offsetWidth / 2 - pv.cx) / u, -lh / u);
     U.uO3.value.set((pv.left + l5.offsetWidth / 2 - pv.cx) / u, -2 * lh / u);
     if (gl) {
-      const dpr = Math.min(devicePixelRatio, 2); gl.setPixelRatio(dpr); gl.setSize(W, H, false);
+      const dpr = Math.min(devicePixelRatio, dprCap); gl.setPixelRatio(dpr); gl.setSize(W, H, false);
       lineShift.set(2 / (W * dpr), -2 / (H * dpr));   // 장치 픽셀 1칸
       if (lineSecond) lineSecond.visible = dpr >= 1.5;
     }
   }
 
   // ---------- 카메라 ----------
+  let dprCap = 1.5;   // 화면이 느려지면 아래에서 단계적으로 낮춤 (1.5 → 1.25 → 1)
   const tilt = { x: 0, y: 0, tx: 0, ty: 0, on: false };
   const qA = new THREE.Quaternion(), qB = new THREE.Quaternion(), ex = new THREE.Euler(), off = new THREE.Vector3();
   function keyAt(p) {
@@ -473,7 +474,18 @@ const CONFIG = {
     window.lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(t => lenis.raf(t * 1000));
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(500, 33);   // 한참 멈췄다 풀려도 밀린 스크롤을 한 번에 몰아서 돌리지 않음
+  }
+  // 느린 컴퓨터 대응: 장면이 보이는 동안 프레임이 계속 늦으면 그림 해상도를 한 단계 낮춤
+  if (gl && !calm) {
+    let slow = 0, prev = performance.now();
+    gsap.ticker.add(() => {
+      const now = performance.now(), dt = now - prev; prev = now;
+      const rc = journey.getBoundingClientRect(), on = rc.top <= 0 && rc.bottom >= innerHeight && !document.hidden;
+      if (!on || dt > 250) { slow = 0; return; }
+      slow = dt > 30 ? slow + 1 : Math.max(0, slow - 2);
+      if (slow > 24 && dprCap > 1) { dprCap = Math.max(1, dprCap - .25); slow = 0; layout(); draw(state.p); }
+    });
   }
   addEventListener("resize", () => { layout(); draw(state.p); });
   // 글꼴이 다 받아진 뒤 단어 그림판을 그 글꼴로 다시 그림
