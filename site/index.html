@@ -176,18 +176,13 @@
     </div>
   </section>
 
-  <!-- Advisory -->
-  <section class="light sec pad">
-    <div class="boards">
-      <span class="label">Advisory Boards <span class="ko">자문 활동</span></span>
-      <ul data-reveal>
-        <li>한국도로공사<span>Technical Advisor</span></li>
-        <li>경기도 경관위원회<span>Committee</span></li>
-        <li>대전시 경관위원회<span>Committee</span></li>
-        <li>부천시 건축위원회<span>Committee</span></li>
-        <li>고양시 공공디자인진흥위원회<span>Committee</span></li>
-      </ul>
+  <!-- Advisory: 자문·심사 활동 (data/advisory.js). 날짜·기간은 싣지 않음 -->
+  <section class="light sec pad" id="advisory">
+    <div class="sec-head">
+      <span class="label">Advisory <span class="ko">자문·심사 활동</span></span>
+      <h2 class="mid" id="adv-title">Trusted by public bodies across Korea.</h2>
     </div>
+    <div class="adv" id="adv"></div>
   </section>
 
   <!-- Company -->
@@ -231,6 +226,7 @@
 
 <script src="assets/js/site.js"></script>
 <script src="data/projects.js"></script>
+<script src="data/advisory.js"></script>
 <script src="assets/js/projects-ui.js"></script>
 <script src="assets/js/cursor.js" defer></script>
 <script src="assets/vendor/gsap.min.js"></script>
@@ -378,6 +374,16 @@
       });
     }
     requestAnimationFrame(frame);
+  })();
+
+  // ---------- Advisory: data/advisory.js로 목록을 그림 ----------
+  (() => {
+    const box = document.getElementById("adv"); if (!box || !window.ADVISORY) return;
+    const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    const total = ADVISORY.reduce((n, g) => n + g.items.length, 0), orgs = new Set(ADVISORY.flatMap(g => g.items.map(i => i[0]))).size;
+    box.innerHTML = `<p class="adv-sum"><b>${total}</b><span>활동</span><b>${orgs}</b><span>기관</span></p>` + ADVISORY.map(g =>
+      `<div class="adv-g"><h3>${esc(g.group)}<small>${g.items.length}</small></h3><ul>` + g.items.map(([o, a, r]) =>
+      `<li><span class="o">${esc(o)}</span><span class="a">${esc(a)}</span><span class="r">${esc(r)}</span></li>`).join("") + `</ul></div>`).join("");
   })();
 
   const mast = document.getElementById("mast");

@@ -235,10 +235,18 @@ h1, h2, h3, p { margin: 0; }
 }
 
 /* Advisory: 이름 목록 */
-.boards { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; }
-.boards ul { list-style: none; margin: 0; padding: 0; font: 600 clamp(22px, 2.6vw, 38px)/1.35 var(--ko); letter-spacing: -0.04em; }
-.boards li span { font: 500 13px/1 var(--mono); color: var(--mute); margin-left: 10px; letter-spacing: 0; }
-@media (max-width: 800px) { .boards { grid-template-columns: 1fr; } }
+/* Advisory: 도면 목록처럼 얇은 선과 세 칸(기관 · 활동 · 직책) */
+.adv-sum { display: flex; align-items: baseline; gap: 10px; margin: 0 0 clamp(28px, 4vw, 56px); }
+.adv-sum b { font: 400 clamp(48px, 6vw, 96px)/1 var(--en); letter-spacing: -0.04em; }
+.adv-sum span { font: 500 14px/1 var(--ko); color: var(--mute-dark); margin-right: 28px; }
+.adv-g + .adv-g { margin-top: clamp(32px, 4vw, 56px); }
+.adv-g h3 { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; font: 600 clamp(18px, 1.6vw, 24px)/1.2 var(--ko); letter-spacing: -0.03em; }
+.adv-g h3 small { font: 500 12px/1 var(--mono); color: var(--mute-dark); letter-spacing: 0; }
+.adv-g ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-l); }
+.adv-g li { display: grid; grid-template-columns: 1fr 1.6fr .9fr; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--rule-l); font: 400 clamp(15px, 1.05vw, 18px)/1.35 var(--ko); }
+.adv-g .o { font-weight: 600; }
+.adv-g .r { color: var(--mute-dark); text-align: right; }
+@media (max-width: 800px) { .adv-g li { grid-template-columns: 1fr auto; gap: 4px 12px; } .adv-g .a { grid-column: 1 / -1; grid-row: 2; color: var(--text-l); } }
 
 /* Company: 사람 */
 .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 28px); }
