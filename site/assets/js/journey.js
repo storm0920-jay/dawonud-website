@@ -37,7 +37,7 @@ const CONFIG = {
     word: .175, side: .175,                            // 글자 크기 (상자 높이 대비). 옆면 동사도 앞면 명사와 같은 크기·재질
     shift: { layer: 5, col: 2, depth: 1 },             // 단어 순환: 층마다 5칸, 열마다 2칸, 깊이마다 1칸 밀기
     stagger: { col: .25, colMax: 1 },                  // 가운데에서 먼 열일수록 뒤로 밀림 (층 엇갈림은 셰이더의 lstag)
-    stepDrop: .45,                                     // 위에서 내려다볼 때 한 칸 바깥마다 낮아지는 높이
+    stepDrop: 1,                                       // 위에서 내려다볼 때 한 칸 바깥마다 낮아지는 높이
     stepRange: [.45, .62],                             // 계단이 생기는 스크롤 구간
     well: true,                                        // 꼭대기 층 가운데 상자를 비워 우물처럼 (바닥에 이미지)
   },
@@ -112,7 +112,8 @@ const CONFIG = {
       if (aInfo.y > .5) { y = mod(aBox.y - uCycle + 1.5, 6.) - 1.5; vOp = midOp(y) * uMid; }
       rev = clamp(uReveal * 1.8 - aInfo.w * .8, 0., 1.);
       vOp *= uAlpha * rev;
-      y -= uStep * ${C.cubes.stepDrop.toFixed(2)} * max(0., max(abs(aBox.x), abs(aBox.z)) - 1.);   // 가운데에서 한 칸 멀어질 때마다 한 단씩 낮아지는 계단
+      float ring = max(abs(aBox.x), abs(aBox.z));
+      y -= uStep * ${C.cubes.stepDrop.toFixed(2)} * (ring > .5 ? ring + 1. : 0.);   // 원본 1분36초: 가운데 상자가 가장 높고, 둘레 고리마다 상자 한 칸씩 낮아지는 계단(우물이라 가운데는 한 층 아래 상자)
       return vec3(aBox.x, y, aBox.z - (aInfo.x + lstag(y)) * (1. - uAlign));
     }`;
   const proj = `gl_Position = projectionMatrix * modelViewMatrix * vec4(bp + local, 1.);`;
