@@ -22,7 +22,7 @@
     <div class="wrap">
       <span class="eyebrow">사업실적</span>
       <h1>Projects</h1>
-      <p class="lead">다원 도시디자인이 수행한 주요 사업입니다. 분야와 연도를 골라 보고, 목록형과 카드형으로 바꿔 볼 수 있습니다.</p>
+      <p class="lead">다원 도시디자인이 수행한 주요 사업입니다. 분야와 연도를 골라 보고,<br>목록형과 카드형으로 바꿔 볼 수 있습니다.</p>
     </div>
   </section>
 
@@ -41,6 +41,9 @@
 <script src="data/projects.js"></script>
 <script src="assets/js/projects-ui.js"></script>
 <script>
+  // 다른 페이지에서 들어올 때 항상 맨 위부터 보이게
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  scrollTo(0, 0); addEventListener("load", () => scrollTo(0, 0));
   const state = { field: new URLSearchParams(location.search).get("field") || "전체", year: "전체", view: "list" };
   try { state.view = localStorage.getItem("dawon-view") || "list"; } catch (e) {}
   const qv = new URLSearchParams(location.search).get("view"); if (qv === "list" || qv === "cards") state.view = qv;

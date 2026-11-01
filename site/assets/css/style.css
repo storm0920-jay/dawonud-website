@@ -236,7 +236,7 @@ html.js-reveal [data-reveal].in { transform: none; opacity: 1; }
 .chip.field-public::before { background: var(--f-public); }
 .chip.field-color::before { background: var(--f-color); }
 .chip.field-universal::before { background: var(--f-universal); }
-.proj-row .chip { justify-self: end; }
+.proj-row .chip { justify-self: end; flex-direction: row-reverse; }   /* 네모를 글자 뒤(오른쪽 끝)에 두어 세로로 가지런히 */
 @media (max-width: 700px) {
   .proj-row { grid-template-columns: 1fr auto; gap: 4px 12px; padding: 16px 0; }
   .proj-name { grid-column: 1 / -1; grid-row: 2; }
