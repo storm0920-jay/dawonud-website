@@ -113,7 +113,7 @@ h1, h2, h3, p { margin: 0; }
 .we-tag { position: absolute; left: 35.3vw; top: 51%; transform: translateY(-50%); font: 500 14px/1 var(--en); color: var(--white); }
 .we-col { position: absolute; left: 50vw; top: 51%; width: 50vw; margin-top: -7.07vw; }   /* 첫 단어(SEE) 가운데가 WE와 같은 높이 */
 .we-w { display: block; will-change: transform; }
-.we-text { margin-top: 7vw; max-width: min(40vw, 640px); }
+.we-text { margin-top: 7vw; max-width: min(40vw, 640px); padding-left: 1vw; }   /* S·H·F 글자 왼쪽 여백(약 0.06em = 1vw)만큼 띄워 세로선에 붙지 않게 */
 .we-text .lead { word-break: keep-all; }
 .we-text .lead { font: 400 clamp(20px, 2.2vw, 42px)/1.3 var(--ko); letter-spacing: -0.02em; color: var(--white); }
 .we-text p:not(.lead) { color: var(--text-d); font-size: 15px; margin-top: 16px; max-width: 30em; }
