@@ -89,19 +89,18 @@
     </div>
   </section>
 
-  <!-- About: Santal처럼 큰 WE 옆에 see / hear / touch / feel이 스크롤에 맞춰 차례로 올라오고, 그 뒤 짧은 소개 -->
+  <!-- About: Santal처럼 WE 옆으로 SEE / HEAR / TOUCH / FEEL이 아치를 그리며 위로 지나가고, 마지막에 소개 글이 WE 옆에 멈춤 -->
   <section class="sec" id="about">
     <div class="we-pin">
       <div class="we-stage pad">
         <span class="label">About <span class="ko">회사소개</span></span>
-        <div class="vision">
-          <p class="we" aria-hidden="true"><span data-magnet=".12" style="color:inherit">WE<span>.</span></span></p>
-          <div class="we-side">
+        <div class="we-row">
+          <p class="we" aria-hidden="true">WE</p>
+          <div class="we-arc">
             <p class="we-tag">Our Approach</p>
-            <ul class="we-words" aria-label="see, hear, touch, feel">
-              <li><span>see</span></li><li><span>hear</span></li><li><span>touch</span></li><li><span>feel</span></li>
-            </ul>
+            <span class="we-w" aria-hidden="true">SEE</span><span class="we-w" aria-hidden="true">HEAR</span><span class="we-w" aria-hidden="true">TOUCH</span><span class="we-w" aria-hidden="true">FEEL</span>
             <div class="we-text">
+              <p class="sr">We see, hear, touch, feel.</p>
               <p>관찰이 방향을 정하고, 설계가 그 방향을 지킵니다.</p>
               <p>다원 도시디자인은 현장에서 보고, 듣고, 만지고, 느낀 것을 체계적인 과정으로 도시의 풍경에 옮깁니다.</p>
               <a class="more" href="about.html">More about us</a>
@@ -259,17 +258,24 @@
   document.getElementById("pj-total").textContent = PROJECTS.length;
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // ---------- About: 단어가 스크롤에 맞춰 아래에서 차례로 올라옴 (see → hear → touch → feel → 소개 글) ----------
+  // ---------- About: 단어가 아치(원호)를 따라 아래에서 위로 지나감. 마지막 소개 글은 같은 호를 따라 올라와 WE 옆 가운데에 멈춤 ----------
   (() => {
     const pin = document.querySelector(".we-pin"); if (!pin) return;
-    const words = [...pin.querySelectorAll(".we-words span")], text = pin.querySelector(".we-text");
+    const arc = pin.querySelector(".we-arc"), words = [...arc.querySelectorAll(".we-w")], text = arc.querySelector(".we-text");
     const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const cl = (v) => Math.min(1, Math.max(0, v)), sg = (p, a, b) => cl((p - a) / (b - a)), eo = t => 1 - Math.pow(1 - t, 3);
+    const cl = v => Math.min(1, Math.max(0, v)), sg = (p, a, b) => cl((p - a) / (b - a));
+    const SPAN = 40 * Math.PI / 180;               // 호의 시작·끝 각도(아래 +40°, 위 -40°)
+    function place(el, t, stop) {                  // t 0: 아래, .5: 가운데, 1: 위
+      const R = innerHeight * .85, th = SPAN * (1 - 2 * t);
+      const x = R * (Math.cos(th) - 1), y = R * Math.sin(th);
+      const o = stop ? cl(t * 4) : Math.sin(Math.PI * cl(t));
+      el.style.transform = `translate(${x.toFixed(1)}px, calc(-50% + ${y.toFixed(1)}px)) rotate(${(th * 180 / Math.PI).toFixed(2)}deg)`;
+      el.style.opacity = o.toFixed(3);
+    }
     function draw() {
       const r = pin.getBoundingClientRect(), p = calm ? 1 : cl(-r.top / Math.max(1, r.height - innerHeight));
-      words.forEach((w, i) => { const t = eo(sg(p, .08 + i * .14, .26 + i * .14)); w.style.transform = `translateY(${(1 - t) * 105}%)`; });
-      const t = eo(sg(p, .7, .88));
-      text.style.opacity = t; text.style.transform = `translateY(${(1 - t) * 24}px)`;
+      words.forEach((w, i) => place(w, calm ? 1 : sg(p, .02 + i * .16, .32 + i * .16), false));
+      place(text, .5 * sg(p, .66, .9), true);      // 가운데(.5)에서 멈춤
     }
     addEventListener("scroll", () => requestAnimationFrame(draw), { passive: true });
     addEventListener("resize", draw); draw();

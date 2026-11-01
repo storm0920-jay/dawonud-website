@@ -98,23 +98,30 @@ h1, h2, h3, p { margin: 0; }
 .pillar p { color: var(--text-l); max-width: 34ch; }
 @media (max-width: 800px) { .pillars { grid-template-columns: 1fr; } .pillar, .pillar + .pillar { padding: 24px 0 32px; border-left: 0; border-bottom: 1px solid var(--rule-l); } }
 
-/* About: 큰 WE + 차례로 올라오는 see / hear / touch / feel (스크롤 동안 화면에 붙어 있음) */
-.we-pin { height: 260vh; position: relative; }
-.we-stage { position: sticky; top: 0; min-height: 100vh; display: grid; align-content: center; gap: 40px; box-sizing: border-box; }
-.vision { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
-.we { font: 700 clamp(140px, 26vw, 400px)/.78 var(--en); letter-spacing: -0.07em; color: var(--white); }
-.we span { color: var(--orange); }
-.we-tag { font: 500 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--mute); margin-bottom: 18px; }
-.we-words { list-style: none; margin: 0; padding: 0; }
-.we-words li { overflow: hidden; line-height: .95; }
-.we-words span { display: inline-block; font: 500 clamp(44px, 6.4vw, 104px)/.95 var(--en); letter-spacing: -0.05em; transform: translateY(105%); will-change: transform; }
-.we-text { margin-top: 36px; max-width: 34em; opacity: 0; }
-.we-text p { color: var(--text-d); font-size: 16px; }
+/* About: Santal h1 크기(1440에서 234px = 16.25vw, Regular, 자간 -0.1em, 줄 간격 .87, 대문자). 옆 단어도 같은 크기 */
+.we-pin { height: 320vh; position: relative; }
+.we-stage { position: sticky; top: 0; height: 100vh; display: grid; grid-template-rows: auto 1fr; box-sizing: border-box; overflow: hidden; padding-top: 88px; }
+.we-row { display: flex; align-items: center; gap: 1.6vw; min-height: 0; }
+.we, .we-w { font: 400 16.25vw/.87 var(--en); letter-spacing: -0.06em;   /* Santal은 -0.1em(Helvetica). 우리 서체(Archivo)는 W가 넓어 -0.1em이면 W·E가 겹쳐 -0.06em */ text-transform: uppercase; color: var(--white); white-space: nowrap; }
+.we { flex: none; margin: 0; }
+.we-arc { position: relative; flex: 1; align-self: stretch; }
+.we-tag { position: absolute; left: 0; top: calc(50% - 8.6vw); font: 500 13px/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--mute); }
+.we-w, .we-text { position: absolute; left: 0; top: 50%; transform-origin: 0 50%; opacity: 0; will-change: transform, opacity; }
+.we-text { max-width: 30em; }
+.we-text p { color: var(--text-d); font-size: 17px; }
 .we-text p + p { margin-top: 8px; }
+.we-text .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (max-width: 1023px) {
+  .we-row { flex-direction: column; align-items: flex-start; justify-content: center; }
+  .we-arc { flex: none; height: 52vh; }
+  .we, .we-w { font-size: 30vw; }
+  .we-arc { width: 100%; }
+  .we-tag { top: 0; }
+  .we-w { font-size: 20vw; }
+}
 .more { display: inline-flex; gap: 10px; align-items: center; font: 500 15px/1 var(--en); border-bottom: 1px solid currentColor; padding-bottom: 6px; margin-top: 32px; }
 .more::after { content: "→"; transition: transform .2s; }
 .more:hover::after { transform: translateX(5px); }
-@media (max-width: 900px) { .vision { grid-template-columns: 1fr; } }
 
 /* Approach: 원칙 4개 */
 .approach-head { max-width: 18ch; }
