@@ -204,7 +204,7 @@ h1, h2, h3, p { margin: 0; }
 .pr-stage::before { left: 50%; top: 0; bottom: 0; width: 1px; }
 .pr-stage::after { top: 51%; left: 0; right: 0; height: 1px; }
 .pr-stage > .label { position: absolute; top: 88px; left: var(--pad); }
-.pr-intro { position: absolute; left: .55vw; top: calc(51% + 8px); width: 15vw; min-width: 150px; margin: 0; font: 500 clamp(13px, .78vw, 16px)/1.3 var(--ko); color: var(--white); word-break: keep-all; }
+.pr-intro { position: absolute; left: var(--pad); top: calc(51% + 8px); width: 15vw; min-width: 150px; margin: 0; font: 500 clamp(13px, .78vw, 16px)/1.3 var(--ko); color: var(--white); word-break: keep-all; }
 .pr-list { position: absolute; left: 50%; right: .6vw; top: 0; padding-bottom: 50vh; will-change: transform; }
 .pr-pin.static .pr-list { position: relative; left: 50%; width: 49.4%; }
 .pr-item { border-top: 1px solid var(--rule-d); transition: border-color .5s; }
