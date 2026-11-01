@@ -541,3 +541,9 @@ html.intro-on .mast *, html.intro-on .mast::before, html.intro-on .mast::after {
 /* 자문 목록 글자를 50% 세로선에서 살짝 띄움(가로선은 선까지) */
 .adv-g h3, .adv-g li { padding-left: 1vw; }
 @media (max-width: 800px) { .adv-g h3, .adv-g li { padding-left: 0; } }
+
+/* Lenis 권장: 브라우저 자체 부드러운 스크롤과 겹쳐 끈적해지는 것을 막음 */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
