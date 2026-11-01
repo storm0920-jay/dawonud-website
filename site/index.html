@@ -16,6 +16,25 @@
 <link rel="stylesheet" href="assets/css/home3.css">
 </head>
 <body data-page="index.html">
+<!-- 인트로(Santal preloader 녹화 Video Project 11 재현): 처음 방문(브라우저 세션)에 한 번만. 스크립트는 바로 아래 -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="in-line"><span class="in-lead">The city is read</span></div>
+  <div class="in-drift">
+    <i class="in-v in-v1"></i><i class="in-v in-v2"></i><i class="in-v in-v3"></i><i class="in-v in-v4"></i>
+    <div class="in-line"><span class="in-col in-c1"><span>layer</span></span><span class="in-col in-c2"><span>by</span></span><span class="in-col in-c3"><span>layer</span></span></div>
+  </div>
+  <p class="in-cap">An urban design studio built on<br>place, color and people</p>
+  <p class="in-load">Loading <b>0%</b></p>
+  <div class="in-black"><p>Until it becomes place</p></div>
+</div>
+<script>
+  (function () {
+    var skip = false;
+    try { skip = sessionStorage.getItem("dawonIntro") === "1"; } catch (e) {}
+    if (skip || matchMedia("(prefers-reduced-motion: reduce)").matches) { document.getElementById("intro").remove(); return; }
+    document.documentElement.classList.add("intro-on");
+  })();
+</script>
 
 <i class="scroll-dot" aria-hidden="true"></i>
 <nav class="fixnav" aria-label="고정 메뉴" aria-hidden="true">
@@ -521,6 +540,32 @@
   pluses.forEach(b => b.addEventListener("click", () => { mb = b; menu(true); }));
   ov.querySelector(".close").addEventListener("click", () => menu(false));
   document.addEventListener("keydown", e => { if (e.key === "Escape" && ov.classList.contains("open")) menu(false); });
+</script>
+<script>
+  // 인트로 타임라인(녹화 실측, 초): 0.3 문장 등장 → 0.6~2.6 단어 세 개가 칸 안으로 밀려 들어옴 → 2.8~3.5 문장이 가운데로 모이며 단어 접힘
+  // → 3.6 회색 → 3.8 검은 막 + 두 번째 문장 → 4.5~4.95 막이 가로 띠로 줄어 선이 됨 → 5.2 선 사라지고 첫 화면 시작
+  (function () {
+    var el = document.getElementById("intro"); if (!el) return;
+    try { sessionStorage.setItem("dawonIntro", "1"); } catch (e) {}
+    var q = function (s) { return el.querySelector(s); }, num = q(".in-load b");
+    var E = "cubic-bezier(.65,0,.35,1)", O = "cubic-bezier(.16,1,.3,1)";
+    var t0 = performance.now(), T = 4.6;
+    (function count() { var k = Math.min(1, (performance.now() - t0) / 1000 / T); num.textContent = Math.round(100 * (1 - Math.pow(1 - k, 1.6))) + "%"; if (k < 1) requestAnimationFrame(count); })();
+    var at = function (sec, fn) { setTimeout(fn, sec * 1000); };
+    at(.3, function () { el.classList.add("s1"); });
+    // 단어 칸 전체가 천천히 오른쪽으로 흐르고, 그 안으로 단어가 왼쪽 선 뒤에서 하나씩 밀려 나옴
+    at(.4, function () { q(".in-drift").animate([{ transform: "translateX(-9vw)" }, { transform: "none" }], { duration: 2400, easing: "cubic-bezier(.33,0,.2,1)", fill: "forwards" }); });
+    [[.55, ".in-c1"], [1.2, ".in-c2"], [1.75, ".in-c3"]].forEach(function (w) {
+      at(w[0], function () { q(w[1] + " span").animate([{ transform: "translateX(-110%)" }, { transform: "none" }], { duration: 1300, easing: O, fill: "forwards" }); });
+    });
+    at(2.8, function () { el.classList.add("s2"); });
+    at(3.6, function () { el.classList.add("s3"); });
+    at(3.8, function () { el.classList.add("s4"); });
+    at(4.5, function () { el.classList.add("s5"); });
+    at(5.0, function () { el.classList.add("s6"); });
+    at(5.25, function () { document.documentElement.classList.remove("intro-on"); el.classList.add("out"); });
+    at(5.8, function () { el.remove(); });
+  })();
 </script>
 </body>
 </html>
