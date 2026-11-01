@@ -427,10 +427,9 @@ html.inverted .j-reveal { filter: invert(1); }
 /* 우물 바닥 도시 전경 + 카피·원형 팝업 (assets/js/well.js) */
 .j-well { --wk: "Noto Sans KR", "SUIT Variable", sans-serif; --sk-bg: #0E0E0E; --sk-line: #8C8A85; background: var(--sk-bg); }
 html.inverted .j-well { --sk-bg: #fff; --sk-line: #B4B1AB; }   /* 인버스: 흰 바탕 연회색 선 (jay: 대비 약하게) (장면 반전을 .j-reveal에서 되돌린 상태) */
-.w-sky { position: absolute; inset: 0; background: #CADEDF; opacity: 0; }   /* 사진 맨 위 하늘색 (휴대폰에서 사진 위 빈 곳) */
+.w-sky { position: absolute; inset: 0; background: #CADEDF; opacity: 1; }   /* 사진 맨 위 하늘색 (휴대폰에서 사진 위 빈 곳) */
 .j-well .w-art { position: absolute; left: 0; top: 0; width: 1920px; height: 1358px; transform-origin: 0 0; }
-.w-sketch { position: absolute; inset: 0; background: var(--sk-line); -webkit-mask: url(../img/well-sketch.png) 0 0 / 100% 100% no-repeat; mask: url(../img/well-sketch.png) 0 0 / 100% 100% no-repeat; }   /* Gemini 펜 스케치(사진과 같은 구도) */
-.w-photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; }
+.w-photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 1; }
 .w-copy { position: absolute; left: calc(var(--pad) + 24px); top: calc(72px + 4vh); z-index: 2; color: #0E0E0E; max-width: calc(100% - var(--pad) * 2 - 24px); }
 .w-copy [data-step] { opacity: 0; margin: 0; will-change: transform, opacity; }
 .w-k { font: 500 clamp(11px, .8vw, 15px)/1 var(--ko); letter-spacing: .08em; color: var(--orange); text-transform: uppercase; margin-bottom: 14px !important; }

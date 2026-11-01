@@ -63,7 +63,7 @@ const CONFIG = {
   hold: { range: [.39, .76], push: .85 },              // 상자만 남아 천천히 다가감
   dive: { range: [.76, .95], fovRange: [.62, .80], fov: 30, view: .9 },      // 가운데 상자로 내려감 (화각 30°로 넓어지며 벽이 보임)
   image: { in: [.82, .88], fill: [.92, .96] },
-  well: { extra: 400 },                                // 우물 바닥 도시 전경: 화면을 채운 뒤 이만큼(vh) 더 스크롤하며 카피·원형이 차례로 (assets/js/well.js)
+  well: { extra: 360 },                                // 우물 바닥 도시 전경: 화면을 채운 뒤 이만큼(vh) 더 스크롤하며 카피·원형이 차례로 (assets/js/well.js)
   tilt: { x: 6, y: 3, damp: 4, minWidth: 1024 },       // 마우스 기울임 (좌우·상하 최대 각도)
   calm: { second: [.08, .11], field: [.11, .16], wordsOut: [.37, .45], image: [.85, .95] },  // 동작 줄이기: 3단계부터 페이드로
 };

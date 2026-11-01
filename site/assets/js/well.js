@@ -5,7 +5,7 @@
 (function () {
   const box = document.querySelector(".j-well");
   if (!box) return;
-  const img = box.querySelector(".w-art"), photo = box.querySelector(".w-photo"), sky = box.querySelector(".w-sky"), pinsEl = box.querySelector(".w-pins");
+  const img = box.querySelector(".w-art"), pinsEl = box.querySelector(".w-pins");
   const copy = [...box.querySelectorAll(".w-copy [data-step]")], bar = box.querySelector(".w-bar");
   const IW = 1920, IH = 1358;
   const S = 1920 / 900;   // 시안 좌표(900폭) → 사진 좌표
@@ -26,10 +26,10 @@
   const ease = t => 1 - Math.pow(1 - t, 3);
   const seg = (t, a, b) => clamp((t - a) / (b - a));
 
-  // 순서(추가 스크롤 비율): 선그림만 → 사진이 겹쳐 나옴 → 전경만 → 카피 세 줄 → 원형 6개
-  const PHOTO = [.04, .17], R = x => .19 + x * .81;   // 선그림 구간은 jay 요청으로 절반(약 70vh), 사진 다음 구간은 예전 비율을 .19~1에 맞춤
+  // 순서(추가 스크롤 비율): 사진 전경만 → 카피 세 줄 → 원형 6개
+  const R = x => x;   // 선그림은 jay 요청으로 삭제(2026-11-01): 우물에 들어가면 사진이 바로 보임
   const COPY = [[R(.08), R(.14)], [R(.13), R(.2)], [R(.19), R(.28)]];
-  const PIN0 = R(.32), PSTEP = .1 * .81, PLEN = .08 * .81;
+  const PIN0 = R(.32), PSTEP = .1, PLEN = .08;
 
   function draw(t) {
     const W = box.clientWidth, H = box.clientHeight;
@@ -50,7 +50,6 @@
   function place(t, k, ox, oy, narrow) {
     img.style.transform = `translate(${ox.toFixed(1)}px, ${oy.toFixed(1)}px) scale(${k.toFixed(4)})`;
 
-    { const u = seg(t, ...PHOTO); photo.style.opacity = sky.style.opacity = (u * u * (3 - 2 * u)).toFixed(3); }   // 선그림 위로 사진이 천천히 겹침
     bar.style.borderLeftColor = `rgba(14,14,14,${(.45 * ease(seg(t, ...COPY[1]))).toFixed(3)})`;
     copy.forEach((el, i) => { const u = ease(seg(t, ...COPY[i])); el.style.opacity = u.toFixed(3); el.style.transform = `translateY(${((1 - u) * 18).toFixed(1)}px)`; });
 
