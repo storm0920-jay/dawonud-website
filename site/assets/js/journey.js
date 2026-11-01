@@ -117,7 +117,12 @@ const CONFIG = {
   const lineMat = mat(`attribute float aDiag; uniform float uDiag; void main(){ vec3 bp = boxAt(); vec3 local = position; vOp *= mix(1., uDiag, aDiag); ${proj} }`,
     `varying float vOp; void main(){ gl_FragColor = vec4(.949, .941, .941, ${C.cubes.line} * vOp); if (gl_FragColor.a < .003) discard; }`, false, 0);   // 선·면은 깊이를 기록하지 않음 (뒤의 선이 비쳐 보임)
   const wordFS = `uniform sampler2D uMap; uniform float uWords; varying float vOp; varying vec2 vUv;
-    void main(){ float a = texture2D(uMap, vUv).a * vOp * uWords; if (a < .02) discard; gl_FragColor = vec4(.941, .941, .941, a); }`;
+    void main(){
+      // 글자 그림은 작게 줄여 쓰므로 가장자리가 번져 있음. 번진 가장자리(알파 0.5가 글자 윤곽)를 SDF처럼 한 픽셀 폭으로 또렷하게 다듬음
+      float a0 = texture2D(uMap, vUv).a, w = max(fwidth(a0) * .75, .03);
+      float a = smoothstep(.5 - w, .5 + w, a0) * vOp * uWords;
+      if (a < .01) discard;
+      gl_FragColor = vec4(.941, .941, .941, a); }`;
   // 세 줄 상자(Place·Defines·Life)의 단어는 주변보다 먼저 보이고, Defines·Life는 처음엔 HTML 때와 같은 자리·크기(깊이 보정)에서 시작해 Place 자리로 모임
   const wordVS = (place, front) => `attribute vec4 aUV; attribute vec2 aSize; uniform float uWords, uSeq, uD; uniform vec2 uO2, uO3; varying vec2 vUv;
     void main(){ vec3 bp = boxAt(); vUv = mix(aUV.xy, aUV.zw, uv);
