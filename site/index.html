@@ -138,18 +138,19 @@
     </div>
   </section>
 
-  <!-- Services (사업분야) -->
-  <section class="light sec pad" id="business">
-    <div class="sec-head">
-      <span class="label">Business <span class="ko">사업분야</span></span>
-      <h2 class="mid">Four fields, planned as one cityscape.</h2>
+  <!-- Services (사업분야): Santal "WE DO" 녹화(Video Project 9 (1)) 재현. 큰 WE DO가 올라가며 사라지고,
+       분야 이름 줄이 왼쪽으로 흘러 지금 분야가 가운데 세로선(Services 눈금)에 섬. 사진은 오른쪽에서 밀려 들어오며 덮음 -->
+  <section class="light sec" id="business">
+    <div class="wd-pin">
+      <div class="wd-stage">
+        <span class="label">Business <span class="ko">사업분야</span></span>
+        <h2 class="wd-title" aria-label="We do">WE DO</h2>
+        <div class="wd-names"><a class="wd-n" href="business.html#landscape">Landscape</a><a class="wd-n" href="business.html#public">Public Design</a><a class="wd-n" href="business.html#color">Color Design</a><a class="wd-n" href="business.html#universal">Universal Design</a></div>
+        <div class="wd-pics"><a class="wd-pic fc-landscape" href="business.html#landscape" aria-label="Landscape 경관"><span class="ico" data-icon="landscape"></span><span class="wd-ph">사진 자리 · 경관</span></a><a class="wd-pic fc-public" href="business.html#public" aria-label="Public Design 공공디자인"><span class="ico" data-icon="public"></span><span class="wd-ph">사진 자리 · 공공디자인</span></a><a class="wd-pic fc-color" href="business.html#color" aria-label="Color Design 색채디자인"><span class="ico" data-icon="color"></span><span class="wd-ph">사진 자리 · 색채디자인</span></a><a class="wd-pic fc-universal" href="business.html#universal" aria-label="Universal Design 유니버설디자인"><span class="ico" data-icon="universal"></span><span class="wd-ph">사진 자리 · 유니버설디자인</span></a></div>
+        <div class="wd-descs"><p class="wd-d"><b>경관</b>경관계획, 경관심의와 경관성 검토, 도로경관과 야간경관을 다룹니다.</p><p class="wd-d"><b>공공디자인</b>정비사업 공공디자인, 가로환경, 공공시설물과 공공미술을 디자인합니다.</p><p class="wd-d"><b>색채디자인</b>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><p class="wd-d"><b>유니버설디자인</b>누구나 편하게 이동하고 쓰는 공간과 안내 체계를 설계합니다.</p></div>
+        <p class="wd-count"><span class="wd-cn">Landscape</span><span class="wd-ci">01</span><span class="wd-ct">04</span></p>
+      </div>
     </div>
-    <ul class="services">
-      <li><a class="service fc-landscape" href="business.html#landscape" data-cursor="Explore"><span class="n">01</span><h3>Landscape<small>경관</small></h3><p>경관계획, 경관심의와 경관성 검토, 도로경관과 야간경관을 다룹니다.</p><span class="ico" data-icon="landscape"></span></a></li>
-      <li><a class="service fc-public" href="business.html#public" data-cursor="Explore"><span class="n">02</span><h3>Public Design<small>공공디자인</small></h3><p>정비사업 공공디자인, 가로환경, 공공시설물과 공공미술을 디자인합니다.</p><span class="ico" data-icon="public"></span></a></li>
-      <li><a class="service fc-color" href="business.html#color" data-cursor="Explore"><span class="n">03</span><h3>Color Design<small>색채디자인</small></h3><p>지역의 색을 조사해 도시와 건축물의 색채 기준을 세웁니다.</p><span class="ico" data-icon="color"></span></a></li>
-      <li><a class="service fc-universal" href="business.html#universal" data-cursor="Explore"><span class="n">04</span><h3>Universal Design<small>유니버설디자인</small></h3><p>누구나 편하게 이동하고 쓰는 공간과 안내 체계를 설계합니다.</p><span class="ico" data-icon="universal"></span></a></li>
-    </ul>
   </section>
 
   <!-- Process -->
@@ -284,6 +285,46 @@
         const y = (stageTop + innerHeight * .51 + i * lh - lift) / innerHeight;   // 단어 가운데의 화면 세로 위치
         w.style.transform = calm ? "" : `translate3d(${(push(y) * innerWidth).toFixed(2)}px, 0, 0)`;
       });
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  // ---------- Services: WE DO. 0~1 구간은 제목이 올라가고 첫 분야가 들어옴, 그 뒤 분야마다 1구간씩 ----------
+  (() => {
+    const pin = document.querySelector(".wd-pin"); if (!pin) return;
+    const st = pin.querySelector(".wd-stage"), title = st.querySelector(".wd-title"), row = st.querySelector(".wd-names");
+    const names = [...row.children], pics = [...st.querySelectorAll(".wd-pic")], descs = [...st.querySelectorAll(".wd-d")];
+    const cn = st.querySelector(".wd-cn"), ci = st.querySelector(".wd-ci"), N = names.length;
+    const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cl = v => Math.min(1, Math.max(0, v)), ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    let cur = null, last = -1;
+    function frame() {
+      requestAnimationFrame(frame);
+      const r = pin.getBoundingClientRect();
+      if (r.bottom < -innerHeight || r.top > 2 * innerHeight) return;
+      const tgt = cl(-r.top / Math.max(1, r.height - innerHeight)) * N;      // 0 ~ N
+      cur = cur === null || calm ? tgt : cur + (tgt - cur) * .1;
+      if (Math.abs(tgt - cur) < 1e-4) cur = tgt;
+      // 제목: 처음 1구간 동안 화면 위로 빠져나감
+      title.style.transform = `translate3d(0, ${(-cur * innerHeight * .75).toFixed(1)}px, 0)`;
+      // 이름 줄: s = 0이면 첫 이름이 화면 오른쪽 밖, 1이면 첫 이름 왼쪽 끝이 세로선(50vw)
+      const s = cur < 1 ? ease(cur) : 1 + ease(cur - 1 - Math.floor(cur - 1)) + Math.floor(cur - 1);
+      const k = Math.min(N - 1, Math.max(0, s - 1)), i0 = Math.floor(k), f = k - i0, i1 = Math.min(N - 1, i0 + 1);
+      const x0 = names[i0].offsetLeft, x1 = names[i1].offsetLeft;
+      const enter = cl(s) ;                                                    // 첫 진입
+      const base = innerWidth * .5 - (x0 + (x1 - x0) * f) + (1 - enter) * innerWidth * .55;
+      row.style.transform = `translate3d(${base.toFixed(1)}px, 0, 0)`;
+      names.forEach((n, i) => n.style.opacity = (.22 + .78 * cl(1 - Math.abs(i - k))).toFixed(3));
+      // 사진: 오른쪽에서 왼쪽으로 열리며 앞 사진을 덮음
+      pics.forEach((p, i) => {
+        const o = i === 0 ? cl((s - .55) / .45) : cl(s - 1 - (i - 1) - 0);
+        const v = i === 0 ? o : cl(k - (i - 1));
+        p.style.clipPath = `inset(0 0 0 ${((1 - (i === 0 ? o : v)) * 100).toFixed(2)}%)`;
+      });
+      // 설명: 지금 분야만 보임
+      const now = Math.round(k);
+      descs.forEach((d, i) => d.style.opacity = (i === now ? cl((s - .7) / .3) * cl(1 - Math.abs(k - i) * 2.2) : 0).toFixed(3));
+      if (now !== last) { last = now; cn.textContent = names[now].textContent; ci.textContent = String(now + 1).padStart(2, "0"); }
     }
     requestAnimationFrame(frame);
   })();

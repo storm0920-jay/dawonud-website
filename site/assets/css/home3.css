@@ -155,6 +155,31 @@ h1, h2, h3, p { margin: 0; }
 @media (max-width: 520px) { .works { grid-template-columns: 1fr; } }
 
 /* Business: 큰 목록, 올리면 픽토그램 */
+/* Services: Santal WE DO 녹화 실측 (화면 1887px 기준). 제목 16.25vw, 분야 이름 3.9vw(글자 높이 50px),
+   이름 아랫선과 사진 윗선 = 화면 높이 50% 가로 가이드선, 사진 = 50vw ~ 75vw 사이(Services ~ Company 눈금) */
+.wd-pin { position: relative; height: calc(100vh + 4 * 90vh); }
+.wd-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; isolation: isolate; }
+.wd-stage::before, .wd-stage::after { content: ""; position: absolute; z-index: -1; pointer-events: none; background: currentColor; opacity: .08; }
+.wd-stage::before { left: 50vw; top: 0; bottom: 0; width: 1px; box-shadow: 25vw 0 0 currentColor; }
+.wd-stage::after { top: 50%; left: 0; right: 0; height: 1px; }
+.wd-stage > .label { position: absolute; top: 88px; left: var(--pad); }
+.wd-title { position: absolute; left: .6vw; top: 22%; margin: 0; font: 400 16.25vw/.87 var(--en); letter-spacing: -0.06em; white-space: nowrap; will-change: transform; }
+.wd-names { position: absolute; left: 0; bottom: calc(50% + 2.4vh); display: flex; gap: 12vw; white-space: nowrap; will-change: transform; }
+.wd-n { font: 400 3.9vw/1 var(--en); letter-spacing: -0.03em; color: inherit; }
+.wd-pics { position: absolute; left: 50vw; width: 25vw; top: 50%; bottom: 0; }
+.wd-pic { position: absolute; inset: 0; display: grid; place-items: center; background: var(--pc); color: var(--fc); clip-path: inset(0 0 0 100%); will-change: clip-path; }
+.wd-pic .ico { width: 34%; aspect-ratio: 1; }
+.wd-ph { position: absolute; left: 14px; bottom: 14px; font: 500 12px/1 var(--ko); color: var(--fc); }
+.wd-descs { position: absolute; left: var(--pad); top: calc(50% + 14px); width: min(30vw, 460px); }
+.wd-d { position: absolute; top: 0; left: 0; margin: 0; font: 400 clamp(16px, 1.25vw, 22px)/1.45 var(--ko); opacity: 0; word-break: keep-all; }
+.wd-d b { display: block; font: 500 13px/1 var(--ko); color: var(--mute-dark); margin-bottom: 10px; }
+.wd-count { position: absolute; right: var(--pad); bottom: 26px; margin: 0; display: flex; gap: 22px; font: 500 13px/1 var(--en); }
+.wd-ci::after { content: ""; display: inline-block; width: 1px; height: 11px; background: currentColor; margin-left: 11px; vertical-align: -1px; }
+@media (max-width: 800px) {
+  .wd-n { font-size: 8vw; } .wd-names { gap: 16vw; }
+  .wd-pics { left: 50vw; width: 46vw; }
+  .wd-descs { width: 44vw; } .wd-d { font-size: 14px; }
+}
 .services { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-l); }
 .service { display: grid; grid-template-columns: 64px 1.2fr 1fr 96px; gap: 24px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--rule-l); transition: background .4s, padding .4s; }
 .service:hover { background: var(--pc); padding-left: 16px; padding-right: 16px; }
