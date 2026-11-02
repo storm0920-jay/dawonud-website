@@ -224,3 +224,60 @@ document.querySelectorAll("[data-icon]").forEach(el => {
   });
   document.body.appendChild(b);
 })();
+
+/* ---------------------------------------------------------
+   오늘 방문자 수 (꼬리말 맨 아래에 작게). 서버는 api/visit.js
+   - 같은 브라우저는 하루(한국 시간)에 한 번만 셈. 새로고침·다른 페이지 이동은 안 셈
+   - 내 기기 빼기: 주소 뒤에 ?me 를 붙여 한 번 열면(예: dawonud.com/?me) 그 브라우저는 앞으로 안 셈
+     다시 세려면 ?me=off
+   - manage.html은 세지도, 보이지도 않음. 저장소 연결 전이면 아무것도 안 보임
+   --------------------------------------------------------- */
+(function visitCounter() {
+  const page = document.body.dataset.page || location.pathname.split("/").pop() || "index.html";
+  if (page === "manage.html") return;
+  // © 문구 바로 옆에 붙임 (꼬리말 칸 수가 그대로라 PC·휴대폰 배치가 바뀌지 않음)
+  const slot = document.querySelector("footer.foot > span, .footer-bottom > span");
+  const store = {
+    get(k) {
+      try { const v = localStorage.getItem(k); if (v !== null) return v; } catch (e) {}
+      const m = document.cookie.match(new RegExp("(?:^|; )" + k + "=([^;]*)"));
+      return m ? decodeURIComponent(m[1]) : null;
+    },
+    set(k, v, days) {
+      try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {}
+      document.cookie = k + "=" + (v === null ? "" : encodeURIComponent(v)) + "; path=/; SameSite=Lax; max-age=" + (v === null ? 0 : Math.round(days * 86400));
+    },
+  };
+
+  const q = new URLSearchParams(location.search);
+  if (q.has("me")) {
+    const off = q.get("me") === "off";
+    store.set("dawonMe", off ? null : "1", 400);
+    const t = document.createElement("div");
+    t.setAttribute("role", "status");
+    t.textContent = off ? "이 브라우저의 방문을 다시 셉니다" : "이 브라우저의 방문은 이제 방문자 수에 들어가지 않습니다";
+    t.style.cssText = "position:fixed;left:50%;bottom:48px;z-index:10000;transform:translateX(-50%);max-width:calc(100% - 32px);padding:14px 22px;border-radius:999px;background:#F4F2ED;color:#0E0E0E;font:500 15px/1.4 'SUIT',sans-serif;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.25);transition:opacity .4s";
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = "0"; setTimeout(() => t.remove(), 500); }, 3500);
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) {}
+  }
+
+  const today = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+  const me = store.get("dawonMe") === "1";
+  const counted = store.get("dawonVisit") === today;
+  const count = !me && !counted && !navigator.webdriver;
+  if (count) store.set("dawonVisit", today, 2);
+
+  fetch("/api/visit", { method: count ? "POST" : "GET", cache: "no-store" })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!slot || !d || typeof d.today !== "number") return;
+      const el = document.createElement("span");
+      el.className = "visit-today";
+      el.textContent = "Today " + d.today.toLocaleString("en-US");
+      el.title = "오늘 방문자 수";
+      el.style.cssText = "margin-left:14px;white-space:nowrap;opacity:.75";
+      slot.appendChild(el);
+    })
+    .catch(() => {});
+})();
