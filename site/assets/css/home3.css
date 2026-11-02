@@ -245,7 +245,8 @@ h1, h2, h3, p { margin: 0; }
   .pr-list { left: 6vw; right: 4vw; }
   .pr-head { min-height: 22vw; padding-top: 4vw; } .pr-t { font-size: 8vw; } .pr-x { width: 14px; height: 14px; margin: 3vw 0 0; }
   .pr-in { grid-template-columns: 1fr; } .pr-in p { max-width: 100%; margin-top: 4vw; font-size: 15px; } .pr-sc { grid-column: 1; margin-top: 5vw; } .pr-sc h4 { margin-bottom: 10px; } .pr-sc ul { gap: 8px; } .pr-sc li { padding-left: 22px; font-size: 13px; } .pr-sc li::before { left: 2px; width: 8px; height: 4px; }
-  .pr-intro { top: auto; bottom: 20px; left: var(--pad); width: 60vw; }
+  .pr-intro { top: auto; bottom: 20px; left: var(--pad); width: 60vw; transition: opacity .3s; }
+  .pr-pin.has-open .pr-intro { opacity: 0; visibility: hidden; }   /* 휴대폰: 단계를 펼치면 펼친 글과 겹쳐서 카피를 숨김 (jay 2026-11-02) */
   .pr-stage::before { display: none; }
 }
 
