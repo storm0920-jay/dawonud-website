@@ -40,7 +40,10 @@
     let ox, oy;
     if (narrow) {
       const kk = W / 1100;
-      ox = W / 2 - 1085 * kk; oy = H - IH * kk;
+      // 사진 아래끝을 '지금 실제로 보이는 화면' 아래에 맞춤. 휴대폰 주소창이 보이면 장면(100vh)보다 보이는 높이가 짧아
+      // 마을이 잘렸음 → 하늘이 먼저 잘리도록 (jay 2026-11-02)
+      const vis = Math.min(H, window.visualViewport ? visualViewport.height : innerHeight, innerHeight);
+      ox = W / 2 - 1085 * kk; oy = vis - IH * kk;
       return place(t, kk, ox, oy, narrow);
     }
     const cx = 960, cy = Math.min(IH - H / 2 / k, 740);
@@ -85,4 +88,5 @@
   const orig = draw;
   window.Well.draw = t => { last = t; orig(t); };
   addEventListener("resize", () => orig(last));
+  if (window.visualViewport) visualViewport.addEventListener("resize", () => orig(last));   // 휴대폰 주소창이 나타나고 사라질 때
 })();

@@ -402,6 +402,7 @@
   // 글씨 농도는 화면 가운데 가로선에 가까울수록 진하고 멀수록 연해짐 ----------
   (() => {
     const pin = document.querySelector(".pr-pin"); if (!pin) return;
+    const phone = matchMedia("(max-width: 800px)");
     const list = pin.querySelector(".pr-list"), items = [...list.children], N = items.length;
     const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const cl = v => Math.min(1, Math.max(0, v));
@@ -439,7 +440,11 @@
         const d = Math.abs((b.top + innerWidth * .02) - innerHeight * .5) / innerHeight;
         let o = Math.max(.28, 1 - Math.pow(d / .55, 1.6));
         if (it.classList.contains("open")) o = Math.max(o, .6);
-        hd.style.opacity = o.toFixed(3);
+        // 휴대폰: 펼친 단계가 있으면 그 단계는 가장 진하게, 한 칸 옆은 연하게, 두 칸 이상 옆은 더 연하게 (jay 2026-11-02)
+        const oi = items.findIndex(x => x.classList.contains("open"));
+        if (phone.matches && oi >= 0) { const k = Math.abs(items.indexOf(it) - oi); o = k === 0 ? 1 : k === 1 ? .32 : .16; }
+        const prev = +(hd.dataset.o || o); const nv = prev + (o - prev) * .15;   // 부드럽게 바뀜
+        hd.dataset.o = nv; hd.style.opacity = nv.toFixed(3);
       });
     }
     requestAnimationFrame(frame);
