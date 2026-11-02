@@ -537,13 +537,27 @@
   let rx = innerWidth * .27, ry = innerHeight * .3, tx = rx, ty = ry;
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (fine) mast.addEventListener("mousemove", e => { const r = mast.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; });
+  // 휴대폰(마우스 없음): 사선은 숨기고, 점은 평소 천천히 떠다니다 손가락 닿은 곳을 크게 부드럽게 쫓아감.
+  // 손을 떼면 1.2초 뒤 점이 작아지며 원래 떠다니던 자리로 돌아감 (jay 2026-11-02)
+  let touchT = -1e9, fx = 0, fy = 0, dx = rx, dy = ry, dr = 3.5;
+  if (!fine) {
+    line.style.display = "none";   // 휴대폰은 사선 없이 점만 (jay 2026-11-02)
+    const follow = e => { const p = e.touches[0]; if (!p) return; const r = mast.getBoundingClientRect(); fx = p.clientX - r.left; fy = p.clientY - r.top; touchT = performance.now(); };
+    mast.addEventListener("touchstart", follow, { passive: true }); mast.addEventListener("touchmove", follow, { passive: true });
+  }
   function drawRay(t) {
     const W = mast.clientWidth, H = mast.clientHeight;
-    if (!fine) { tx = W * (.27 + Math.sin(t / 2400) * .06); ty = H * (.3 + Math.cos(t / 3100) * .05); }
+    if (!fine) { tx = W * (.3 + Math.sin(t / 2000) * .12); ty = H * (.32 + Math.cos(t / 2600) * .08); }
     rx += (tx - rx) * .12; ry += (ty - ry) * .12;
     const k = Math.min(W / Math.max(rx, 1), H / Math.max(ry, 1));
     line.setAttribute("x2", rx * k); line.setAttribute("y2", ry * k);
-    dot.setAttribute("cx", rx); dot.setAttribute("cy", ry);
+    if (fine) { dot.setAttribute("cx", rx); dot.setAttribute("cy", ry); }
+    else {
+      const on = t - touchT < 1200;
+      dx += ((on ? fx : rx) - dx) * (on ? .14 : .08); dy += ((on ? fy : ry) - dy) * (on ? .14 : .08);
+      dr += ((on ? 11 : 3.5) - dr) * .1;
+      dot.setAttribute("cx", dx); dot.setAttribute("cy", dy); dot.setAttribute("r", dr.toFixed(2));
+    }
     requestAnimationFrame(drawRay);
   }
   requestAnimationFrame(drawRay);

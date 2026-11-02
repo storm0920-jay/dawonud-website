@@ -245,7 +245,8 @@ h1, h2, h3, p { margin: 0; }
   .pr-list { left: 6vw; right: 4vw; }
   .pr-head { min-height: 22vw; padding-top: 4vw; } .pr-t { font-size: 8vw; } .pr-x { width: 14px; height: 14px; margin: 3vw 0 0; }
   .pr-in { grid-template-columns: 1fr; } .pr-in p { max-width: 100%; margin-top: 4vw; font-size: 15px; } .pr-sc { grid-column: 1; margin-top: 5vw; } .pr-sc h4 { margin-bottom: 10px; } .pr-sc ul { gap: 8px; } .pr-sc li { padding-left: 22px; font-size: 13px; } .pr-sc li::before { left: 2px; width: 8px; height: 4px; }
-  .pr-intro { top: auto; bottom: 20px; left: var(--pad); width: 60vw; }
+  .pr-intro { top: auto; bottom: 20px; left: var(--pad); width: 60vw; transition: opacity .3s; }
+  .pr-pin.has-open .pr-intro { opacity: 0; visibility: hidden; }   /* 휴대폰: 단계를 펼치면 펼친 글과 겹쳐서 카피를 숨김 (jay 2026-11-02) */
   .pr-stage::before { display: none; }
 }
 
@@ -550,7 +551,8 @@ html.intro-on .mast *, html.intro-on .mast::before, html.intro-on .mast::after {
 .intro.s5 .in-load { opacity: 0; }
 .intro.s6 .in-black { opacity: 0; transition: opacity .25s; }
 .intro.out { opacity: 0; pointer-events: none; }
-@media (max-width: 800px) { .intro .in-line { font-size: 4.6vw; } .in-black p { font-size: 4vw; } .in-lead { left: 16px; } .in-cap { left: 16px; } }
+@media (max-width: 800px) { .intro.s2 .in-lead { transform: translateX(24.2vw); } .intro.s2 .in-c3 { transform: translateX(-12.7vw); }   /* 휴대폰: 글씨가 커서 PC 이동값이면 마지막 layer가 앞 문장 위에 겹침 → 이동을 줄여 한 줄로 */
+  .intro .in-line { font-size: 4.6vw; } .in-black p { font-size: 4vw; } .in-lead { left: 16px; } .in-cap { left: 16px; } }
 
 /* 자문 목록 글자를 50% 세로선에서 살짝 띄움(가로선은 선까지) */
 .adv-g h3, .adv-g li { padding-left: 1vw; }
