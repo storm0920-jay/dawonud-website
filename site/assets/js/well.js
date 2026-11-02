@@ -48,11 +48,11 @@
     place(t, k, ox, oy, narrow);
   }
   // 휴대폰(세로): 위쪽 원 4개(경관·역사·장소·색채)의 인출선을 늘려 원을 하늘 쪽으로 올림. 카피 아래부터 차례로 높이를 다르게 (jay 2026-11-02)
-  const SKY = [.62, 1, .28, .06];   // 0번~3번 원이 하늘 빈 곳의 어디까지 올라갈지 (1 = 카피 바로 아래)
+  const SKY = [.3, .45, .14, .04];   // 0번~3번 원이 하늘 빈 곳의 어디까지 올라갈지 (1 = 카피 바로 아래)
   const copyBox = box.querySelector(".w-copy");
   function skyLen(i, k, oy, base) {
     if (i >= SKY.length) return base;
-    const top = copyBox.offsetTop + copyBox.offsetHeight + 28 + 58;                       // 원(58px) 아래끝이 올 수 있는 가장 높은 곳
+    const top = copyBox.offsetTop + copyBox.offsetHeight + 60 + 58;                       // 원(58px) 아래끝이 올 수 있는 가장 높은 곳
     const low = Math.min(...PINS.slice(0, SKY.length).map(p => oy + p.y * k - p.ln * Math.min(1, k * 1.2)));   // 지금 가장 높은 원 아래끝
     if (low <= top) return base;
     const dotY = oy + PINS[i].y * k, yb = low - (low - top) * SKY[i];
