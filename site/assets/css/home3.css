@@ -563,3 +563,6 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
+
+/* PC: 왼쪽 아래 고정 Invert color 버튼과 맨 아래 © 줄이 겹치지 않게 꼬리말 아래 여백을 늘려 글줄을 위로 올림 */
+@media (min-width: 801px) { footer.foot { padding-bottom: 72px; } }
