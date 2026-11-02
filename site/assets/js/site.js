@@ -236,7 +236,8 @@ document.querySelectorAll("[data-icon]").forEach(el => {
   const page = document.body.dataset.page || location.pathname.split("/").pop() || "index.html";
   if (page === "manage.html") return;
   // © 문구 바로 옆에 붙임 (꼬리말 칸 수가 그대로라 PC·휴대폰 배치가 바뀌지 않음)
-  const slot = document.querySelector("footer.foot > span, .footer-bottom > span");
+  const sub = document.querySelector("footer.foot .foot-sub");   // 메인: 둘째 줄 맨 왼쪽
+  const slot = sub || document.querySelector("footer.foot > span, .footer-bottom > span");
   const store = {
     get(k) {
       try { const v = localStorage.getItem(k); if (v !== null) return v; } catch (e) {}
@@ -277,7 +278,7 @@ document.querySelectorAll("[data-icon]").forEach(el => {
       el.textContent = "Today " + d.today.toLocaleString("en-US");
       el.title = "오늘 방문자 수";
       el.style.cssText = "margin-left:14px;white-space:nowrap;opacity:.75";
-      slot.appendChild(el);
+      sub ? sub.prepend(el) : slot.appendChild(el);
     })
     .catch(() => {});
 })();

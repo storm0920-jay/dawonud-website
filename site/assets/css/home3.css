@@ -565,4 +565,14 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 
 /* PC: 왼쪽 아래 고정 Invert color 버튼과 맨 아래 © 줄이 겹치지 않게 꼬리말 아래 여백을 늘려 글줄을 위로 올림 */
-@media (min-width: 801px) { footer.foot { padding-bottom: 72px; } }
+@media (min-width: 801px) { footer.foot { padding-bottom: 96px; } }
+
+/* 꼬리말: 첫 줄 © 문구(왼쪽) + 맨 오른쪽 작은 원형 TOP 버튼, 둘째 줄 왼쪽에 Today · Privacy Policy */
+footer.foot { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px 16px; }
+footer.foot .foot-copy { grid-column: 1; }
+footer.foot .foot-sub { grid-column: 1 / -1; grid-row: 2; display: flex; align-items: baseline; gap: 22px; }
+footer.foot .visit-today { margin: 0 !important; opacity: 1 !important; }
+.to-top { grid-column: 2; grid-row: 1; width: 46px; height: 46px; border-radius: 50%; border: 1px solid currentColor; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; color: var(--white); transition: background .25s, color .25s, border-color .25s; }
+.to-top i { font: 600 9px/1 var(--en); font-style: normal; letter-spacing: .06em; }
+.to-top b { font: 500 14px/1 var(--en); }
+.to-top:hover, .to-top:active, .to-top:focus-visible { background: var(--white); color: #0E0E0E !important; border-color: var(--white); }
