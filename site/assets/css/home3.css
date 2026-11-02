@@ -118,7 +118,11 @@ h1, h2, h3, p { margin: 0; }
 .we-text .lead { font: 400 clamp(20px, 2.2vw, 42px)/1.3 var(--ko); letter-spacing: -0.02em; color: var(--white); }
 .we-text p:not(.lead) { color: var(--text-d); font-size: 15px; margin-top: 16px; max-width: 30em; }
 .we-text .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-@media (max-width: 800px) { .we-tag { display: none; } .we-text { max-width: 46vw; } .we-text p:not(.lead) { font-size: 13px; } }
+@media (max-width: 800px) {
+  .we-tag { display: none; } .we-text { max-width: 60vw; } .we-text p:not(.lead) { font-size: 13px; }
+  /* 휴대폰: SEE·HEAR·TOUCH·FEEL이 오른쪽 끝에서 잘리지 않게 단어 줄과 세로선을 왼쪽으로 */
+  .we-col { left: 34%; width: 64%; } .we-stage::before { left: 34%; }
+}
 .more { display: inline-flex; gap: 10px; align-items: center; font: 500 15px/1 var(--en); border-bottom: 1px solid currentColor; padding-bottom: 6px; margin-top: 32px; }
 .more::after { content: "→"; transition: transform .2s; }
 .more:hover::after { transform: translateX(5px); }
@@ -177,10 +181,19 @@ h1, h2, h3, p { margin: 0; }
 .wd-d b { display: block; font: 500 13px/1 var(--ko); color: var(--mute-dark); margin-bottom: 10px; }
 .wd-count { position: absolute; right: var(--pad); bottom: 26px; margin: 0; display: flex; gap: 22px; font: 500 13px/1 var(--en); }
 .wd-ci::after { content: ""; display: inline-block; width: 1px; height: 11px; background: currentColor; margin-left: 11px; vertical-align: -1px; }
+/* 휴대폰: 배경 눈금선에 맞추지 않고 휴대폰 비율로. 지금 분야 이름이 왼쪽 여백에 서고(가로로 흐름), 아래에 사진·설명 */
 @media (max-width: 800px) {
-  .wd-n { font-size: 8vw; } .wd-names { gap: 16vw; }
-  .wd-pics { left: 50%; width: 46%; }
-  .wd-descs { width: 44vw; } .wd-d { font-size: 14px; }
+  .wd-pin { height: calc(100vh + 4 * 70vh); }
+  .wd-stage::before, .wd-stage::after { display: none; }
+  .wd-title { top: 36%; }
+  .wd-names { top: 132px; bottom: auto; gap: 14vw; align-items: flex-start; }
+  .wd-n { display: flex; flex-direction: column; align-items: flex-start; font-size: clamp(34px, 10.5vw, 64px); letter-spacing: -0.04em; }
+  .wd-k { margin: 10px 0 0 2px; font-size: 13px; }
+  .wd-pics { left: var(--pad); right: var(--pad); width: auto; top: calc(132px + clamp(34px, 10.5vw, 64px) + 44px); bottom: auto; height: min(calc((100vw - 2 * var(--pad)) * .75), 38vh); }
+  .wd-descs { top: calc(132px + clamp(34px, 10.5vw, 64px) + 44px + min(calc((100vw - 2 * var(--pad)) * .75), 38vh) + 22px); width: calc(100vw - 2 * var(--pad)); }
+  .wd-d { font-size: 15px; line-height: 1.55; }
+  .wd-count { top: 88px; bottom: auto; gap: 14px; font-size: 12px; }
+  .wd-count .wd-cn { display: none; }
 }
 .services { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule-l); }
 .service { display: grid; grid-template-columns: 64px 1.2fr 1fr 96px; gap: 24px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--rule-l); transition: background .4s, padding .4s; }
@@ -365,6 +378,7 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 .invert { position: fixed; z-index: 44; mix-blend-mode: difference; left: 20px; bottom: 26px; background: none; border: 0; padding: 0 0 6px; color: #fff; font: 500 13px/1 var(--en); cursor: pointer; border-top: 1px solid rgba(255,255,255,.35); padding-top: 4px; }
 .invert::after { content: ""; position: absolute; left: 0; bottom: -4px; width: 4px; height: 4px; border-radius: 50%; background: currentColor; transition: left .4s; }
 .invert[aria-pressed="true"]::after { left: calc(100% - 4px); }
+@media (max-width: 800px) { .invert { display: none; } }   /* 휴대폰: 좌하단 고정 버튼이 본문 글자 위에 겹쳐서 숨김 */
 
 .ray { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .ray line { stroke: var(--white); stroke-width: 1; opacity: .28; }
@@ -372,7 +386,7 @@ body, .light { transition: background-color .6s ease, color .6s ease; }
 
 @media (max-width: 900px) {
   .mast { height: auto; min-height: 100svh; }
-  .mast-word { left: 0; }
+  .mast-word { left: 14px; right: 14px; font-size: 18.4vw; }   /* 휴대폰: D·N이 화면 끝에 붙어 잘려 보이지 않게 */
   .mast-nav { height: auto; border: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0 20px; top: calc(14.4vw + 16px); }
   .mast-nav::before { display: none; }
   .mast-nav a { position: static; height: auto; padding: 12px 0; border-bottom: 1px solid var(--hair); font-size: 18px; }

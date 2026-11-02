@@ -155,7 +155,7 @@
   <section class="sec pad" id="projects">
     <div class="sec-head">
       <span class="label">Projects <span class="ko">사업실적</span></span>
-      <h2 class="mid"><span id="pj-total">91</span> projects across landscape and public design.</h2>
+      <h2 class="mid">Selected works across landscape and public design.</h2>
     </div>
     <ul class="works" id="works"></ul>
     <div class="works-foot">
@@ -310,7 +310,6 @@
   }
   addWorks();
   document.getElementById("more-works").addEventListener("click", addWorks);
-  document.getElementById("pj-total").textContent = PROJECTS.length;
   document.getElementById("year").textContent = new Date().getFullYear();
 
   // ---------- About: 녹화 실측. 단어 묶음이 FEEL까지 3줄 올라가는 동안 WE는 고정.
@@ -339,7 +338,7 @@
       col.style.transform = `translate3d(0, ${(-lift).toFixed(2)}px, 0)`;
       words.forEach((w, i) => {
         const y = (stageTop + innerHeight * .51 + i * lh - lift) / innerHeight;   // 단어 가운데의 화면 세로 위치
-        w.style.transform = calm ? "" : `translate3d(${(push(y) * innerWidth).toFixed(2)}px, 0, 0)`;
+        w.style.transform = calm ? "" : `translate3d(${(push(y) * innerWidth * (innerWidth <= 800 ? .3 : 1)).toFixed(2)}px, 0, 0)`;   // 휴대폰은 밀림을 줄여 화면 밖으로 잘리지 않게
       });
     }
     requestAnimationFrame(frame);
@@ -352,12 +351,14 @@
     const names = [...row.children], pics = [...st.querySelectorAll(".wd-pic")], descs = [...st.querySelectorAll(".wd-d")];
     const cn = st.querySelector(".wd-cn"), ci = st.querySelector(".wd-ci"), N = names.length;
     const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const phone = matchMedia("(max-width: 800px)");   // 휴대폰: 이름을 줄이지 않고, 지금 분야가 가운데 세로선 대신 왼쪽 여백에 섬
     const cl = v => Math.min(1, Math.max(0, v)), ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
     // 사진 칸(Services~Company 눈금, 폭 25%)보다 긴 영문 이름은 글자 장평을 줄여 마지막 글자가 오른쪽 세로선 안쪽에서 끝나게
     function fit() {
       const box = st.clientWidth * .25 - 6;
       names.forEach(n => {
         const e = n.querySelector(".wd-e"); e.style.transform = ""; e.style.marginRight = "";
+        if (phone.matches) return;
         const w = e.getBoundingClientRect().width;
         if (w > box) { const s = box / w; e.style.transform = `scaleX(${s.toFixed(4)})`; e.style.marginRight = `${(-(w - box)).toFixed(1)}px`; }
       });
@@ -378,8 +379,10 @@
       const k = Math.min(N - 1, Math.max(0, s - 1)), i0 = Math.floor(k), f = k - i0, i1 = Math.min(N - 1, i0 + 1);
       const x0 = names[i0].offsetLeft, x1 = names[i1].offsetLeft;
       const enter = cl(s) ;                                                    // 첫 진입
-      const base = st.clientWidth * .5 - (x0 + (x1 - x0) * f) + (1 - enter) * innerWidth * .55;
+      const anchor = phone.matches ? parseFloat(getComputedStyle(st.querySelector(".label")).left) || 20 : st.clientWidth * .5;
+      const base = anchor - (x0 + (x1 - x0) * f) + (1 - enter) * innerWidth * .55;
       row.style.transform = `translate3d(${base.toFixed(1)}px, 0, 0)`;
+      row.style.opacity = phone.matches ? cl((cur - .35) / .3).toFixed(3) : "";   // 휴대폰: WE DO가 비킨 뒤에 이름이 보임
       names.forEach((n, i) => n.style.opacity = (.22 + .78 * cl(1 - Math.abs(i - k))).toFixed(3));
       // 사진: 오른쪽에서 왼쪽으로 열리며 앞 사진을 덮음
       pics.forEach((p, i) => {

@@ -240,7 +240,7 @@ html.js-reveal [data-reveal].in { transform: none; opacity: 1; }
 @media (max-width: 700px) {
   .proj-row { grid-template-columns: 1fr auto; gap: 4px 12px; padding: 16px 0; }
   .proj-name { grid-column: 1 / -1; grid-row: 2; }
-  .proj-row .chip { grid-row: 1; grid-column: 2; }
+  .proj-row .chip { display: none; }   /* 휴대폰: 영문 분야명·색 상자가 사업명과 겹쳐서 뺌 */
 }
 
 /* 필터 */
@@ -403,3 +403,11 @@ table.data th { border-top: 1px solid var(--ink); border-bottom: 1px solid var(-
 .wordmark span { font-weight: 300; }
 .site-footer .wordmark { font-size: 26px; color: #fff; }
 @media (max-width: 800px) { .wordmark { font-size: 20px; } }
+
+/* 휴대폰 뒤로가기 버튼 (site.js가 하위 페이지에만 넣음). PC에서는 보이지 않음 */
+.back-fab { display: none; }
+@media (max-width: 800px) {
+  .back-fab { display: grid; place-items: center; position: fixed; right: 16px; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 60; width: 48px; height: 48px; padding: 0; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; background: var(--ink); color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.18); cursor: pointer; }
+  .back-fab svg { margin-left: -2px; }
+}
+@media (max-width: 600px) { table.data { min-width: 0; font-size: 14px; word-break: keep-all; } table.data th, table.data td { padding: 12px 8px; } }   /* 휴대폰: 표 오른쪽 칸이 화면 밖으로 밀리지 않게 */
