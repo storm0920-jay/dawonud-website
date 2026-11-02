@@ -537,9 +537,15 @@
   let rx = innerWidth * .27, ry = innerHeight * .3, tx = rx, ty = ry;
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (fine) mast.addEventListener("mousemove", e => { const r = mast.getBoundingClientRect(); tx = e.clientX - r.left; ty = e.clientY - r.top; });
+  // 휴대폰(마우스 없음): 손가락을 대고 움직이면 점이 따라옴. 손을 떼고 2.5초 뒤 다시 저절로 천천히 떠다님 (jay 2026-11-02)
+  let touchT = -1e9;
+  if (!fine) {
+    const follow = e => { const p = e.touches[0]; if (!p) return; const r = mast.getBoundingClientRect(); tx = p.clientX - r.left; ty = p.clientY - r.top; touchT = performance.now(); };
+    mast.addEventListener("touchstart", follow, { passive: true }); mast.addEventListener("touchmove", follow, { passive: true });
+  }
   function drawRay(t) {
     const W = mast.clientWidth, H = mast.clientHeight;
-    if (!fine) { tx = W * (.27 + Math.sin(t / 2400) * .06); ty = H * (.3 + Math.cos(t / 3100) * .05); }
+    if (!fine && t - touchT > 2500) { tx = W * (.3 + Math.sin(t / 2000) * .12); ty = H * (.32 + Math.cos(t / 2600) * .08); }
     rx += (tx - rx) * .12; ry += (ty - ry) * .12;
     const k = Math.min(W / Math.max(rx, 1), H / Math.max(ry, 1));
     line.setAttribute("x2", rx * k); line.setAttribute("y2", ry * k);
