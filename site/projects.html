@@ -28,7 +28,6 @@
   <section class="section" style="padding-top:56px">
     <div class="wrap">
       <div class="filters" id="filters" role="group" aria-label="분야 선택"></div>
-      <p class="note" id="count" style="margin:-12px 0 16px"></p>
       <ul class="proj-list" id="list"></ul>
       <p class="empty-state" id="empty" hidden>조건에 맞는 실적이 없습니다.</p>
     </div>
@@ -63,7 +62,6 @@
     const ul = document.getElementById("list");
     ul.className = state.view === "cards" ? "proj-cards" : "proj-list";
     ul.innerHTML = list.map(state.view === "cards" ? projectCard : projectRow).join("");
-    document.getElementById("count").textContent = `${list.length} Projects`;
     document.getElementById("empty").hidden = list.length > 0;
   }
   filters.addEventListener("click", e => {

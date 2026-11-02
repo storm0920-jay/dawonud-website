@@ -209,3 +209,18 @@ document.querySelectorAll("[data-icon]").forEach(el => {
   }), { threshold: .6 });
   counters.forEach(el => io.observe(el));
 })();
+
+// 휴대폰 하위 페이지: 오른쪽 아래 뒤로가기 버튼 (메뉴가 잠겨 있어 돌아갈 길이 필요). 보이고 숨기는 것은 style.css에서 화면 폭으로
+(function backButton() {
+  const page = document.body.dataset.page || location.pathname.split("/").pop() || "index.html";
+  if (page === "index.html") return;
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "back-fab"; b.setAttribute("aria-label", "뒤로가기");
+  b.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg>';
+  b.addEventListener("click", () => {
+    let same = false;
+    try { same = document.referrer && new URL(document.referrer).origin === location.origin; } catch (e) {}
+    if (same && history.length > 1) history.back(); else location.href = "index.html";
+  });
+  document.body.appendChild(b);
+})();
