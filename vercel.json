@@ -1,5 +1,12 @@
 {
   "outputDirectory": "site",
   "buildCommand": null,
-  "framework": null
+  "framework": null,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "(?<sub>.*)\\.vercel\\.app" }],
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
 }
