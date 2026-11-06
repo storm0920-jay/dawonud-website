@@ -13,14 +13,16 @@ const SITE = {
   ceoTitle: "소장",
   address: "서울시 영등포구 여의나루로 67, 신송빌딩 1205호",
   addressShort: "여의나루로 67 신송빌딩 1205호",
-  email: "dawon@dawonud.com",
+  // 메일 주소는 자동 수집기(스팸 봇)가 못 읽도록 거꾸로 뒤집어 조각내 두고, 화면에 보일 때만 조립합니다.
+  // 바꾸려면: 아이디와 도메인을 각각 글자 순서를 뒤집어 넣으세요. (예: dawon → nowad, dawonud.com → moc.dunowad)
+  email: ["nowad", "moc.dunowad"].map(t => t.split("").reverse().join("")).join(String.fromCharCode(64)),
   phone: null,      // 예: "02-000-0000"
   fax: null,
   bizNo: null,      // 사업자등록번호
   founded: null,    // 설립 연도, 예: 2015
 
   // 문의 양식이 보내질 곳 (FormSubmit 무료 서비스. 첫 문의 때 위 메일로 확인 메일이 한 번 옵니다)
-  formEndpoint: "https://formsubmit.co/dawon@dawonud.com",
+  formEndpoint: null, // 아래에서 메일 주소로 자동 조립
 
   // true 이면 위쪽에 "미리보기" 안내 띠가 보입니다. 자료를 모두 넣은 뒤 false 로 바꾸세요.
   preview: false,
@@ -31,6 +33,7 @@ const SITE = {
   logo: "assets/img/logo.svg",
   logoWhite: "assets/img/logo-white.svg",
 };
+SITE.formEndpoint = "https://formsubmit.co/" + SITE.email;
 
 const NAV = [
   { href: "about.html", label: "About" },
